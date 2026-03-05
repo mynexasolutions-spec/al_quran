@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0d4a3f"/>
+  <!-- Quran / open book -->
+  <rect x="38" y="64" width="124" height="88" rx="6" fill="#c9a84c" opacity=".18"/>
+  <rect x="38" y="64" width="60" height="88" rx="6 0 0 6" fill="#1a6b57"/>
+  <rect x="102" y="64" width="60" height="88" rx="0 6 6 0" fill="#c9a84c" opacity=".85"/>
+  <line x1="100" y1="64" x2="100" y2="152" stroke="#f5dfa0" stroke-width="4"/>
+  <!-- Arabic crescent + star motif -->
+  <path d="M70 88 Q56 100 70 112 Q58 112 50 100 Q58 88 70 88Z" fill="#f5dfa0" opacity=".9"/>
+  <polygon points="85,92 87,99 94,99 88,103 90,110 85,106 80,110 82,103 76,99 83,99" fill="#f5dfa0" opacity=".7" transform="scale(0.55) translate(70,-20)"/>
+  <!-- Sound waves on right side -->
+  <path d="M118 90 Q128 100 118 110" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".7"/>
+  <path d="M124 84 Q138 100 124 116" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".5"/>
+  <path d="M130 78 Q148 100 130 122" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".3"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0a3d33"/>
+  <!-- Speech bubble -->
+  <rect x="34" y="48" width="110" height="72" rx="14" fill="#c9a84c" opacity=".85"/>
+  <polygon points="56,120 44,148 78,120" fill="#c9a84c" opacity=".85"/>
+  <!-- Arabic text lines inside bubble -->
+  <line x1="50" y1="68" x2="126" y2="68" stroke="#0a3d33" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <line x1="50" y1="82" x2="120" y2="82" stroke="#0a3d33" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <line x1="50" y1="96" x2="106" y2="96" stroke="#0a3d33" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <!-- Crescent on right side -->
+  <path d="M162 76 Q148 100 162 124 Q148 124 138 100 Q148 76 162 76Z" fill="#f5dfa0" opacity=".7"/>
+  <!-- Star -->
+  <polygon points="153,84 155,91 162,91 156.5,95.5 158.5,102.5 153,98 147.5,102.5 149.5,95.5 144,91 151,91" fill="#f5dfa0" opacity=".5" transform="scale(0.6) translate(100,-28)"/>
+</svg>

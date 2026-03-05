@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="10" fill="#0d4a3f"/>
+  <!-- Book / curriculum -->
+  <rect x="14" y="16" width="24" height="48" rx="3" fill="#c9a84c" opacity=".85"/>
+  <rect x="42" y="16" width="24" height="48" rx="3" fill="#1f7d64"/>
+  <line x1="38" y1="16" x2="38" y2="64" stroke="#f5dfa0" stroke-width="3"/>
+  <line x1="18" y1="28" x2="34" y2="28" stroke="#f5dfa0" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  <line x1="18" y1="36" x2="34" y2="36" stroke="#f5dfa0" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  <line x1="18" y1="44" x2="30" y2="44" stroke="#f5dfa0" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  <line x1="46" y1="28" x2="62" y2="28" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  <line x1="46" y1="36" x2="62" y2="36" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  <line x1="46" y1="44" x2="58" y2="44" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+</svg>

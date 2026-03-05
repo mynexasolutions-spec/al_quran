@@ -1,0 +1,39 @@
+/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — Footer Component Styles
+   ══════════════════════════════════════════════════════════ */
+
+footer {
+  background: var(--teal-dark);
+  color: rgba(200,230,222,0.72);
+  padding: 55px 8% 28px;
+  border-top: 2px solid rgba(201,168,76,0.12);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+
+.footer-logo { display: flex; align-items: center; gap: .92rem; margin-bottom: 1rem; }
+.footer-logo img { width: 48px; height: 48px; object-fit: contain; border-radius: 50%; border: 2px solid rgba(201,168,76,0.3); }
+.footer-logo-text { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.05rem; font-weight: 700; line-height: 1.2; }
+.footer-logo-text small { display: block; font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,168,76,0.48); font-family: 'Lato', sans-serif; }
+
+.footer-desc { font-size: .88rem; line-height: 1.78; color: rgba(215,242,235,0.65); font-weight: 400; margin-bottom: 1.2rem; }
+
+.social-links { display: flex; gap: .62rem; }
+.social-links a { width: 35px; height: 35px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.24); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-light); text-decoration: none; font-size: .82rem; transition: all .3s; }
+.social-links a:hover { background: var(--gold); border-color: var(--gold); color: var(--teal-dark); }
+
+.footer-col h4 { font-family: 'Playfair Display', serif; color: var(--white); font-size: .97rem; margin-bottom: 1.05rem; }
+
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: .6rem; }
+.footer-links a { color: rgba(215,242,235,0.58); text-decoration: none; font-size: .86rem; transition: color .3s; }
+.footer-links a:hover { color: var(--gold); }
+
+.footer-bottom { margin-top: 1.68rem; text-align: center; font-size: .79rem; color: rgba(201,168,76,0.32); }
+.footer-bottom span { color: var(--gold); }

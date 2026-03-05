@@ -1,0 +1,90 @@
+{% extends "layouts/course_base.html" %}
+{% block title %}Qirat Course | Al-Qur'an Global Institute{% endblock %}
+
+{# ── Sidebar variables ── #}
+{% set course_duration    = "Flexible" %}
+{% set course_schedule    = "Flexible Timing" %}
+{% set course_eligibility = "Basic Recitation Req." %}
+{% set course_certificate = "Qirat Exam / Ijazah" %}
+
+{# ── Hero content ── #}
+{% block course_category %}Quranic Studies{% endblock %}
+{% block course_icon %}<img src="{{ url_for('static', filename='images/course_qirat.svg') }}" alt="Qirat Course" class="ch-icon"/>{% endblock %}
+{% block course_title %}Quran Qirat Course{% endblock %}
+{% block course_arabic %}&#x639;&#x644;&#x645; &#x627;&#x644;&#x642;&#x631;&#x627;&#x621;&#x627;&#x62A;{% endblock %}
+{% block course_tagline %}Master the art of Quranic recitation through the 10 authentic Qira'at styles under certified scholars who hold Ijazah.{% endblock %}
+{% block course_badges %}
+  <span class="ch-badge">Flexible Timing</span>
+  <span class="ch-badge">Online</span>
+  <span class="ch-badge">Ijazah Pathway</span>
+  <span class="ch-badge">Advanced</span>
+{% endblock %}
+
+{# ── Main course body ── #}
+{% block course_body %}
+<div class="cb-quote">
+  <p>"It will be said to the companion of the Quran: Recite and rise in rank!"</p>
+  <cite>&mdash; Sunan Abi Dawud</cite>
+</div>
+
+<p class="cb-intro">Master the art of Quranic recitation with our Online Quran Qirat Course at Al-Qur'an Global Institute. Designed for learners with basic recitation knowledge, this program focuses on the most renowned Qira'at (recitation styles), helping you recite the Quran with precision, proper Tajweed, and a deep spiritual connection. Explore the rich diversity of Quranic recitation and work toward earning your own Ijazah certification.</p>
+
+<div class="content-block">
+  <h3>What You'll Learn</h3>
+  <ul class="learn-list">
+    <li>Advanced Tajweed: Ikhfa, Idgham, Madd, Qalqalah, and all related rules for precise recitation</li>
+    <li>Makharij and Sifaat: articulation points and letter characteristics for flawless pronunciation</li>
+    <li>Waqf and Ibtida: correct pausing and starting rules to fully preserve Quranic meaning</li>
+    <li>The 10 authentic Qira'at styles including their specific rules, traditions, and applications</li>
+    <li>Quranic Insights: basic Tafsir of selected passages to connect with the Quran's teachings</li>
+    <li>Preparation for the Ijazah pathway under certified scholars with chain of narration</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <h3>Course Highlights</h3>
+  <div class="highlights-grid">
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_instructor.svg') }}" alt="Ijazah Instructors" class="hl-icon"/>
+      <h4>Ijazah Instructors</h4>
+      <p>Study under certified scholars who hold authentic Ijazah in Qira'at and Tajweed</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_curriculum.svg') }}" alt="10 Qira'at" class="hl-icon"/>
+      <h4>10 Qira'at</h4>
+      <p>Comprehensive coverage of all ten authentic Quranic recitation styles</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_feedback.svg') }}" alt="Personal Guidance" class="hl-icon"/>
+      <h4>Personal Guidance</h4>
+      <p>One-on-one feedback each session to perfect recitation and master each style</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_certificate.svg') }}" alt="Ijazah Pathway" class="hl-icon"/>
+      <h4>Ijazah Pathway</h4>
+      <p>Progress toward earning an official Ijazah &mdash; a prestigious scholarly certification</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-block">
+  <h3>Prerequisites &amp; Certification</h3>
+  <ul class="detail-list">
+    <li>Basic Quran recitation knowledge is recommended; beginners should complete a foundational course first</li>
+    <li>Stable internet connection, a Quran in Uthmani script, and a quiet learning space</li>
+    <li>Maintain at least 70% attendance throughout the program</li>
+    <li>Pass the comprehensive Qirat Exam to receive certification</li>
+    <li>Advanced students may pursue the full Ijazah pathway</li>
+  </ul>
+</div>
+{% endblock %}
+
+{# ── Other Courses ── #}
+{% block other_courses %}
+  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed" class="oc-icon"/><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></a>
+  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation" class="oc-icon"/><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></a>
+  <a href="{{ url_for('course_hifz') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz" class="oc-icon"/><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></a>
+  <a href="{{ url_for('course_arabic') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic" class="oc-icon"/><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></a>
+  <a href="{{ url_for('course_urdu') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language" class="oc-icon"/><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English" class="oc-icon"/><h4>Basic English</h4><p>Speak English confidently</p></a>
+{% endblock %}

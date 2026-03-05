@@ -1,0 +1,46 @@
+/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — Responsive / Media Queries
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .about-logo-wrap { order: -1; }
+  .about-logo-circle { width: 185px; height: 185px; }
+  .about-logo-circle img { width: 124px; height: 124px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .cb-grid { grid-template-columns: 1fr; }
+  .cb-sidebar { order: -1; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 660px) {
+  section { padding: 60px 5%; }
+  .about-strip { padding: 60px 5%; }
+  .hero { padding: 110px 5% 55px; }
+  .course-hero { padding: 110px 5% 55px; }
+  .hero-wm { display: none; }
+  .hero-stats { flex-direction: column; }
+  .stat { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.2); }
+  .stat:last-child { border-bottom: none; }
+  .stat-num { font-size: 1.55rem; }
+  .hero-logo-row { flex-direction: column; align-items: center; gap: .65rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .highlights-grid { grid-template-columns: 1fr 1fr; }
+  .oc-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  /* carousel: hide arrows, 1 card, swipe */
+  .rev-arrow { display: none; }
+  .reviews-carousel { gap: 0; }
+  .reviews-track { gap: 0; }
+  .review-card { flex: 0 0 100%; }
+}
+
+@media (max-width: 430px) {
+  .hero h1, .course-hero h1 { font-size: 2.1rem; }
+  .hero-btns, .ch-btns { flex-direction: column; }
+  .btn-primary, .btn-outline { width: 100%; text-align: center; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .highlights-grid, .oc-grid { grid-template-columns: 1fr; }
+}

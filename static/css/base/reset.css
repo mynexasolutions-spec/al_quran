@@ -1,0 +1,21 @@
+/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — Reset & Base Styles
+   ══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--cream);
+  color: var(--text-body);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+p { color: var(--text-body); font-size: 1rem; line-height: 1.88; }

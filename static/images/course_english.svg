@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0a3d33"/>
+  <!-- Globe -->
+  <circle cx="100" cy="100" r="58" stroke="#c9a84c" stroke-width="3.5" fill="#1a6b57" opacity=".6"/>
+  <!-- Latitude lines -->
+  <ellipse cx="100" cy="100" rx="58" ry="22" stroke="#c9a84c" stroke-width="1.8" fill="none" opacity=".5"/>
+  <line x1="42" y1="100" x2="158" y2="100" stroke="#c9a84c" stroke-width="1.8" opacity=".5"/>
+  <!-- Longitude lines -->
+  <ellipse cx="100" cy="100" rx="22" ry="58" stroke="#f5dfa0" stroke-width="1.8" fill="none" opacity=".4"/>
+  <line x1="100" y1="42" x2="100" y2="158" stroke="#f5dfa0" stroke-width="1.8" opacity=".4"/>
+  <!-- "A" and "B" letters hint -->
+  <text x="78" y="108" font-family="sans-serif" font-weight="bold" font-size="26" fill="#f5dfa0" opacity=".85">A</text>
+  <text x="103" y="108" font-family="sans-serif" font-weight="bold" font-size="22" fill="#c9a84c" opacity=".6">B</text>
+</svg>

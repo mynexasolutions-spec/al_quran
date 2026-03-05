@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0d4a3f"/>
+  <!-- Stylised Urdu pen / calligraphy nib -->
+  <path d="M100 44 L140 84 L110 134 L90 134 L60 84 Z" fill="#c9a84c" opacity=".85"/>
+  <path d="M100 44 L120 84 L110 134 L100 120 Z" fill="#f5dfa0" opacity=".5"/>
+  <!-- Nib tip -->
+  <path d="M90 134 L100 160 L110 134 Z" fill="#c9a84c" opacity=".7"/>
+  <!-- Decorative curls (Urdu Nastaliq style) -->
+  <path d="M54 150 Q70 140 90 150 Q110 160 130 150 Q150 140 160 148" stroke="#f5dfa0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".5"/>
+  <path d="M44 62 Q56 56 66 62 Q76 68 86 60" stroke="#f5dfa0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".4"/>
+</svg>

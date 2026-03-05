@@ -1,0 +1,98 @@
+{% extends "layouts/course_base.html" %}
+{% block title %}Quran Recitation Course | Al-Qur'an Global Institute{% endblock %}
+
+{# ── Sidebar variables ── #}
+{% set course_duration    = "1 Year" %}
+{% set course_schedule    = "Flexible Timing" %}
+{% set course_eligibility = "All Ages & Levels" %}
+{% set course_certificate = "Nazira-e-Quran" %}
+
+{# ── Hero content ── #}
+{% block course_category %}Quranic Studies{% endblock %}
+{% block course_icon %}<img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation" class="ch-icon"/>{% endblock %}
+{% block course_title %}Quran Recitation Course{% endblock %}
+{% block course_arabic %}&#x62E;&#x64A;&#x631;&#x643;&#x645; &#x645;&#x646; &#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x648;&#x639;&#x644;&#x645;&#x647;{% endblock %}
+{% block course_tagline %}A 1-Year comprehensive program to complete the entire Quran with proper Tajweed, guided by expert instructors worldwide.{% endblock %}
+{% block course_badges %}
+  <span class="ch-badge">1 Year</span>
+  <span class="ch-badge">All Levels</span>
+  <span class="ch-badge">Online</span>
+  <span class="ch-badge">Nazira Exam</span>
+{% endblock %}
+
+{# ── Main course body ── #}
+{% block course_body %}
+<div class="cb-quote">
+  <p>"Read the Quran, for it will intercede for its reciters on the Day of Resurrection."</p>
+  <cite>&mdash; Sahih Muslim</cite>
+</div>
+
+<p class="cb-intro">The Best Among You Are Those Who Learn the Quran and Teach It. Join our 1-Year Quran Recitation Course to master reciting the Holy Quran with proper Tajweed and complete its full recitation with confidence. Designed for all levels, this program fosters spiritual growth and equips you to share the Quran's beauty with your family and community.</p>
+
+<div class="content-block">
+  <h3>Why Enroll?</h3>
+  <ul class="learn-list">
+    <li>Master Tajweed for accurate, melodious recitation of every verse of the Holy Quran</li>
+    <li>Complete the entire Quran with expert guidance over the course of 12 months</li>
+    <li>Deepen your spiritual connection with the Book of Allah throughout every session</li>
+    <li>Gain the skills and confidence to lead prayers or teach others in your community</li>
+    <li>Earn an official Nazira-e-Quran certificate to mark this tremendous achievement</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <h3>Course Highlights</h3>
+  <div class="highlights-grid">
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_instructor.svg') }}" alt="Expert Instructors" class="hl-icon"/>
+      <h4>Expert Instructors</h4>
+      <p>Qualified Tajweed specialists with years of teaching students worldwide</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_curriculum.svg') }}" alt="Structured Curriculum" class="hl-icon"/>
+      <h4>Structured Curriculum</h4>
+      <p>Covers all Tajweed rules, pronunciation, and full Quran recitation practice</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_interactive.svg') }}" alt="Interactive Classes" class="hl-icon"/>
+      <h4>Interactive Classes</h4>
+      <p>Live sessions with real-time feedback and personalised corrections every class</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_certificate.svg') }}" alt="Certification" class="hl-icon"/>
+      <h4>Certification</h4>
+      <p>Certificate awarded with 70% attendance and passing the Nazira-e-Quran Exam</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-block">
+  <h3>What You'll Cover</h3>
+  <ul class="learn-list">
+    <li>Complete Tajweed rules from foundation to advanced application</li>
+    <li>Correct pronunciation of every letter from its precise Makhraj</li>
+    <li>Recitation of the entire Quran from Surah Al-Fatihah to Surah An-Nas</li>
+    <li>Regular revision sessions to consolidate and retain correct recitation</li>
+    <li>Waqf and Ibtida &mdash; pausing and starting rules for accurate meaning</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <h3>Certification Requirements</h3>
+  <ul class="detail-list">
+    <li>Attend at least 70% of all scheduled classes throughout the year</li>
+    <li>Pass the Nazira-e-Quran Exam assessing full recitation proficiency</li>
+    <li>Demonstrate completion of the entire Quran with correct Tajweed application</li>
+  </ul>
+</div>
+{% endblock %}
+
+{# ── Other Courses ── #}
+{% block other_courses %}
+  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed" class="oc-icon"/><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></a>
+  <a href="{{ url_for('course_hifz') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz" class="oc-icon"/><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></a>
+  <a href="{{ url_for('course_qirat') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_qirat.svg') }}" alt="Qirat" class="oc-icon"/><h4>Qirat Course</h4><p>Master the 10 Qira'at styles</p></a>
+  <a href="{{ url_for('course_arabic') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic" class="oc-icon"/><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></a>
+  <a href="{{ url_for('course_urdu') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language" class="oc-icon"/><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English" class="oc-icon"/><h4>Basic English</h4><p>Speak English confidently</p></a>
+{% endblock %}

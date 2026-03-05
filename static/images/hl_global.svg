@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="10" fill="#0a3d33"/>
+  <!-- Globe for global/online/interactive -->
+  <circle cx="40" cy="40" r="24" stroke="#c9a84c" stroke-width="2.5" fill="#1a6b57" opacity=".7"/>
+  <ellipse cx="40" cy="40" rx="24" ry="10" stroke="#c9a84c" stroke-width="1.8" fill="none" opacity=".5"/>
+  <line x1="16" y1="40" x2="64" y2="40" stroke="#c9a84c" stroke-width="1.8" opacity=".5"/>
+  <ellipse cx="40" cy="40" rx="10" ry="24" stroke="#f5dfa0" stroke-width="1.5" fill="none" opacity=".4"/>
+</svg>

@@ -1,0 +1,71 @@
+/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — Navbar Component Styles
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Desktop Nav ── */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 1000;
+  background: rgba(10,61,51,0.97);
+  backdrop-filter: blur(12px);
+  padding: 0 5%;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 84px;
+  border-bottom: 2px solid rgba(201,168,76,0.35);
+}
+
+.nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; flex-shrink: 0; }
+.nav-logo img { height: 44px; width: 44px; object-fit: contain; border-radius: 50%; border: 2px solid rgba(201,168,76,0.45); }
+.nav-logo-text { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1rem; font-weight: 700; line-height: 1.2; }
+.nav-logo-text small { display: block; font-size: .57rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,168,76,0.6); font-family: 'Lato', sans-serif; font-weight: 400; }
+
+.nav-links { display: flex; gap: 1.4rem; list-style: none; align-items: center; }
+.nav-links > li { position: relative; }
+.nav-links a { color: rgba(229,213,165,0.92); text-decoration: none; font-size: .8rem; letter-spacing: 1px; text-transform: uppercase; transition: color .3s; white-space: nowrap; display: flex; align-items: center; gap: .3rem; }
+.nav-links a:hover { color: var(--gold); }
+
+.nav-cta { background: var(--gold); color: var(--teal-dark) !important; padding: .43rem 1.1rem; border-radius: 2px; font-weight: 700 !important; }
+.nav-cta:hover { background: var(--gold-light) !important; }
+
+/* ── Dropdown ── */
+.dropdown-menu {
+  display: none;
+  position: absolute; top: calc(100% + 14px); left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10,61,51,0.99);
+  border: 1px solid rgba(201,168,76,0.28);
+  border-radius: 5px;
+  min-width: 238px; padding: .5rem 0;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.38);
+  z-index: 200;
+}
+.dropdown-menu li { list-style: none; }
+.dropdown-menu li a { display: block; padding: .73rem 1.25rem; color: rgba(229,213,165,0.9); font-size: .8rem; letter-spacing: .4px; text-transform: none; border-bottom: 1px solid rgba(201,168,76,0.08); transition: background .2s, color .2s; }
+.dropdown-menu li:last-child a { border-bottom: none; }
+.dropdown-menu li a:hover { background: rgba(201,168,76,0.13); color: var(--gold); }
+.has-dropdown:hover .dropdown-menu { display: block; }
+.chevron { font-size: .6rem; transition: transform .3s; }
+.has-dropdown:hover .chevron { transform: rotate(180deg); }
+
+/* ── Hamburger ── */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
+.hamburger span { display: block; width: 25px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all .3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile Drawer ── */
+.nav-drawer { display: none; position: fixed; top: 84px; left: 0; right: 0; background: rgba(10,61,51,0.99); padding: 1rem 5%; z-index: 999; border-bottom: 2px solid rgba(201,168,76,0.25); max-height: 85vh; overflow-y: auto; }
+.nav-drawer.open { display: block; }
+.nav-drawer ul { list-style: none; }
+.nav-drawer ul li a { display: block; padding: .82rem 0; color: rgba(229,213,165,0.92); text-decoration: none; font-size: .95rem; border-bottom: 1px solid rgba(201,168,76,0.1); transition: color .2s; }
+.nav-drawer > ul > li:last-child > a { border-bottom: none; }
+.nav-drawer ul li a:hover { color: var(--gold); }
+.drawer-section-label { display: block; padding: .7rem 0 .4rem; color: var(--gold-light) !important; font-weight: 700 !important; font-size: .82rem !important; letter-spacing: 2px; text-transform: uppercase; border-bottom: none !important; }
+.drawer-sub { padding-left: 1.1rem !important; font-size: .88rem !important; color: rgba(229,213,165,0.68) !important; }
+
+/* ── Drawer Collapsible Courses ── */
+.drawer-toggle { display: flex !important; align-items: center; justify-content: space-between; font-weight: 700; color: var(--gold-light) !important; cursor: pointer; -webkit-tap-highlight-color: rgba(201,168,76,0.15); }
+.drawer-toggle .drawer-chevron { font-size: .6rem; transition: transform .3s; }
+.drawer-toggle.open .drawer-chevron { transform: rotate(180deg); }
+.drawer-sub-list { display: none; list-style: none; padding: 0; }
+.drawer-sub-list.open { display: block; }

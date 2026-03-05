@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0d4a3f"/>
+  <!-- Compass / ruler motif for academics -->
+  <!-- Left side: Maths - Pi symbol & formula -->
+  <circle cx="72" cy="72" r="30" fill="#c9a84c" opacity=".15" stroke="#c9a84c" stroke-width="2"/>
+  <text x="58" y="80" font-family="serif" font-weight="bold" font-size="28" fill="#c9a84c" opacity=".9">π</text>
+  <!-- Right side: Science - atom -->
+  <circle cx="132" cy="72" r="18" stroke="#f5dfa0" stroke-width="2" fill="none" opacity=".6"/>
+  <circle cx="132" cy="72" r="6" fill="#f5dfa0" opacity=".7"/>
+  <ellipse cx="132" cy="72" rx="28" ry="10" stroke="#f5dfa0" stroke-width="1.8" fill="none" opacity=".4" transform="rotate(30,132,72)"/>
+  <ellipse cx="132" cy="72" rx="28" ry="10" stroke="#f5dfa0" stroke-width="1.8" fill="none" opacity=".4" transform="rotate(-30,132,72)"/>
+  <!-- Bottom: pencil -->
+  <rect x="74" y="122" width="52" height="12" rx="3" fill="#c9a84c" opacity=".7"/>
+  <polygon points="74,122 68,128 74,134" fill="#f5dfa0" opacity=".8"/>
+  <rect x="118" y="122" width="10" height="12" rx="0 3 3 0" fill="#1a6b57" stroke="#c9a84c" stroke-width="1.5"/>
+  <!-- Book under pencil -->
+  <rect x="56" y="142" width="88" height="20" rx="4" fill="#1a6b57" stroke="#c9a84c" stroke-width="1.5" opacity=".8"/>
+  <line x1="100" y1="142" x2="100" y2="162" stroke="#c9a84c" stroke-width="1.5" opacity=".5"/>
+</svg>

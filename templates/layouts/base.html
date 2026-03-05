@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Al-Qur'an Global Institute{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  {% include 'components/navbar.html' %}
+
+  <!-- ══ PAGE CONTENT ══ -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'components/footer.html' %}
+  {% include 'components/whatsapp_float.html' %}
+
+  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

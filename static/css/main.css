@@ -1,0 +1,23 @@
+﻿/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — Main Stylesheet Entry Point
+   All styles are split into focused files and imported here.
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Base ── */
+@import url('base/variables.css');
+@import url('base/reset.css');
+@import url('base/buttons.css');
+@import url('base/sections.css');
+
+/* ── Components ── */
+@import url('components/navbar.css');
+@import url('components/footer.css');
+@import url('components/whatsapp.css');
+
+/* ── Pages ── */
+@import url('pages/home.css');
+@import url('pages/course.css');
+
+/* ── Utilities ── */
+@import url('animations.css');
+@import url('responsive.css');

@@ -1,0 +1,26 @@
+/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — CSS Custom Properties
+   Theme: Deep Teal + Gold
+   ══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  /* ── Colour Palette ── */
+  --teal-dark:  #0A3D33;
+  --teal-mid:   #0D4A3F;
+  --teal-main:  #115544;
+  --teal-light: #1A7A62;
+  --teal-pale:  #C8E6DE;
+  --gold:       #C9A84C;
+  --gold-light: #E2C97E;
+  --gold-pale:  #F5EDCF;
+  --cream:      #FAF7EF;
+  --white:      #FFFFFF;
+
+  /* ── Text — high contrast ── */
+  --text-dark:  #082820;
+  --text-body:  #1A4035;
+  --text-mid:   #2A5C4A;
+  --text-light: #3A7A62;
+}

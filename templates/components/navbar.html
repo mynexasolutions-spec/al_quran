@@ -1,0 +1,88 @@
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <a href="{{ url_for('index') }}" class="nav-logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
+    <div class="nav-logo-text">Al-Qur'an<br><small>Global Institute</small></div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li class="has-dropdown">
+      <a href="#">Courses <span class="chevron">&#9660;</span></a>
+      <ul class="dropdown-menu">
+        <li><a href="{{ url_for('course_tajweed') }}">&#128218; Tajweed Course</a></li>
+        <li><a href="{{ url_for('course_quran_recitation') }}">&#128276; Quran Recitation</a></li>
+        <li><a href="{{ url_for('course_hifz') }}">&#10024; Quran Hifz</a></li>
+        <li><a href="{{ url_for('course_qirat') }}">&#127908; Qirat Course</a></li>
+        <li><a href="{{ url_for('course_arabic') }}">&#127462;&#127479; Basic Arabic</a></li>
+        <li><a href="{{ url_for('course_urdu') }}">&#128012; Urdu Language</a></li>
+        <li><a href="{{ url_for('course_english') }}">&#127466;&#127475; Basic English</a></li>
+      </ul>
+    </li>
+    <li><a href="{{ url_for('index') }}#about">About</a></li>
+    <li><a href="{{ url_for('index') }}#reviews">Reviews</a></li>
+    <li><a href="{{ url_for('index') }}#faq">FAQ</a></li>
+    <li><a href="{{ url_for('index') }}#contact" class="nav-cta">Enroll Now</a></li>
+  </ul>
+
+  <button class="hamburger" id="hbg" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══ MOBILE DRAWER ══ -->
+<div class="nav-drawer" id="drawer">
+  <ul>
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li>
+      <a href="#" class="drawer-toggle" id="drawer-courses-btn">Courses <span class="drawer-chevron">&#9660;</span></a>
+      <ul class="drawer-sub-list" id="drawer-courses-list">
+        <li><a href="{{ url_for('course_tajweed') }}" class="drawer-sub">&#128218; Tajweed Course</a></li>
+        <li><a href="{{ url_for('course_quran_recitation') }}" class="drawer-sub">&#128276; Quran Recitation</a></li>
+        <li><a href="{{ url_for('course_hifz') }}" class="drawer-sub">&#10024; Quran Hifz</a></li>
+        <li><a href="{{ url_for('course_qirat') }}" class="drawer-sub">&#127908; Qirat Course</a></li>
+        <li><a href="{{ url_for('course_arabic') }}" class="drawer-sub">&#127462;&#127479; Basic Arabic</a></li>
+        <li><a href="{{ url_for('course_urdu') }}" class="drawer-sub">&#128012; Urdu Language</a></li>
+        <li><a href="{{ url_for('course_english') }}" class="drawer-sub">&#127466;&#127475; Basic English</a></li>
+      </ul>
+    </li>
+    <li><a href="{{ url_for('index') }}#about">About</a></li>
+    <li><a href="{{ url_for('index') }}#reviews">Reviews</a></li>
+    <li><a href="{{ url_for('index') }}#faq">FAQ</a></li>
+    <li><a href="{{ url_for('index') }}#contact">&#128197; Enroll Now</a></li>
+  </ul>
+</div>
+
+<!-- Inline script: guarantees hamburger + courses toggle work
+     regardless of module loading status -->
+<script>
+(function(){
+  var hbg = document.getElementById('hbg');
+  var drawer = document.getElementById('drawer');
+  if(hbg && drawer){
+    hbg.addEventListener('click', function(){
+      hbg.classList.toggle('open');
+      drawer.classList.toggle('open');
+    });
+  }
+  var cbtn = document.getElementById('drawer-courses-btn');
+  var clist = document.getElementById('drawer-courses-list');
+  if(cbtn && clist){
+    cbtn.addEventListener('click', function(e){
+      e.preventDefault();
+      cbtn.classList.toggle('open');
+      clist.classList.toggle('open');
+    });
+  }
+  // close drawer when a navigation link is tapped
+  if(drawer){
+    var links = drawer.querySelectorAll('a:not(#drawer-courses-btn)');
+    for(var i=0;i<links.length;i++){
+      links[i].addEventListener('click', function(){
+        if(hbg) hbg.classList.remove('open');
+        drawer.classList.remove('open');
+      });
+    }
+  }
+})();
+</script>

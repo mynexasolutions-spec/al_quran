@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0a3d33"/>
+  <!-- Open book -->
+  <rect x="36" y="68" width="58" height="76" rx="4" fill="#c9a84c" opacity=".9"/>
+  <rect x="36" y="68" width="58" height="76" rx="4" fill="url(#bookL)"/>
+  <rect x="106" y="68" width="58" height="76" rx="4" fill="#c9a84c" opacity=".9"/>
+  <rect x="106" y="68" width="58" height="76" rx="4" fill="url(#bookR)"/>
+  <!-- Spine line -->
+  <line x1="100" y1="68" x2="100" y2="144" stroke="#f5dfa0" stroke-width="3"/>
+  <!-- Lines on left page -->
+  <line x1="48" y1="88" x2="82" y2="88" stroke="#f5dfa0" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="48" y1="98" x2="82" y2="98" stroke="#f5dfa0" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="48" y1="108" x2="82" y2="108" stroke="#f5dfa0" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="48" y1="118" x2="70" y2="118" stroke="#f5dfa0" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Lines on right page -->
+  <line x1="118" y1="88" x2="152" y2="88" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+  <line x1="118" y1="98" x2="152" y2="98" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+  <line x1="118" y1="108" x2="152" y2="108" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+  <line x1="118" y1="118" x2="140" y2="118" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+  <!-- Small tajweed dots (harakat) -->
+  <circle cx="55" cy="84" r="3" fill="#f5dfa0"/>
+  <circle cx="65" cy="84" r="3" fill="#f5dfa0"/>
+  <circle cx="75" cy="84" r="3" fill="#f5dfa0"/>
+  <defs>
+    <linearGradient id="bookL" x1="36" y1="68" x2="94" y2="144" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#a07820"/>
+    </linearGradient>
+    <linearGradient id="bookR" x1="106" y1="68" x2="164" y2="144" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1a6b57"/>
+      <stop offset="100%" stop-color="#0d4a3f"/>
+    </linearGradient>
+  </defs>
+</svg>

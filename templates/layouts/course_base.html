@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{# ══════════════════════════════════════════════════════════
+   Course Page Base Layout
+   Extends the main base layout and provides the standard
+   structure shared across all course pages:
+     1. Course Hero
+     2. Course Body  (main content + sidebar)
+     3. Other Courses section
+   Course pages extend THIS layout, not layouts/base.html.
+   ══════════════════════════════════════════════════════════ #}
+
+{% block content %}
+
+<!-- ══ COURSE HERO ══ -->
+<section class="course-hero">
+  <div class="ch-inner">
+    <a href="{{ url_for('index') }}" class="ch-back">&#8592; Back to All Courses</a>
+    <span class="ch-cat">{% block course_category %}{% endblock %}</span>
+    <span class="ch-icon">{% block course_icon %}{% endblock %}</span>
+    <h1>{% block course_title %}{% endblock %}</h1>
+    <span class="ch-arabic">{% block course_arabic %}{% endblock %}</span>
+    <p class="ch-tagline">{% block course_tagline %}{% endblock %}</p>
+    <div class="ch-meta">
+      {% block course_badges %}{% endblock %}
+    </div>
+    <div class="ch-btns">
+      <a href="{{ url_for('index') }}#contact" class="btn-primary">Enroll Now</a>
+      <a href="#details" class="btn-outline">Course Details</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COURSE BODY ══ -->
+<section class="course-body" id="details">
+  <div class="cb-grid">
+
+    <!-- Main Content -->
+    <div class="cb-main">
+      {% block course_body %}{% endblock %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="cb-sidebar">
+      {% include 'components/course_sidebar.html' %}
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ OTHER COURSES ══ -->
+<section class="other-courses">
+  <div class="center-hdr">
+    <span class="section-tag">Explore More</span>
+    <h2 class="section-title">Other <span>Courses</span></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="oc-grid">
+    {% block other_courses %}{% endblock %}
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,427 @@
+{% extends "layouts/base.html" %}
+{% block title %}Home | Al-Qur'an Global Institute{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-wm">&#x627;&#x644;&#x642;&#x631;&#x622;&#x646;</div>
+  <div class="hero-content">
+
+    <div class="hero-logo-row">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
+      <div class="hero-inst">
+        <strong>Al-Qur'an Global Institute</strong>
+        <span>Excellence in Quranic &amp; Language Education</span>
+      </div>
+    </div>
+
+    <span class="hero-badge">&#10022; Certified Online Courses &bull; All Ages Welcome</span>
+
+    <h1>Learn Quran With<br><em>Heart &amp; Understanding</em></h1>
+
+    <span class="hero-arabic-sub">&#x648;&#x631;&#x62A;&#x644; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x62A;&#x631;&#x62A;&#x64A;&#x644;&#x627;</span>
+
+    <p>From Tajweed &amp; Hifz to Arabic, Urdu &amp; English &mdash; Al-Qur'an Global Institute offers world-class online courses to nurture your spiritual growth and language skills from anywhere in the world.</p>
+
+    <div class="hero-btns">
+      <a href="#courses" class="btn-primary">Explore Courses</a>
+      <a href="#contact" class="btn-outline">Contact Us</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Students Enrolled</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Expert Courses</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">30+</span>
+        <span class="stat-label">Countries Reached</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4.9&#9733;</span>
+        <span class="stat-label">Average Rating</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ COURSES OVERVIEW ══ -->
+<section class="courses" id="courses">
+  <div class="center-hdr">
+    <span class="section-tag">Our Programs</span>
+    <h2 class="section-title">All <span>Courses</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">Choose from eight expertly designed courses &mdash; Quranic, language, and academic programs for learners of all ages and backgrounds.</p>
+  </div>
+
+  <div class="courses-grid">
+
+    <a href="{{ url_for('course_tajweed') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Quranic Studies</span>
+        <h3>Tajweed Course</h3>
+        <p>Master the rules of Quranic recitation &mdash; from Makharij to Madd &mdash; and beautify every letter with precision and devotion.</p>
+        <div class="course-meta">
+          <span class="badge">All Levels</span>
+          <span class="badge">Online</span>
+          <span class="badge">Certificate</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('course_quran_recitation') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Quranic Studies</span>
+        <h3>Quran Recitation</h3>
+        <p>A 1-year comprehensive program to complete the entire Quran with proper Tajweed, guided by expert instructors worldwide.</p>
+        <div class="course-meta">
+          <span class="badge">1 Year</span>
+          <span class="badge">All Levels</span>
+          <span class="badge">Nazira Exam</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('course_hifz') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Quranic Studies</span>
+        <h3>Quran Hifz Course</h3>
+        <p>Memorize the entire Holy Quran with structured daily plans, personalized feedback, and expert Tajweed mastery.</p>
+        <div class="course-meta">
+          <span class="badge">Mon&ndash;Sat</span>
+          <span class="badge">All Ages</span>
+          <span class="badge">Hafiz/Hafiza</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('course_qirat') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_qirat.svg') }}" alt="Qirat Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Quranic Studies</span>
+        <h3>Qirat Course</h3>
+        <p>Explore the 10 authentic Qira'at recitation styles under certified scholars with Ijazah and earn your own certification.</p>
+        <div class="course-meta">
+          <span class="badge">Flexible</span>
+          <span class="badge">Ijazah Path</span>
+          <span class="badge">Advanced</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('course_arabic') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic Speaking Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Language</span>
+        <h3>Basic Arabic Speaking</h3>
+        <p>A 3-month intensive speaking course covering everyday Arabic and Quranic vocabulary, with 70% conversational focus.</p>
+        <div class="course-meta">
+          <span class="badge">3 Months</span>
+          <span class="badge">Beginner</span>
+          <span class="badge">5x / Week</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('course_urdu') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Language</span>
+        <h3>Urdu Language Course</h3>
+        <p>Learn to speak, read, and write Urdu with Islamic context &mdash; connecting you with Urdu-speaking communities worldwide.</p>
+        <div class="course-meta">
+          <span class="badge">Tue &amp; Wed</span>
+          <span class="badge">All Levels</span>
+          <span class="badge">Certificate</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('course_english') }}" class="course-card">
+      <img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English Course" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Language</span>
+        <h3>Basic English Course</h3>
+        <p>A 3-month beginner program to build conversational English skills with Islamic contexts &mdash; speak confidently in a global world.</p>
+        <div class="course-meta">
+          <span class="badge">3 Months</span>
+          <span class="badge">Beginner</span>
+          <span class="badge">5x / Week</span>
+        </div>
+        <span class="course-link">View Course <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+
+    <div class="course-card course-card--no-link">
+      <img src="{{ url_for('static', filename='images/course_academic.svg') }}" alt="Academic Subjects" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">Academic</span>
+        <h3>Academic Subjects</h3>
+        <p>Structured tuition in Maths, Science, and other core academic subjects &mdash; personalised online sessions for all school levels.</p>
+        <div class="course-meta">
+          <span class="badge">Maths</span>
+          <span class="badge">Science</span>
+          <span class="badge">All Ages</span>
+        </div>
+        <span class="course-link">Enroll via Contact <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ ABOUT ══ -->
+<section class="about-strip" id="about">
+  <div class="about-inner">
+    <div class="about-logo-wrap">
+      <div class="about-logo-circle">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
+        <div class="about-logo-ring"></div>
+      </div>
+    </div>
+    <div>
+      <span class="section-tag">Who We Are</span>
+      <h2 class="section-title">Al-Qur'an <span style="color:var(--gold)">Global Institute</span></h2>
+      <div class="divider"></div>
+      <p class="section-sub">Al-Qur'an Global Institute is dedicated to empowering learners worldwide with authentic Quranic and language education. Our mission is to make sacred knowledge accessible to everyone, regardless of age, background, or location.</p>
+      <ul class="mission-list">
+        <li>Expert instructors with verified Tajweed Ijazah credentials</li>
+        <li>Live, interactive online classes with real-time feedback</li>
+        <li>Courses for all ages &mdash; children, teens, and adults</li>
+        <li>Globally accessible &mdash; students from 30+ countries</li>
+        <li>Official certification upon successful course completion</li>
+        <li>Supportive and encouraging global learning community</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ REVIEWS ══ -->
+<section class="reviews" id="reviews">
+  <div class="center-hdr">
+    <span class="section-tag">Student Testimonials</span>
+    <h2 class="section-title">What Our <span>Students Say</span></h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="reviews-carousel">
+    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews">&#8249;</button>
+    <div class="reviews-track-outer" id="rev-track-outer">
+      <div class="reviews-track" id="rev-track">
+
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">The Tajweed course transformed my recitation completely. The instructor's patience and detailed feedback made such a difference. JazakAllah Khair!</p>
+          <div class="reviewer">
+            <div class="ra">FA</div>
+            <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
+          <div class="reviewer">
+            <div class="ra">KM</div>
+            <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
+          <div class="reviewer">
+            <div class="ra">ZR</div>
+            <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
+          <div class="reviewer">
+            <div class="ra">NA</div>
+            <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
+          <div class="reviewer">
+            <div class="ra">OB</div>
+            <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they're reciting &mdash; it has made them truly fall in love with learning.</p>
+          <div class="reviewer">
+            <div class="ra">SI</div>
+            <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button class="rev-arrow rev-next" id="rev-next" aria-label="Next reviews">&#8250;</button>
+  </div>
+
+  <div class="rev-dots" id="rev-dots"></div>
+</section>
+
+
+<!-- ══ FAQ ══ -->
+<section class="faq" id="faq">
+  <div class="center-hdr">
+    <span class="section-tag">Common Questions</span>
+    <h2 class="section-title">Frequently Asked <span>Questions</span></h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="faq-list">
+
+    <div class="faq-item open">
+      <div class="faq-q">Is there a free trial lesson?<span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! Every new student is offered one completely free trial lesson &mdash; no payment, no commitment required. This allows both the student and teacher to assess compatibility, set learning goals, and experience the teaching style before enrolling.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What ages do you teach?<span class="faq-icon">+</span></div>
+      <div class="faq-a">We welcome students from age 4 upwards, including adults of all ages. Every lesson is tailored to the student's age, level, and learning pace. Adult learners are very warmly encouraged and well supported throughout their journey.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do you teach female students?<span class="faq-icon">+</span></div>
+      <div class="faq-a">Female students are welcome for all online sessions. We maintain full Islamic etiquette in all interactions, and lessons are conducted in a respectful, professional environment. Female students can enroll in any of our courses.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What platform is used for online lessons?<span class="faq-icon">+</span></div>
+      <div class="faq-a">We use Zoom or Skype &mdash; whichever is more convenient for you. A tablet or laptop with a stable internet connection and a working microphone is recommended for the best interactive learning experience.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How many lessons per week are recommended?<span class="faq-icon">+</span></div>
+      <div class="faq-a">For best results, 3&ndash;5 sessions per week are recommended, especially for Hifz and language students. However, even 2 sessions per week yields great progress over time. We fully accommodate your schedule and commitments.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Are the courses available worldwide?<span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! All our courses are available 100% online, meaning students from anywhere in the world can enroll and attend live classes. We currently have students from the UK, USA, Canada, UAE, and across Asia and Africa.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What certification do students receive?<span class="faq-icon">+</span></div>
+      <div class="faq-a">Students who maintain at least 70% attendance and pass the relevant assessment receive an official certificate from Al-Qur'an Global Institute. Hifz students receive a Hifz Certificate, and Qirat students can pursue an Ijazah pathway.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I enroll or find out about fees?<span class="faq-icon">+</span></div>
+      <div class="faq-a">Simply fill out the contact form below, WhatsApp us, or send an email. We'll get back to you within 24 hours with full details about fees, schedules, and how to get started, insha'Allah. The first trial lesson is always free.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ CONTACT ══ -->
+<section class="contact" id="contact">
+  <span class="section-tag">Get in Touch</span>
+  <h2 class="section-title">Enroll or <span style="color:var(--gold)">Ask a Question</span></h2>
+  <div class="divider"></div>
+
+  <div class="contact-grid">
+    <div class="ci">
+      <h3>We'd Love to Hear From You</h3>
+      <p>Reach out for course details, enrollment, fees, or any queries. We respond within 24 hours, insha'Allah.</p>
+      <div class="cd">
+        <div class="cdi">&#x1F4DE;</div>
+        <div class="cdt"><strong>Phone / WhatsApp</strong>+91 8226970167</div>
+      </div>
+      <div class="cd">
+        <div class="cdi">&#x2709;&#xFE0F;</div>
+        <div class="cdt"><strong>Email</strong>osamasamastipur@gmail.com</div>
+      </div>
+      <div class="cd">
+        <div class="cdi">&#x1F4BB;</div>
+        <div class="cdt"><strong>Mode</strong>100% Online &middot; Worldwide</div>
+      </div>
+      <div class="cd">
+        <div class="cdi">&#x1F550;</div>
+        <div class="cdt"><strong>Available</strong>Mon&ndash;Sat &middot; Flexible Timing</div>
+      </div>
+    </div>
+
+    <div>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="fg"><label>Your Name</label><input type="text" name="name" placeholder="Full Name" required/></div>
+          <div class="fg"><label>Phone / WhatsApp</label><input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/></div>
+        </div>
+        <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com"/></div>
+        <div class="form-row">
+          <div class="fg">
+            <label>Course Interested In</label>
+            <select name="course">
+              <option value="">Select a Course</option>
+              <option>Tajweed Course</option>
+              <option>Quran Recitation</option>
+              <option>Quran Hifz</option>
+              <option>Qirat Course</option>
+              <option>Basic Arabic Speaking</option>
+              <option>Urdu Language Course</option>
+              <option>Basic English Course</option>
+              <option>Academic Subjects (Maths / Science)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Student Age Group</label>
+            <select name="age">
+              <option value="">Select Age</option>
+              <option>4&ndash;8 years</option>
+              <option>9&ndash;13 years</option>
+              <option>14&ndash;17 years</option>
+              <option>18+ (Adult)</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Your Message</label>
+          <textarea name="message" placeholder="Tell us about your learning goals, current level, or any questions..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;">
+          &#10022; Send Message
+        </button>
+        <div class="form-success" id="formSuccess"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

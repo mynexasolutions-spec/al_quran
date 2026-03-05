@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="16" fill="#0a3d33"/>
+  <!-- Heart shape representing memorization with love -->
+  <path d="M100 140 C60 115, 34 92, 34 72 C34 55, 48 44, 64 44 C76 44, 88 52, 100 64 C112 52, 124 44, 136 44 C152 44, 166 55, 166 72 C166 92 140 115 100 140Z" fill="#c9a84c" opacity=".85"/>
+  <!-- Arabic text suggestion - small lines inside heart -->
+  <line x1="82" y1="76" x2="118" y2="76" stroke="#0a3d33" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  <line x1="76" y1="86" x2="124" y2="86" stroke="#0a3d33" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  <line x1="72" y1="96" x2="128" y2="96" stroke="#0a3d33" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  <line x1="70" y1="106" x2="130" y2="106" stroke="#0a3d33" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+  <!-- Star sparkles around the heart -->
+  <circle cx="50" cy="55" r="4" fill="#f5dfa0" opacity=".6"/>
+  <circle cx="150" cy="55" r="4" fill="#f5dfa0" opacity=".6"/>
+  <circle cx="40" cy="100" r="2.5" fill="#f5dfa0" opacity=".4"/>
+  <circle cx="160" cy="100" r="2.5" fill="#f5dfa0" opacity=".4"/>
+  <circle cx="100" cy="38" r="3" fill="#f5dfa0" opacity=".5"/>
+</svg>

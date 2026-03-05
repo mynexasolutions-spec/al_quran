@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="10" fill="#0d4a3f"/>
+  <!-- Laptop / interactive / online -->
+  <rect x="10" y="20" width="60" height="38" rx="4" fill="#1a6b57" stroke="#c9a84c" stroke-width="2"/>
+  <rect x="14" y="24" width="52" height="28" rx="2" fill="#0a3d33"/>
+  <!-- Screen content: waveform -->
+  <path d="M18 38 L24 30 L30 46 L36 34 L42 42 L48 28 L54 38 L62 38" stroke="#c9a84c" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+  <!-- Base -->
+  <rect x="6" y="58" width="68" height="6" rx="3" fill="#c9a84c" opacity=".5"/>
+  <rect x="26" y="56" width="28" height="4" rx="2" fill="#c9a84c" opacity=".3"/>
+</svg>

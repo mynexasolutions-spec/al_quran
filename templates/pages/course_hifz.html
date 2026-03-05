@@ -1,0 +1,100 @@
+{% extends "layouts/course_base.html" %}
+{% block title %}Quran Hifz Course | Al-Qur'an Global Institute{% endblock %}
+
+{# ── Sidebar variables ── #}
+{% set course_duration    = "Flexible Duration" %}
+{% set course_schedule    = "Mon–Sat" %}
+{% set course_eligibility = "All Ages, No Prior Hifz" %}
+{% set course_certificate = "Yes — Hifz Exam" %}
+
+{# ── Hero content ── #}
+{% block course_category %}Quranic Studies{% endblock %}
+{% block course_icon %}<img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz" class="ch-icon"/>{% endblock %}
+{% block course_title %}Quran Hifz Course{% endblock %}
+{% block course_arabic %}&#x62D;&#x641;&#x638; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x627;&#x644;&#x643;&#x631;&#x64A;&#x645;{% endblock %}
+{% block course_tagline %}Memorize the entire Holy Quran with structured daily plans, personalized one-on-one feedback, and expert Tajweed mastery.{% endblock %}
+{% block course_badges %}
+  <span class="ch-badge">Mon&ndash;Sat</span>
+  <span class="ch-badge">All Ages</span>
+  <span class="ch-badge">Online</span>
+  <span class="ch-badge">Hafiz/Hafiza</span>
+{% endblock %}
+
+{# ── Main course body ── #}
+{% block course_body %}
+<div class="cb-quote">
+  <p>"It will be said to the companion of the Quran: Recite and rise in rank!"</p>
+  <cite>&mdash; Sunan Abi Dawud</cite>
+</div>
+
+<p class="cb-intro">Discover the transformative journey of memorizing the Holy Quran with our Quran Hifz Course at Al-Qur'an Global Institute. Tailored for all ages and skill levels, this online program offers expert instruction, personalized guidance, and Tajweed mastery to help you commit the entire Quran to memory, deepen your spiritual connection, and earn the prestigious title of Hafiz or Hafiza &mdash; a lifelong honour and blessing.</p>
+
+<div class="content-block">
+  <h3>Why Join Our Hifz Course?</h3>
+  <ul class="learn-list">
+    <li>Memorize the entire Quran with precision, confidence, and lasting retention</li>
+    <li>Master Tajweed for accurate and beautifully correct recitation throughout</li>
+    <li>Strengthen your spiritual bond with the eternal words of Allah</li>
+    <li>Gain the skills and honour to lead Tarawih prayers and teach others</li>
+    <li>Earn the prestigious lifelong title of Hafiz or Hafiza</li>
+    <li>Connect deeply with the Quran through understanding of what you memorize</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <h3>What You'll Learn</h3>
+  <ul class="learn-list">
+    <li>Complete memorization of the Quran using the structured sabaq, sabaqi &amp; manzil revision system</li>
+    <li>Effective memorization techniques for long-term retention using spaced repetition</li>
+    <li>Proper Tajweed application throughout every part of the memorization journey</li>
+    <li>Basic Tafsir of key passages to enhance understanding and strengthen connection</li>
+    <li>Confidence and fluency to recite and share the Quran with others</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <h3>Course Highlights</h3>
+  <div class="highlights-grid">
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_instructor.svg') }}" alt="Certified Scholars" class="hl-icon"/>
+      <h4>Certified Scholars</h4>
+      <p>Instructors with extensive Hifz and Tajweed experience and proven track records</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_curriculum.svg') }}" alt="Structured Plan" class="hl-icon"/>
+      <h4>Structured Plan</h4>
+      <p>Systematic progress from Juz Amma to the full Quran with daily tracking</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_feedback.svg') }}" alt="One-on-One Support" class="hl-icon"/>
+      <h4>One-on-One Support</h4>
+      <p>Personal feedback every session to ensure memorization accuracy and Tajweed</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_certificate.svg') }}" alt="Hifz Certificate" class="hl-icon"/>
+      <h4>Hifz Certificate</h4>
+      <p>Official Hifz Certificate awarded upon passing the comprehensive Hifz Exam</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-block">
+  <h3>Requirements &amp; Certification</h3>
+  <ul class="detail-list">
+    <li>A copy of the Quran in Uthmani script is recommended for memorization</li>
+    <li>Stable internet connection and a quiet, dedicated learning space</li>
+    <li>Commitment to daily revision &mdash; consistency is the key to successful Hifz</li>
+    <li>Pass the comprehensive Hifz Exam evaluating memorization accuracy and Tajweed</li>
+  </ul>
+</div>
+{% endblock %}
+
+{# ── Other Courses ── #}
+{% block other_courses %}
+  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed" class="oc-icon"/><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></a>
+  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation" class="oc-icon"/><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></a>
+  <a href="{{ url_for('course_qirat') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_qirat.svg') }}" alt="Qirat" class="oc-icon"/><h4>Qirat Course</h4><p>Master the 10 Qira'at styles</p></a>
+  <a href="{{ url_for('course_arabic') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic" class="oc-icon"/><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></a>
+  <a href="{{ url_for('course_urdu') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language" class="oc-icon"/><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English" class="oc-icon"/><h4>Basic English</h4><p>Speak English confidently</p></a>
+{% endblock %}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="10" fill="#0a3d33"/>
+  <!-- Two people / community / support -->
+  <circle cx="28" cy="28" r="12" fill="#c9a84c" opacity=".8"/>
+  <circle cx="52" cy="28" r="12" fill="#1a6b57" stroke="#c9a84c" stroke-width="2" opacity=".9"/>
+  <path d="M8 62 Q8 46 28 46 Q40 46 40 56" stroke="#c9a84c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M72 62 Q72 46 52 46 Q40 46 40 56" stroke="#f5dfa0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".6"/>
+  <!-- Plus / feedback symbol -->
+  <line x1="52" y1="22" x2="52" y2="34" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  <line x1="46" y1="28" x2="58" y2="28" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+</svg>

@@ -1,0 +1,95 @@
+{% extends "layouts/course_base.html" %}
+{% block title %}Basic Arabic Speaking Course | Al-Qur'an Global Institute{% endblock %}
+
+{# ── Sidebar variables ── #}
+{% set course_duration    = "3 Months" %}
+{% set course_schedule    = "5 Classes / Week" %}
+{% set course_eligibility = "All Beginners Welcome" %}
+{% set course_certificate = "Yes — Speaking Exam" %}
+
+{# ── Hero content ── #}
+{% block course_category %}Language Course{% endblock %}
+{% block course_icon %}<img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic Speaking" class="ch-icon"/>{% endblock %}
+{% block course_title %}Basic Arabic Speaking Course{% endblock %}
+{% block course_arabic %}&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x644;&#x63A;&#x629; &#x627;&#x644;&#x639;&#x631;&#x628;&#x64A;&#x629;{% endblock %}
+{% block course_tagline %}Unlock the Language of the Quran &mdash; speak basic Arabic in just 3 months with our intensive online conversational program.{% endblock %}
+{% block course_badges %}
+  <span class="ch-badge">3 Months</span>
+  <span class="ch-badge">Beginner</span>
+  <span class="ch-badge">5x / Week</span>
+  <span class="ch-badge">Certificate</span>
+{% endblock %}
+
+{# ── Main course body ── #}
+{% block course_body %}
+<div class="cb-quote">
+  <p>"Learning Arabic opens the gateway to the Quran's wisdom."</p>
+  <cite>&mdash; Al-Qur'an Global Institute</cite>
+</div>
+
+<p class="cb-intro">Embark on a foundational journey to speak basic Arabic with our Three-Month Online Basic Arabic Speaking Course. Tailored for beginners of all ages, this intensive program emphasizes conversational skills, everyday vocabulary, and simple grammar, with a focus on Quranic terms and Islamic contexts to enhance your spiritual learning. Delivered through engaging online sessions, you'll gain confidence in speaking Arabic quickly and effectively.</p>
+
+<div class="content-block">
+  <h3>What You'll Learn</h3>
+  <ul class="learn-list">
+    <li>Basic Pronunciation: Master the Arabic alphabet, sounds, and simple words from scratch</li>
+    <li>Conversational Basics: Greetings, self-introductions, asking questions, and describing daily routines</li>
+    <li>Everyday Vocabulary: Family, shopping, directions, time, and key Quranic terms such as salat and dua</li>
+    <li>Simple Grammar: Sentence structure, verbs, and adjectives for practical everyday use</li>
+    <li>Cultural Insights: Arabic customs and Islamic phrases used in English-speaking Muslim communities</li>
+    <li>Quranic Arabic: An introduction to common words and expressions found throughout the Quran</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <h3>Course Highlights</h3>
+  <div class="highlights-grid">
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_instructor.svg') }}" alt="Expert Instructors" class="hl-icon"/>
+      <h4>Expert Instructors</h4>
+      <p>Experienced Arabic speakers with language and Islamic studies teaching experience</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_interactive.svg') }}" alt="70% Speaking Focus" class="hl-icon"/>
+      <h4>70% Speaking Focus</h4>
+      <p>Role-playing, dialogues, and live conversations making up most of every class</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_curriculum.svg') }}" alt="12-Week Curriculum" class="hl-icon"/>
+      <h4>12-Week Curriculum</h4>
+      <p>Structured units: greetings, family, food, numbers, Quranic expressions and more</p>
+    </div>
+    <div class="hl-card">
+      <img src="{{ url_for('static', filename='images/hl_certificate.svg') }}" alt="Certification" class="hl-icon"/>
+      <h4>Certification</h4>
+      <p>Certificate with 70% attendance and passing a basic Arabic speaking assessment</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-block">
+  <h3>Why Learn Arabic?</h3>
+  <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;margin-bottom:1rem;">Arabic is the language of the Quran &mdash; learning it opens the door to understanding the divine message directly, without relying solely on translations. Even a basic foundation in Arabic will transform your experience of Salah, your reading of the Quran, and your connection to Islamic scholarship.</p>
+  <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;">This course is the ideal first step for anyone who wants to connect more deeply with Islamic knowledge and the global Muslim community.</p>
+</div>
+
+<div class="content-block">
+  <h3>Requirements &amp; Certification</h3>
+  <ul class="detail-list">
+    <li>No prior Arabic knowledge required &mdash; open to absolute beginners of all ages</li>
+    <li>Stable internet connection, a device with a microphone, and a notebook for practice</li>
+    <li>Maintain at least 70% attendance throughout the three-month program</li>
+    <li>Pass a final speaking exam demonstrating basic conversational Arabic proficiency</li>
+  </ul>
+</div>
+{% endblock %}
+
+{# ── Other Courses ── #}
+{% block other_courses %}
+  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed" class="oc-icon"/><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></a>
+  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation" class="oc-icon"/><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></a>
+  <a href="{{ url_for('course_hifz') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz" class="oc-icon"/><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></a>
+  <a href="{{ url_for('course_qirat') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_qirat.svg') }}" alt="Qirat" class="oc-icon"/><h4>Qirat Course</h4><p>Master the 10 Qira'at styles</p></a>
+  <a href="{{ url_for('course_urdu') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language" class="oc-icon"/><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English" class="oc-icon"/><h4>Basic English</h4><p>Speak English confidently</p></a>
+{% endblock %}

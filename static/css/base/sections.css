@@ -1,0 +1,44 @@
+/* ══════════════════════════════════════════════════════════
+   Al-Qur'an Global Institute — Section Base Styles
+   ══════════════════════════════════════════════════════════ */
+
+section { padding: 84px 8%; }
+
+.section-tag {
+  display: inline-block;
+  font-size: .7rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--teal-light);
+  margin-bottom: .78rem;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  color: var(--text-dark);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.section-title span { color: var(--teal-light); }
+
+.section-sub {
+  font-size: 1.02rem;
+  color: var(--text-mid);
+  line-height: 1.9;
+  max-width: 630px;
+  font-weight: 400;
+}
+
+.divider {
+  width: 55px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  margin: 1.38rem 0 2.5rem;
+  border-radius: 2px;
+}
+
+.center-hdr { text-align: center; }
+.center-hdr .section-sub,
+.center-hdr .divider { margin-left: auto; margin-right: auto; }
