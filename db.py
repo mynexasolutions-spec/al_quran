@@ -10,7 +10,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+_DATABASE_URL = os.environ.get('DATABASE_URL', '')
+# Vercel may deliver env vars as bytes; normalise to str
+if isinstance(_DATABASE_URL, bytes):
+    _DATABASE_URL = _DATABASE_URL.decode('utf-8')
+DATABASE_URL = _DATABASE_URL
 
 
 # ─────────────────────────────────────────────────────────────
@@ -23,8 +27,8 @@ def get_conn():
         host     = url.hostname,
         port     = url.port or 5432,
         dbname   = url.path.lstrip('/'),
-        user     = unquote(url.username),
-        password = unquote(url.password),
+        user     = unquote(url.username or ''),
+        password = unquote(url.password or ''),
         sslmode  = 'require',
         cursor_factory = psycopg2.extras.RealDictCursor
     )
