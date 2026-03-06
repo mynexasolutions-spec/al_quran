@@ -18,43 +18,52 @@ DATABASE_URL = _DATABASE_URL
 
 
 # ─────────────────────────────────────────────────────────────
-#  Connection helper — zero reliance on urlparse so that a
-#  literal/encoded '@' inside the password never confuses the
-#  parser (Vercel may pre-decode %40 → @).
-#
-#  Strategy: strip the scheme, then rsplit on the LAST '@' to
-#  split userinfo from hostinfo robustly.
+#  Connection helper
+#  - Guards against empty DATABASE_URL (env var not configured)
+#  - PRIMARY: passes the URI directly to psycopg2 which has its
+#    own RFC-3986 parser and handles %xx-encoded passwords.
+#  - FALLBACK: manual rsplit('@', 1) for literal-@ passwords.
 # ─────────────────────────────────────────────────────────────
 def get_conn():
-    raw = DATABASE_URL.strip()
+    raw = (DATABASE_URL or '').strip()
+    if not raw:
+        raise RuntimeError(
+            "DATABASE_URL is not set. "
+            "Add it in Vercel → Project Settings → Environment Variables."
+        )
 
-    # Remove scheme prefix (postgresql:// or postgres://)
-    rest = raw.split('://', 1)[-1]          # user:pass@host:port/db
+    # Ensure sslmode=require is present in the URI
+    db_url = raw
+    if 'sslmode=' not in db_url:
+        db_url += ('&' if '?' in db_url else '?') + 'sslmode=require'
 
-    # Split on the LAST '@' — handles passwords that contain '@'
+    # PRIMARY: psycopg2 native URI parser (handles %xx-encoding correctly)
+    try:
+        return psycopg2.connect(db_url, cursor_factory=psycopg2.extras.RealDictCursor)
+    except Exception:
+        pass  # fall through to manual parser
+
+    # FALLBACK: manual rsplit for literal-@ passwords that confuse URI parsers
+    rest = raw.split('://', 1)[-1]
+    if '?' in rest:
+        rest = rest.split('?', 1)[0]
     userinfo, hostinfo = rest.rsplit('@', 1)
-
-    # Extract user + password (password may itself contain ':')
-    user, password = userinfo.split(':', 1)
-
-    # Extract host[:port]/dbname
-    host_port, dbname = hostinfo.split('/', 1)
+    user, password     = userinfo.split(':', 1)
+    host_port, dbname  = hostinfo.split('/', 1)
     if ':' in host_port:
         host, port_str = host_port.rsplit(':', 1)
         port = int(port_str)
     else:
         host, port = host_port, 5432
-
-    conn = psycopg2.connect(
+    return psycopg2.connect(
         host     = host,
         port     = port,
         dbname   = dbname,
         user     = unquote(user),
         password = unquote(password),
         sslmode  = 'require',
-        cursor_factory = psycopg2.extras.RealDictCursor
+        cursor_factory = psycopg2.extras.RealDictCursor,
     )
-    return conn
 
 
 # ─────────────────────────────────────────────────────────────
