@@ -1,0 +1,123 @@
+{% extends "admin/base.html" %}
+{% block title %}Reviews | Admin{% endblock %}
+{% block topbar_title %}Reviews{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Student Reviews</h2>
+    <p>Approve or reject submitted reviews. Only approved reviews appear on the public website.</p>
+  </div>
+</div>
+
+<!-- Stats row -->
+<div class="adm-stat-row">
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ reviews|length }}</span>
+    <span class="adm-stat-lbl">Total Submitted</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num" style="color:#C9A84C">{{ pending_count }}</span>
+    <span class="adm-stat-lbl">Pending Approval</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num" style="color:#22B464">{{ reviews|selectattr('status','equalto','approved')|list|length }}</span>
+    <span class="adm-stat-lbl">Approved (Live)</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num" style="color:#e55">{{ reviews|selectattr('status','equalto','rejected')|list|length }}</span>
+    <span class="adm-stat-lbl">Rejected</span>
+  </div>
+</div>
+
+<!-- Reviews table -->
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Reviewer</th>
+        <th style="width:100px">Rating</th>
+        <th>Review</th>
+        <th style="width:130px">Status</th>
+        <th style="width:120px;text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rev in reviews %}
+      <tr id="rev-row-{{ rev.id }}">
+        <td class="adm-td-muted">{{ loop.index }}</td>
+        <td>
+          <div style="font-weight:700;color:var(--teal-dark)">{{ rev.name }}</div>
+          {% if rev.location %}<div class="adm-td-muted" style="font-size:.8rem">{{ rev.location }}</div>{% endif %}
+          {% if rev.course %}<div style="font-size:.78rem;color:var(--teal-light)">{{ rev.course }}</div>{% endif %}
+        </td>
+        <td>
+          <span style="color:var(--gold);letter-spacing:1px">{% for i in range(rev.rating) %}★{% endfor %}{% for i in range(5-rev.rating) %}<span style="opacity:.25">★</span>{% endfor %}</span>
+        </td>
+        <td style="max-width:340px">
+          <p style="font-size:.87rem;line-height:1.6;color:var(--text-body);margin:0">{{ rev.review_text }}</p>
+          <div class="adm-td-muted" style="font-size:.74rem;margin-top:.3rem">{{ rev.created_at.strftime('%d %b %Y') }}</div>
+        </td>
+        <td>
+          <span class="rev-adm-status rev-adm-status--{{ rev.status }}" id="rev-status-label-{{ rev.id }}">
+            {{ rev.status.title() }}
+          </span>
+        </td>
+        <td style="text-align:center">
+          <div class="adm-actions" style="justify-content:center">
+            {% if rev.status != 'approved' %}
+            <button class="adm-btn adm-btn--approve" title="Approve"
+                    onclick="setStatus({{ rev.id }}, 'approved')">&#10003;</button>
+            {% endif %}
+            {% if rev.status != 'rejected' %}
+            <button class="adm-btn adm-btn--reject" title="Reject"
+                    onclick="setStatus({{ rev.id }}, 'rejected')">&#10007;</button>
+            {% endif %}
+            <form method="post" action="{{ url_for('admin_review_delete', rid=rev.id) }}"
+                  onsubmit="return confirm('Delete this review permanently?');"
+                  style="display:inline">
+              <button type="submit" class="adm-btn adm-btn--delete" title="Delete">&#128465;</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center;padding:2.5rem;color:var(--text-light)">
+          No reviews submitted yet.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function setStatus(id, status) {
+  var row       = document.getElementById('rev-row-' + id);
+  var labelEl   = document.getElementById('rev-status-label-' + id);
+  var fd        = new FormData();
+  fd.append('status', status);
+
+  fetch('/admin/reviews/' + id + '/status', { method: 'POST', body: fd })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (data.ok) {
+        /* update label */
+        labelEl.className = 'rev-adm-status rev-adm-status--' + status;
+        labelEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        /* refresh action buttons */
+        var actionsDiv = row.querySelector('.adm-actions');
+        actionsDiv.innerHTML =
+          (status !== 'approved' ? '<button class="adm-btn adm-btn--approve" title="Approve" onclick="setStatus(' + id + ',\'approved\')">&#10003;</button>' : '') +
+          (status !== 'rejected' ? '<button class="adm-btn adm-btn--reject" title="Reject" onclick="setStatus(' + id + ',\'rejected\')">&#10007;</button>' : '') +
+          '<form method="post" action="/admin/reviews/' + id + '/delete" onsubmit="return confirm(\'Delete this review permanently?\');" style="display:inline"><button type="submit" class="adm-btn adm-btn--delete" title="Delete">&#128465;</button></form>';
+      }
+    });
+}
+</script>
+{% endblock %}

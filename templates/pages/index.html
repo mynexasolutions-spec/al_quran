@@ -12,7 +12,7 @@
       <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
       <div class="hero-inst">
         <strong>Al-Qur'an Global Institute</strong>
-        <span>Excellence in Quranic &amp; Language Education</span>
+        <span>Excellence in Islamic and Language Education</span>
       </div>
     </div>
 
@@ -22,7 +22,7 @@
 
     <span class="hero-arabic-sub">&#x648;&#x631;&#x62A;&#x644; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x62A;&#x631;&#x62A;&#x64A;&#x644;&#x627;</span>
 
-    <p>From Tajweed &amp; Hifz to Arabic, Urdu &amp; English &mdash; Al-Qur'an Global Institute offers world-class online courses to nurture your spiritual growth and language skills from anywhere in the world.</p>
+    <p>From Tajweed, Hifz &amp; Basic Islamic Education to Arabic, Urdu &amp; English &mdash; Al-Qur'an Global Institute offers world-class online courses to nurture your spiritual growth and language skills from anywhere in the world.</p>
 
     <div class="hero-btns">
       <a href="#courses" class="btn-primary">Explore Courses</a>
@@ -222,70 +222,90 @@
     <div class="divider"></div>
   </div>
 
+  <!-- Flash messages for review submission -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+      <div class="rev-flash rev-flash--{{ category }}">{{ message }}</div>
+    {% endfor %}{% endif %}
+  {% endwith %}
+
   <div class="reviews-carousel">
     <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews">&#8249;</button>
     <div class="reviews-track-outer" id="rev-track-outer">
       <div class="reviews-track" id="rev-track">
 
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">The Tajweed course transformed my recitation completely. The instructor's patience and detailed feedback made such a difference. JazakAllah Khair!</p>
-          <div class="reviewer">
-            <div class="ra">FA</div>
-            <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
+        {% if reviews %}
+          {% for rev in reviews %}
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">{% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}</div>
+            <p class="rt">{{ rev.review_text }}</p>
+            <div class="reviewer">
+              <div class="ra">{{ rev.name[:2].upper() }}</div>
+              <div>
+                <div class="rn">{{ rev.name }}</div>
+                <div class="rl">{{ rev.location }}{% if rev.location and rev.course %} &middot; {% endif %}{{ rev.course }}</div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
-          <div class="reviewer">
-            <div class="ra">KM</div>
-            <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
+          {% endfor %}
+        {% else %}
+          {# Fallback static reviews shown until DB has approved entries #}
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
+            <div class="reviewer">
+              <div class="ra">FA</div>
+              <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
+            </div>
           </div>
-        </div>
-
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
-          <div class="reviewer">
-            <div class="ra">ZR</div>
-            <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
+            <div class="reviewer">
+              <div class="ra">KM</div>
+              <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
+            </div>
           </div>
-        </div>
-
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
-          <div class="reviewer">
-            <div class="ra">NA</div>
-            <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
+            <div class="reviewer">
+              <div class="ra">ZR</div>
+              <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
+            </div>
           </div>
-        </div>
-
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
-          <div class="reviewer">
-            <div class="ra">OB</div>
-            <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
+            <div class="reviewer">
+              <div class="ra">NA</div>
+              <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
+            </div>
           </div>
-        </div>
-
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they're reciting &mdash; it has made them truly fall in love with learning.</p>
-          <div class="reviewer">
-            <div class="ra">SI</div>
-            <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
+            <div class="reviewer">
+              <div class="ra">OB</div>
+              <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
+            </div>
           </div>
-        </div>
+          <div class="review-card">
+            <div class="rq">&#x201C;</div>
+            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
+            <div class="reviewer">
+              <div class="ra">SI</div>
+              <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
+            </div>
+          </div>
+        {% endif %}
 
       </div>
     </div>
@@ -293,6 +313,109 @@
   </div>
 
   <div class="rev-dots" id="rev-dots"></div>
+
+  <!-- Share your review CTA -->
+  <div class="rev-submit-cta">
+    <p>Alhamdulillah — did we make a difference for you?</p>
+    <button type="button" id="openReviewModal" class="btn-primary">Share Your Review</button>
+  </div>
+</section>
+
+<!-- ══ REVIEW SUBMISSION MODAL ══ -->
+<div class="rev-modal-overlay" id="revModal" role="dialog" aria-modal="true" aria-labelledby="revModalTitle">
+  <div class="rev-modal">
+    <button class="rev-modal-close" id="revModalClose" aria-label="Close">&times;</button>
+    <div class="rev-modal-hdr">
+      <span class="section-tag">Share Your Experience</span>
+      <h2 id="revModalTitle">Leave a Review</h2>
+    </div>
+
+    <form method="post" action="{{ url_for('review_submit') }}" class="rev-modal-form">
+      <!-- Star rating -->
+      <div class="rev-star-row">
+        <label>Your Rating <span class="req">*</span></label>
+        <div class="rev-stars" id="revStars">
+          {% for i in range(1,6) %}
+          <button type="button" class="rev-star-btn" data-val="{{ i }}" aria-label="{{ i }} stars">&#9733;</button>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="rating" id="revRatingInput" value="5"/>
+      </div>
+
+      <div class="rev-modal-grid">
+        <div class="rmg">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="Your name" required/>
+        </div>
+        <div class="rmg">
+          <label>Location</label>
+          <input type="text" name="location" placeholder="City, Country"/>
+        </div>
+        <div class="rmg rmg--full">
+          <label>Course Taken</label>
+          <select name="course">
+            <option value="">Select a course (optional)</option>
+            <option>Tajweed Course</option>
+            <option>Quran Recitation</option>
+            <option>Quran Hifz Course</option>
+            <option>Qirat Course</option>
+            <option>Basic Arabic Speaking</option>
+            <option>Urdu Language Course</option>
+            <option>Basic English Course</option>
+            <option>Academic Subjects</option>
+          </select>
+        </div>
+        <div class="rmg rmg--full">
+          <label>Your Review <span class="req">*</span></label>
+          <textarea name="review_text" rows="4" placeholder="Share your experience with Al-Qur'an Global Institute..." required></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;padding:1rem;text-align:center;">Submit Review</button>
+      <p class="rev-modal-note">Your review will be visible after admin verification, insha'Allah.</p>
+    </form>
+  </div>
+</div>
+
+
+<!-- ══ COMPETITIONS PREVIEW ══ -->
+<section class="comp-preview" id="competitions">
+
+  <div class="center-hdr">
+    <span class="section-tag">Events &amp; Programs</span>
+    <h2 class="section-title">Our <span>Competitions</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">We regularly host exciting Islamic and Quranic competitions, open to learners worldwide. Showcase your skills, earn recognition, and grow with our community.</p>
+  </div>
+
+  <div class="comp-preview-grid">
+
+    {% for comp in featured_comps %}
+    <div class="comp-prev-card">
+      <div class="comp-prev-img-wrap comp-prev--{{ comp.color_theme or 'teal' }}">
+        {% if comp.image_url %}<img src="{{ comp.image_url }}" alt="{{ comp.title }}" class="comp-prev-img">{% endif %}
+      </div>
+      <div class="comp-prev-body">
+        <span class="comp-prev-cat">{{ comp.category }}</span>
+        <h3>{{ comp.title }}</h3>
+        <p>{{ comp.description[:120] ~ '…' if comp.description and comp.description|length > 120 else comp.description }}</p>
+        <div class="comp-prev-meta">
+          {% if comp.date_display %}<span class="badge">{{ comp.date_display }}</span>{% endif %}
+          <span class="comp-prev-status comp-prev--{{ comp.status }}">{{ STATUS_LABELS.get(comp.status, comp.status.title()) }}</span>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div style="grid-column:1/-1;text-align:center;color:var(--text-light);padding:2rem;">
+      Competitions coming soon, insha'Allah.
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="comp-preview-cta">
+    <a href="{{ url_for('competitions') }}" class="btn-primary">View All Competitions</a>
+  </div>
 </section>
 
 
@@ -424,4 +547,123 @@
   </div>
 </section>
 
+
+<!-- ══ SOCIAL MEDIA ══ -->
+<section class="social-media" id="social">
+  <div class="center-hdr">
+    <span class="section-tag">Stay Connected</span>
+    <h2 class="section-title">Follow Us on <span>Social Media</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">Stay updated with our latest courses, upcoming competitions, Islamic reminders, and student achievements. Join our growing global community online.</p>
+  </div>
+
+  <div class="social-grid">
+
+    <!-- Instagram -->
+    <a href="#" target="_blank" rel="noopener" class="social-card social-card--instagram">
+      <div class="social-card-bg"></div>
+      <div class="social-card-inner">
+        <div class="social-logo-wrap">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Instagram">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3>Instagram</h3>
+        <p>Daily Quranic verses, student spotlights, course highlights, and behind-the-scenes from our online classrooms.</p>
+        <span class="social-handle">@alquranglobalinstitute</span>
+        <div class="social-follow-btn">Follow Us</div>
+      </div>
+    </a>
+
+    <!-- Facebook -->
+    <a href="#" target="_blank" rel="noopener" class="social-card social-card--facebook">
+      <div class="social-card-bg"></div>
+      <div class="social-card-inner">
+        <div class="social-logo-wrap">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Facebook">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Facebook</h3>
+        <p>Join our community page for live session announcements, competition updates, Islamic articles, and parent resources.</p>
+        <span class="social-handle">Al-Qur'an Global Institute</span>
+        <div class="social-follow-btn">Like Page</div>
+      </div>
+    </a>
+
+    <!-- YouTube -->
+    <a href="#" target="_blank" rel="noopener" class="social-card social-card--youtube">
+      <div class="social-card-bg"></div>
+      <div class="social-card-inner">
+        <div class="social-logo-wrap">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="YouTube">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" stroke="currentColor" stroke-width="2"/>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>YouTube</h3>
+        <p>Free Tajweed tutorials, Quran recitation lessons, competition recordings, and inspiring Islamic education content.</p>
+        <span class="social-handle">Al-Qur'an Global Institute</span>
+        <div class="social-follow-btn">Subscribe</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var overlay   = document.getElementById('revModal');
+  var openBtn   = document.getElementById('openReviewModal');
+  var closeBtn  = document.getElementById('revModalClose');
+  var starBtns  = document.querySelectorAll('.rev-star-btn');
+  var ratingInp = document.getElementById('revRatingInput');
+
+  function openModal() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (openBtn)  openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  overlay && overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  /* Interactive star rating */
+  var selected = 5;
+  function paintStars(val) {
+    starBtns.forEach(function (btn) {
+      btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
+    });
+  }
+  paintStars(selected);
+  starBtns.forEach(function (btn) {
+    btn.addEventListener('mouseenter', function () { paintStars(parseInt(this.dataset.val)); });
+    btn.addEventListener('mouseleave', function () { paintStars(selected); });
+    btn.addEventListener('click', function () {
+      selected = parseInt(this.dataset.val);
+      if (ratingInp) ratingInp.value = selected;
+      paintStars(selected);
+    });
+  });
+
+  /* Auto-dismiss flash banners */
+  setTimeout(function () {
+    document.querySelectorAll('.rev-flash').forEach(function (el) {
+      el.style.transition = 'opacity .4s';
+      el.style.opacity = '0';
+      setTimeout(function () { el.remove(); }, 450);
+    });
+  }, 6000);
+})();
+</script>
 {% endblock %}

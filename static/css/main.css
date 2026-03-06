@@ -17,6 +17,7 @@
 /* ── Pages ── */
 @import url('pages/home.css');
 @import url('pages/course.css');
+@import url('pages/competitions.css');
 
 /* ── Utilities ── */
 @import url('animations.css');

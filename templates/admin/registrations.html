@@ -1,0 +1,119 @@
+{% extends "admin/base.html" %}
+{% block title %}Registrations | Admin{% endblock %}
+{% block topbar_title %}Registrations{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Registration Entries</h2>
+    <p>
+      {% if selected_comp %}
+        Showing registrations for <strong>{{ selected_comp.title }}</strong>.
+        <a href="{{ url_for('admin_registrations') }}">View all</a>
+      {% else %}
+        All competition registrations across every event.
+      {% endif %}
+    </p>
+  </div>
+  <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+    <!-- Filter by competition -->
+    <form method="get" style="display:flex;gap:.5rem;align-items:center;">
+      <select name="competition_id" class="adm-inline-sel" onchange="this.form.submit()">
+        <option value="">All Competitions</option>
+        {% for comp in competitions %}
+        <option value="{{ comp.id }}" {% if selected_id == comp.id %}selected{% endif %}>
+          {{ comp.title }}
+        </option>
+        {% endfor %}
+      </select>
+    </form>
+    <!-- Export -->
+    <a href="{{ url_for('admin_registrations_export') }}{% if selected_id %}?competition_id={{ selected_id }}{% endif %}"
+       class="btn-primary" style="white-space:nowrap;">
+      &#128196;&nbsp; Export Excel
+    </a>
+  </div>
+</div>
+
+<!-- Count strip -->
+<div class="adm-reg-strip">
+  <strong>{{ registrations|length }}</strong> registration{{ 's' if registrations|length != 1 else '' }} found
+</div>
+
+<!-- Table -->
+<div class="adm-table-wrap">
+  <table class="adm-table adm-table--reg">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Age</th>
+        <th>Country</th>
+        <th>Competition</th>
+        <th>Registered</th>
+        <th style="width:40px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reg in registrations %}
+      <tr class="adm-reg-row" data-id="{{ reg.id }}">
+        <td class="adm-td-muted">{{ loop.index }}</td>
+        <td><strong>{{ reg.name }}</strong></td>
+        <td><a href="mailto:{{ reg.email }}" class="adm-link">{{ reg.email }}</a></td>
+        <td>{{ reg.phone or '—' }}</td>
+        <td>{{ reg.age or '—' }}</td>
+        <td>{{ reg.country or '—' }}</td>
+        <td>
+          <a href="{{ url_for('admin_registrations', competition_id=reg.competition_id) }}" class="adm-cat-badge">
+            {{ reg.competition_title or '—' }}
+          </a>
+        </td>
+        <td class="adm-td-muted">{{ reg.created_at.strftime('%Y-%m-%d') if reg.created_at else '—' }}</td>
+        <td>
+          <button class="adm-btn adm-btn--view adm-expand-btn"
+                  data-id="{{ reg.id }}" title="View details">&#9660;</button>
+        </td>
+      </tr>
+      <!-- Expandable detail row -->
+      <tr class="adm-detail-row" id="detail-{{ reg.id }}" style="display:none;">
+        <td colspan="9">
+          <div class="adm-detail-box">
+            {% if reg.experience %}
+              <div><strong>Previous Experience:</strong> {{ reg.experience }}</div>
+            {% endif %}
+            {% if reg.notes %}
+              <div><strong>Additional Notes:</strong> {{ reg.notes }}</div>
+            {% endif %}
+            {% if not reg.experience and not reg.notes %}
+              <em class="adm-td-muted">No additional details provided.</em>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No registrations found.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.adm-expand-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var id       = btn.dataset.id;
+    var detailRow = document.getElementById('detail-' + id);
+    var isOpen   = detailRow.style.display !== 'none';
+    detailRow.style.display = isOpen ? 'none' : 'table-row';
+    btn.innerHTML = isOpen ? '&#9660;' : '&#9650;';
+  });
+});
+</script>
+{% endblock %}

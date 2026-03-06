@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Admin | Al-Qur'an Global Institute{% endblock %}</title>
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon"       href="{{ url_for('static', filename='images/favicon/favicon.ico') }}"/>
+  <link rel="icon" type="image/png" sizes="16x16"  href="{{ url_for('static', filename='images/favicon/favicon-16x16.png') }}"/>
+  <link rel="icon" type="image/png" sizes="32x32"  href="{{ url_for('static', filename='images/favicon/favicon-32x32.png') }}"/>
+  <link rel="apple-touch-icon" sizes="180x180"     href="{{ url_for('static', filename='images/favicon/apple-touch-icon.png') }}"/>
+  <link rel="manifest" href="{{ url_for('static', filename='images/favicon/site.webmanifest') }}"/>
+  <meta name="theme-color" content="#0A3D33"/>
+  <!-- Base styles only (no navbar/footer/page CSS) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/variables.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/reset.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/buttons.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/sections.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin.css') }}"/>
+</head>
+<body class="admin-body">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="adm-sidebar" id="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"/>
+      <div>
+        <strong>Al-Qur'an</strong>
+        <small>Admin Panel</small>
+      </div>
+    </div>
+
+    <nav class="adm-nav">
+      <a href="{{ url_for('admin_competitions') }}"
+         class="adm-nav-item {% if request.endpoint in ('admin_competitions','admin_dashboard','admin_competition_new','admin_competition_edit') %}active{% endif %}">
+        <span class="adm-nav-icon">&#127942;</span> Competitions
+      </a>
+      <a href="{{ url_for('admin_registrations') }}"
+         class="adm-nav-item {% if request.endpoint == 'admin_registrations' %}active{% endif %}">
+        <span class="adm-nav-icon">&#128203;</span> Registrations
+      </a>
+      <a href="{{ url_for('admin_reviews') }}"
+         class="adm-nav-item {% if request.endpoint == 'admin_reviews' %}active{% endif %}">
+        <span class="adm-nav-icon">&#11088;</span> Reviews
+        {% set pending = pending_reviews_count|default(0) %}
+        {% if pending > 0 %}<span class="adm-badge">{{ pending }}</span>{% endif %}
+      </a>
+      <div class="adm-nav-sep"></div>
+      <a href="{{ url_for('competitions') }}" target="_blank" class="adm-nav-item">
+        <span class="adm-nav-icon">&#127760;</span> View Site
+      </a>
+      <a href="{{ url_for('admin_logout') }}" class="adm-nav-item adm-logout">
+        <span class="adm-nav-icon">&#x2190;</span> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="adm-main">
+    <!-- Top bar -->
+    <header class="adm-topbar">
+      <button class="adm-menu-btn" id="adm-menu-btn" aria-label="Toggle menu">&#9776;</button>
+      <span class="adm-topbar-title">{% block topbar_title %}Admin{% endblock %}</span>
+      <span class="adm-topbar-user">&#128100; {{ session.get('admin_username', 'Admin') }}</span>
+    </header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="adm-flash-wrap">
+          {% for category, message in messages %}
+            <div class="adm-flash adm-flash--{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Page content -->
+    <div class="adm-content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('adm-menu-btn').addEventListener('click', function(){
+      document.getElementById('adm-sidebar').classList.toggle('open');
+    });
+    // Auto-hide flash messages
+    setTimeout(function(){
+      document.querySelectorAll('.adm-flash').forEach(function(el){
+        el.style.opacity='0';
+        setTimeout(function(){ el.remove(); }, 400);
+      });
+    }, 4000);
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,135 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'New Competition' if action=='new' else 'Edit Competition' }} | Admin{% endblock %}
+{% block topbar_title %}{{ 'New Competition' if action=='new' else 'Edit: ' ~ competition.title[:30] }}{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>{{ 'Create New Competition' if action=='new' else 'Edit Competition' }}</h2>
+    <p>{{ 'Fill in the details below to publish a new competition.' if action=='new' else 'Update the details and save.' }}</p>
+  </div>
+  <a href="{{ url_for('admin_competitions') }}" class="adm-btn adm-btn--secondary">&#8592; Back</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="adm-form-card">
+
+  <!-- Row 1: Title + Category -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Competition Title <span class="adm-req">*</span></label>
+      <input type="text" name="title" placeholder="e.g. International Qirat Competition" required
+             value="{{ competition.title if competition else '' }}"/>
+    </div>
+    <div class="adm-fg">
+      <label>Category <span class="adm-req">*</span></label>
+      <select name="category">
+        {% set cats = ['Quranic Studies','Islamic Knowledge','Quran Memorization','Arabic Language','Islamic Writing','Other'] %}
+        {% for cat in cats %}
+        <option value="{{ cat }}" {% if competition and competition.category == cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="adm-fg">
+    <label>Description</label>
+    <textarea name="description" rows="4" placeholder="Describe the competition in detail...">{{ competition.description if competition else '' }}</textarea>
+  </div>
+
+  <!-- Row 2: Date + Status -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Date Display</label>
+      <input type="text" name="date_display" placeholder="e.g. April 20, 2026 or Mar 1 – Apr 30, 2026"
+             value="{{ competition.date_display if competition else '' }}"/>
+      <small class="adm-hint">Free-text shown on cards (e.g. "May 10, 2026" or "Ongoing – Apr 2026")</small>
+    </div>
+    <div class="adm-fg">
+      <label>Status <span class="adm-req">*</span></label>
+      <select name="status" class="adm-status-sel--form" id="form-status-sel">
+        {% for key, label in STATUS_LABELS.items() %}
+        <option value="{{ key }}" {% if competition and competition.status == key %}selected{% elif not competition and key=='upcoming' %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Row 3: Location + Age Group -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Location</label>
+      <input type="text" name="location" placeholder="Online — Worldwide"
+             value="{{ competition.location if competition else 'Online — Worldwide' }}"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Age Group</label>
+      <input type="text" name="age_group" placeholder="All Ages"
+             value="{{ competition.age_group if competition else 'All Ages' }}"/>
+    </div>
+  </div>
+
+  <!-- Row 4: Prize + Tags -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Prize / Reward</label>
+      <input type="text" name="prize" placeholder="Certificate & Cash Prize"
+             value="{{ competition.prize if competition else '' }}"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Tags</label>
+      <input type="text" name="tags" placeholder="Recitation, Advanced, Ijazah Path"
+             value="{{ competition.tags_str if competition else '' }}"/>
+      <small class="adm-hint">Comma-separated tags shown as badges</small>
+    </div>
+  </div>
+
+  <!-- Row 5: Icon + Color Theme -->
+  <div class="adm-form-row">
+    <div class="adm-fg">
+      <label>Icon (Emoji)</label>
+      <input type="text" name="icon" placeholder="🏆" maxlength="8"
+             value="{{ competition.icon if competition else '🏆' }}" class="adm-icon-input"/>
+      <small class="adm-hint">Single emoji displayed on the card header</small>
+    </div>
+    <div class="adm-fg">
+      <label>Card Color Theme</label>
+      <select name="color_theme">
+        <option value="teal"  {% if competition and competition.color_theme=='teal'  %}selected{% elif not competition %}selected{% endif %}>Teal (Quranic)</option>
+        <option value="gold"  {% if competition and competition.color_theme=='gold'  %}selected{% endif %}>Gold (Islamic Knowledge)</option>
+        <option value="green" {% if competition and competition.color_theme=='green' %}selected{% endif %}>Green (Tajweed)</option>
+        <option value="grey"  {% if competition and competition.color_theme=='grey'  %}selected{% endif %}>Grey (Completed)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Image upload -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Banner Image Upload (Cloudinary)</label>
+      <input type="file" name="image" accept="image/*" class="adm-file-input"/>
+      <small class="adm-hint">Upload a new image — this replaces the current one.</small>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Image URL</label>
+      <input type="url" name="image_url" placeholder="https://... (leave blank if uploading above)"
+             value="{{ competition.image_url if competition else '' }}"/>
+    </div>
+  </div>
+
+  {% if competition and competition.image_url %}
+  <div class="adm-current-img">
+    <span>Current Image:</span>
+    <img src="{{ competition.image_url }}" alt="Competition Banner"/>
+  </div>
+  {% endif %}
+
+  <div class="adm-form-footer">
+    <a href="{{ url_for('admin_competitions') }}" class="adm-btn adm-btn--secondary">Cancel</a>
+    <button type="submit" class="btn-primary">
+      {% if action == 'new' %}&#10024;&nbsp; Create Competition{% else %}&#9998;&nbsp; Save Changes{% endif %}
+    </button>
+  </div>
+
+</form>
+{% endblock %}

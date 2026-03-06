@@ -1,0 +1,126 @@
+{% extends "admin/base.html" %}
+{% block title %}Competitions | Admin{% endblock %}
+{% block topbar_title %}Competitions{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Competitions</h2>
+    <p>Create, edit, and manage all competitions. Changes reflect live on the public site.</p>
+  </div>
+  <a href="{{ url_for('admin_competition_new') }}" class="btn-primary">
+    &#43;&nbsp; New Competition
+  </a>
+</div>
+
+<!-- Stats row -->
+<div class="adm-stat-row">
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ competitions|length }}</span>
+    <span class="adm-stat-lbl">Total Competitions</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ competitions|selectattr('status','equalto','upcoming')|list|length }}</span>
+    <span class="adm-stat-lbl">Upcoming</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ competitions|selectattr('status','equalto','ongoing')|list|length }}</span>
+    <span class="adm-stat-lbl">Ongoing</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ total_regs }}</span>
+    <span class="adm-stat-lbl">Total Registrations</span>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Competition</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th style="width:80px;text-align:center">Registrations</th>
+        <th style="width:200px;text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for comp in competitions %}
+      <tr id="comp-row-{{ comp.id }}">
+        <td class="adm-td-muted">{{ loop.index }}</td>
+        <td>
+          <div class="adm-comp-title">{{ comp.icon or '🏆' }} {{ comp.title }}</div>
+        </td>
+        <td><span class="adm-cat-badge">{{ comp.category }}</span></td>
+        <td class="adm-td-muted">{{ comp.date_display or '—' }}</td>
+        <td>
+          <!-- Status dropdown (submits via AJAX) -->
+          <form class="adm-status-form" data-id="{{ comp.id }}">
+            <select class="adm-status-sel adm-status--{{ comp.status }}" name="status" title="Change status">
+              {% for key, label in STATUS_LABELS.items() %}
+              <option value="{{ key }}" {% if comp.status == key %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+        <td style="text-align:center">
+          <a href="{{ url_for('admin_registrations', competition_id=comp.id) }}" class="adm-reg-count">
+            {{ comp.reg_count }}
+          </a>
+        </td>
+        <td style="text-align:center">
+          <div class="adm-actions">
+            <a href="{{ url_for('admin_competition_edit', cid=comp.id) }}" class="adm-btn adm-btn--edit" title="Edit">
+              &#9998;
+            </a>
+            <a href="{{ url_for('competitions') }}#comp-{{ comp.id }}" target="_blank"
+               class="adm-btn adm-btn--view" title="View on site">
+              &#128065;
+            </a>
+            <form method="post" action="{{ url_for('admin_competition_delete', cid=comp.id) }}"
+                  onsubmit="return confirm('Delete \'{{ comp.title }}\' and all its registrations? This cannot be undone.')">
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete">&#x1F5D1;</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No competitions yet. <a href="{{ url_for('admin_competition_new') }}">Create one.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Inline status AJAX
+document.querySelectorAll('.adm-status-form select').forEach(function(sel){
+  sel.addEventListener('change', function(){
+    var form  = sel.closest('.adm-status-form');
+    var id    = form.dataset.id;
+    var fd    = new FormData();
+    fd.append('status', sel.value);
+
+    fetch('/admin/competitions/' + id + '/status', { method: 'POST', body: fd })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        sel.className = 'adm-status-sel adm-status--' + data.status;
+        // brief flash
+        var row = document.getElementById('comp-row-' + id);
+        row.style.background = 'rgba(201,168,76,0.12)';
+        setTimeout(function(){ row.style.background = ''; }, 1000);
+      })
+      .catch(function(){ alert('Status update failed.'); sel.value = sel.dataset.old; });
+  });
+  sel.dataset.old = sel.value;
+});
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login | Al-Qur'an Global Institute</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin.css') }}"/>
+</head>
+<body class="admin-body adm-login-body">
+
+  <div class="adm-login-card">
+    <div class="adm-login-logo">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
+    </div>
+    <h1>Admin Panel</h1>
+    <p class="adm-login-sub">Al-Qur'an Global Institute</p>
+
+    {% if error %}
+      <div class="adm-flash adm-flash--error" style="margin-bottom:1.2rem;">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="adm-login-form">
+      <div class="adm-fg">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="admin" required autofocus/>
+      </div>
+      <div class="adm-fg">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••••" required/>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:.85rem;">
+        &#128274;&nbsp; Sign In
+      </button>
+    </form>
+
+    <a href="{{ url_for('index') }}" class="adm-back-link">&#8592; Back to Website</a>
+  </div>
+
+</body>
+</html>

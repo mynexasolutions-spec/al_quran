@@ -1,0 +1,139 @@
+{% extends "layouts/base.html" %}
+{% block title %}Register — {{ competition.title }} | Al-Qur'an Global Institute{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ══ -->
+<section class="reg-hero">
+  <div class="reg-hero-wm">&#x62A;&#x633;&#x62C;&#x64A;&#x644;</div>
+  <div class="reg-hero-content">
+    <a href="{{ url_for('competitions') }}" class="reg-back-link">&#8592; Back to Competitions</a>
+    <span class="section-tag" style="color:var(--gold-light)">Registration Form</span>
+    <h1 class="reg-hero-title">{{ competition.icon or '🏆' }}&nbsp; {{ competition.title }}</h1>
+    <div class="divider" style="margin:1rem auto 1.4rem;"></div>
+    <div class="reg-comp-meta">
+      {% if competition.date_display %}
+        <span class="reg-meta-item">&#128197; {{ competition.date_display }}</span>
+      {% endif %}
+      <span class="reg-meta-item">&#127759; {{ competition.location or 'Online' }}</span>
+      <span class="reg-meta-item">&#128101; {{ competition.age_group or 'All Ages' }}</span>
+      {% if competition.prize %}
+        <span class="reg-meta-item">&#127942; {{ competition.prize }}</span>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FORM / SUCCESS ══ -->
+<section class="reg-section">
+
+  {% if success %}
+  <!-- ── Success state ── -->
+  <div class="reg-success-wrap">
+    <div class="reg-success-icon">&#10004;</div>
+    <h2>Registration Received!</h2>
+    <p>JazakAllah Khair! Your registration for <strong>{{ competition.title }}</strong> has been successfully submitted. We will contact you with further details soon, insha'Allah.</p>
+    <div class="reg-success-btns">
+      <a href="{{ url_for('competitions') }}" class="btn-primary">Browse More Competitions</a>
+      <a href="{{ url_for('index') }}#contact" class="btn-outline">Contact Us</a>
+    </div>
+  </div>
+
+  {% else %}
+  <!-- ── Registration form ── -->
+  <div class="reg-form-wrap">
+    <div class="reg-form-info">
+      <h3>About This Competition</h3>
+      <p>{{ competition.description }}</p>
+      {% if competition.tags %}
+        <div class="reg-tags">
+          {% for tag in competition.tags %}
+            <span class="badge">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <div class="reg-info-divider"></div>
+      <h4>What happens next?</h4>
+      <ul class="reg-steps-list">
+        <li>We review your registration and email you a confirmation</li>
+        <li>Full competition guidelines are shared before the event</li>
+        <li>You receive the schedule and participation link / instructions</li>
+        <li>Compete &amp; receive your certificate upon participation</li>
+      </ul>
+    </div>
+
+    <div class="reg-form-col">
+      <h3>Your Details</h3>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="reg-flash reg-flash--{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('register_submit', cid=competition.id) }}" class="reg-form">
+
+        <div class="form-row">
+          <div class="fg">
+            <label>Full Name <span style="color:var(--gold)">*</span></label>
+            <input type="text" name="name" placeholder="Your full name" required/>
+          </div>
+          <div class="fg">
+            <label>Email Address <span style="color:var(--gold)">*</span></label>
+            <input type="email" name="email" placeholder="your@email.com" required/>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="fg">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/>
+          </div>
+          <div class="fg">
+            <label>Age</label>
+            <select name="age">
+              <option value="">Select Age Group</option>
+              <option>Under 8</option>
+              <option>8–11 years</option>
+              <option>12–15 years</option>
+              <option>16–18 years</option>
+              <option>19–25 years</option>
+              <option>26+ (Adult)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Country</label>
+          <input type="text" name="country" placeholder="Your country of residence"/>
+        </div>
+
+        <div class="fg">
+          <label>Previous Experience</label>
+          <textarea name="experience" rows="3"
+            placeholder="Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)..."></textarea>
+        </div>
+
+        <div class="fg">
+          <label>Additional Notes</label>
+          <textarea name="notes" rows="2"
+            placeholder="Any questions or special requirements?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary"
+                style="width:100%;padding:1rem 1.5rem;justify-content:center;font-size:1rem;">
+          &#10022;&nbsp; Submit Registration
+        </button>
+
+        <p style="font-size:.78rem;color:var(--gold-light);text-align:center;margin-top:.8rem;opacity:.85;">
+          Your information is kept private and only used for competition coordination.
+        </p>
+
+      </form>
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}

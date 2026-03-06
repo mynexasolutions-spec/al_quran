@@ -1,0 +1,364 @@
+{% extends "layouts/base.html" %}
+{% block title %}Competitions | Al-Qur'an Global Institute{% endblock %}
+
+{% block content %}
+
+<!-- ══ PAGE HERO ══ -->
+<section class="comp-hero">
+  <div class="comp-hero-wm">&#x645;&#x633;&#x627;&#x628;&#x642;&#x629;</div>
+  <div class="comp-hero-content">
+    <span class="section-tag" style="color:var(--gold-light)">Events &amp; Programs</span>
+    <h1 class="comp-hero-title">Our <span>Competitions</span></h1>
+    <div class="divider" style="margin-left:auto;margin-right:auto;"></div>
+    <p>At Al-Qur&rsquo;an Global Institute, we regularly host competitions to inspire excellence, celebrate talent, and strengthen our global community of learners. From Quranic recitation to Islamic knowledge, every competition is an opportunity to grow in faith and skill.</p>
+    <a href="#all-competitions" class="btn-primary" style="margin-top:1.6rem;display:inline-block;">View All Competitions</a>
+  </div>
+</section>
+
+
+<!-- ══ COMPETITIONS OVERVIEW STATS ══ -->
+<section class="comp-stats-bar">
+  <div class="comp-stat">
+    <span class="comp-stat-num">10+</span>
+    <span class="comp-stat-lbl">Competitions Hosted</span>
+  </div>
+  <div class="comp-stat">
+    <span class="comp-stat-num">300+</span>
+    <span class="comp-stat-lbl">Participants Worldwide</span>
+  </div>
+  <div class="comp-stat">
+    <span class="comp-stat-num">30+</span>
+    <span class="comp-stat-lbl">Countries Represented</span>
+  </div>
+  <div class="comp-stat">
+    <span class="comp-stat-num">6</span>
+    <span class="comp-stat-lbl">Active Categories</span>
+  </div>
+</section>
+
+
+<!-- ══ ALL COMPETITIONS ══ -->
+<section class="comp-all" id="all-competitions">
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+      <div class="reg-flash-banner reg-flash-banner--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}  
+  <div class="center-hdr">
+    <span class="section-tag">All Events</span>
+    <h2 class="section-title">Open &amp; Upcoming <span>Competitions</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">Participate in our prestigious competitions, open to all enrolled and non-enrolled students worldwide. Join us, sharpen your skills, and win recognition for your dedication.</p>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="comp-filters">
+    <button class="comp-filter active" data-filter="all">All</button>
+    <button class="comp-filter" data-filter="upcoming">Upcoming</button>
+    <button class="comp-filter" data-filter="ongoing">Ongoing</button>
+    <button class="comp-filter" data-filter="completed">Completed</button>
+  </div>
+
+  <div class="comp-grid" id="comp-grid">
+
+    {% for comp in competitions %}
+    <div class="comp-card" id="comp-{{ comp.id }}" data-status="{{ comp.status }}">
+      <div class="comp-card-top {{ THEME_MAP.get(comp.color_theme, 'comp-top--teal') }}">
+        {% if comp.image_url %}
+        <img src="{{ comp.image_url }}" alt="{{ comp.title }}" class="comp-card-img">
+        {% endif %}
+        <span class="comp-status-badge {{ BADGE_MAP.get(comp.status, 'comp-badge--upcoming') }}">
+          {{ STATUS_LABELS.get(comp.status, comp.status.title()) }}
+        </span>
+      </div>
+      <div class="comp-card-body">
+        <span class="comp-cat">{{ comp.category }}</span>
+        <h3>{{ comp.title }}</h3>
+        <p>{{ comp.description }}</p>
+        <div class="comp-details">
+          {% if comp.date_display %}
+          <div class="comp-detail-item">
+            <span class="comp-detail-icon">📅</span>
+            <span>{{ comp.date_display }}</span>
+          </div>
+          {% endif %}
+          {% if comp.location %}
+          <div class="comp-detail-item">
+            <span class="comp-detail-icon">🌍</span>
+            <span>{{ comp.location }}</span>
+          </div>
+          {% endif %}
+          {% if comp.age_group %}
+          <div class="comp-detail-item">
+            <span class="comp-detail-icon">👥</span>
+            <span>{{ comp.age_group }}</span>
+          </div>
+          {% endif %}
+          {% if comp.prize %}
+          <div class="comp-detail-item">
+            <span class="comp-detail-icon">🏆</span>
+            <span>{{ comp.prize }}</span>
+          </div>
+          {% endif %}
+        </div>
+        {% if comp.tags %}
+        <div class="comp-tags">
+          {% for tag in comp.tags %}
+          <span class="badge">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if comp.status == 'completed' %}
+        <span class="comp-cta comp-cta--disabled">Competition Ended</span>
+        {% else %}
+        <button type="button" class="comp-cta btn-primary comp-register-btn"
+                data-cid="{{ comp.id }}" data-title="{{ comp.title }}">
+          Register Now
+        </button>
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light);">
+      No competitions available at the moment. Check back soon, insha'Allah.
+    </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+
+<!-- ══ HOW TO PARTICIPATE ══ -->
+<section class="comp-how" id="how-to-participate">
+  <div class="comp-how-inner">
+    <div>
+      <span class="section-tag">Simple Steps</span>
+      <h2 class="section-title">How to <span>Participate</span></h2>
+      <div class="divider"></div>
+      <p class="section-sub">Joining our competitions is straightforward. Follow these steps to register and compete with learners worldwide.</p>
+    </div>
+
+    <div class="comp-steps">
+      <div class="comp-step">
+        <div class="comp-step-num">01</div>
+        <div>
+          <h4>Choose Your Competition</h4>
+          <p>Browse the competitions above and find one that matches your skill &mdash; Qirat, Quiz, Tajweed, Hifz, Calligraphy, or Essay.</p>
+        </div>
+      </div>
+      <div class="comp-step">
+        <div class="comp-step-num">02</div>
+        <div>
+          <h4>Click &ldquo;Register Now&rdquo;</h4>
+          <p>Each competition card has a dedicated registration form. Fill in your details and submit &mdash; you&rsquo;ll receive a confirmation message instantly, insha&rsquo;Allah.</p>
+        </div>
+      </div>
+      <div class="comp-step">
+        <div class="comp-step-num">03</div>
+        <div>
+          <h4>Prepare &amp; Perform</h4>
+          <p>Follow the provided rubric to prepare. All competitions are conducted online via video or submission &mdash; participate from anywhere in the world.</p>
+        </div>
+      </div>
+      <div class="comp-step">
+        <div class="comp-step-num">04</div>
+        <div>
+          <h4>Receive Your Award</h4>
+          <p>Winners and outstanding participants receive digital certificates, prizes, and recognition on our platform and social media channels.</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="{{ url_for('index') }}#contact" class="btn-primary" style="margin-top:2rem;display:inline-flex;align-items:center;gap:.55rem;">&#128231;&nbsp; Register Your Interest</a>
+  </div>
+</section>
+
+
+<!-- ══ PRIZES & RECOGNITION ══ -->
+<section class="comp-prizes">
+  <div class="center-hdr">
+    <span class="section-tag">Rewards</span>
+    <h2 class="section-title">Prizes &amp; <span>Recognition</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">We celebrate every participant&rsquo;s effort, with special honours for those who excel at the top.</p>
+  </div>
+
+  <div class="comp-prizes-grid">
+    <div class="prize-card prize-card--gold">
+      <div class="prize-medal">&#129351;</div>
+      <h4>1st Place</h4>
+      <ul>
+        <li>Gold Medal &amp; Trophy</li>
+        <li>Cash Prize</li>
+        <li>Official Certificate</li>
+        <li>Feature on Institute Website</li>
+        <li>Free Course Enrollment (1 month)</li>
+      </ul>
+    </div>
+    <div class="prize-card prize-card--silver">
+      <div class="prize-medal">&#129352;</div>
+      <h4>2nd Place</h4>
+      <ul>
+        <li>Silver Medal</li>
+        <li>Certificate of Excellence</li>
+        <li>Course Discount Voucher</li>
+        <li>Social Media Recognition</li>
+      </ul>
+    </div>
+    <div class="prize-card prize-card--bronze">
+      <div class="prize-medal">&#129353;</div>
+      <h4>3rd Place</h4>
+      <ul>
+        <li>Bronze Medal</li>
+        <li>Certificate of Merit</li>
+        <li>Social Media Recognition</li>
+      </ul>
+    </div>
+    <div class="prize-card prize-card--part">
+      <div class="prize-medal">&#127970;</div>
+      <h4>All Participants</h4>
+      <ul>
+        <li>Digital Participation Certificate</li>
+        <li>Community Recognition</li>
+        <li>Feedback from Expert Panel</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ CTA BANNER ══ -->
+<section class="comp-cta-banner">
+  <div class="comp-cta-banner-inner">
+    <h2>Ready to Compete?</h2>
+    <p>Join hundreds of students from around the world and let your skills shine. Contact us today to register for an upcoming competition, insha&rsquo;Allah.</p>
+    <div class="comp-cta-btns">
+      <a href="{{ url_for('index') }}#contact" class="btn-primary">&#128231;&nbsp; Register Now</a>
+      <a href="https://wa.me/918226970167" target="_blank" rel="noopener" class="btn-outline" style="border-color:rgba(255,255,255,0.6);color:var(--white);">&#128172;&nbsp; WhatsApp Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REGISTRATION MODAL ══ -->
+<div class="reg-modal-overlay" id="regModal" role="dialog" aria-modal="true" aria-labelledby="regModalTitle">
+  <div class="reg-modal">
+    <button class="reg-modal-close" id="regModalClose" aria-label="Close">&times;</button>
+    <div class="reg-modal-hdr">
+      <span class="section-tag">Competition Registration</span>
+      <h2 class="reg-modal-comp-title" id="regModalTitle"></h2>
+    </div>
+    <form id="regModalForm" method="post" action="">
+      <div class="reg-modal-grid">
+        <div class="rmg">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="Your full name" required/>
+        </div>
+        <div class="rmg">
+          <label>Email Address <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="your@email.com" required/>
+        </div>
+        <div class="rmg">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/>
+        </div>
+        <div class="rmg">
+          <label>Age Group</label>
+          <select name="age">
+            <option value="">Select Age Group</option>
+            <option>Under 8</option>
+            <option>8–11 years</option>
+            <option>12–15 years</option>
+            <option>16–18 years</option>
+            <option>19–25 years</option>
+            <option>26+ (Adult)</option>
+          </select>
+        </div>
+        <div class="rmg rmg--full">
+          <label>Country</label>
+          <input type="text" name="country" placeholder="Your country of residence"/>
+        </div>
+        <div class="rmg rmg--full">
+          <label>Previous Experience</label>
+          <textarea name="experience" rows="3" placeholder="Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)..."></textarea>
+        </div>
+        <div class="rmg rmg--full">
+          <label>Additional Notes</label>
+          <textarea name="notes" rows="2" placeholder="Any questions or special requirements?"></textarea>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;text-align:center;padding:1rem;">Submit Registration</button>
+      <p class="reg-modal-privacy">Your information is kept private and only used for competition coordination.</p>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  /* ── Filter tabs ── */
+  const filters = document.querySelectorAll('.comp-filter');
+  const cards   = document.querySelectorAll('.comp-card');
+
+  filters.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      filters.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+
+      var filter = btn.dataset.filter;
+      cards.forEach(function (card) {
+        if (filter === 'all' || card.dataset.status === filter) {
+          card.style.display = '';
+          card.style.animation = 'fadeUp .45s ease both';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  /* ── Registration modal ── */
+  var overlay  = document.getElementById('regModal');
+  var form     = document.getElementById('regModalForm');
+  var titleEl  = document.getElementById('regModalTitle');
+  var closeBtn = document.getElementById('regModalClose');
+
+  function openModal(cid, title) {
+    titleEl.textContent = title;
+    form.action = '/competitions/' + cid + '/register';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    overlay.querySelector('input[name="name"]').focus();
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.comp-register-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openModal(this.dataset.cid, this.dataset.title);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  /* Auto-dismiss flash banners */
+  setTimeout(function () {
+    document.querySelectorAll('.reg-flash-banner').forEach(function (el) {
+      el.style.transition = 'opacity .4s';
+      el.style.opacity = '0';
+      setTimeout(function () { el.remove(); }, 450);
+    });
+  }, 5000);
+})();
+</script>
+{% endblock %}
