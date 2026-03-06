@@ -18,17 +18,39 @@ DATABASE_URL = _DATABASE_URL
 
 
 # ─────────────────────────────────────────────────────────────
-#  Connection helper  — parses the URL manually so special
-#  characters in passwords (like @) are handled correctly.
+#  Connection helper — zero reliance on urlparse so that a
+#  literal/encoded '@' inside the password never confuses the
+#  parser (Vercel may pre-decode %40 → @).
+#
+#  Strategy: strip the scheme, then rsplit on the LAST '@' to
+#  split userinfo from hostinfo robustly.
 # ─────────────────────────────────────────────────────────────
 def get_conn():
-    url    = urlparse(DATABASE_URL)
-    conn   = psycopg2.connect(
-        host     = url.hostname,
-        port     = url.port or 5432,
-        dbname   = url.path.lstrip('/'),
-        user     = unquote(url.username or ''),
-        password = unquote(url.password or ''),
+    raw = DATABASE_URL.strip()
+
+    # Remove scheme prefix (postgresql:// or postgres://)
+    rest = raw.split('://', 1)[-1]          # user:pass@host:port/db
+
+    # Split on the LAST '@' — handles passwords that contain '@'
+    userinfo, hostinfo = rest.rsplit('@', 1)
+
+    # Extract user + password (password may itself contain ':')
+    user, password = userinfo.split(':', 1)
+
+    # Extract host[:port]/dbname
+    host_port, dbname = hostinfo.split('/', 1)
+    if ':' in host_port:
+        host, port_str = host_port.rsplit(':', 1)
+        port = int(port_str)
+    else:
+        host, port = host_port, 5432
+
+    conn = psycopg2.connect(
+        host     = host,
+        port     = port,
+        dbname   = dbname,
+        user     = unquote(user),
+        password = unquote(password),
         sslmode  = 'require',
         cursor_factory = psycopg2.extras.RealDictCursor
     )
