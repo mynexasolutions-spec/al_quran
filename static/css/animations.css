@@ -15,7 +15,18 @@
 .hero-arabic-sub  { animation-delay: .37s; }
 .hero p           { animation-delay: .47s; }
 .hero-btns        { animation-delay: .57s; }
-.hero-stats       { animation-delay: .72s; }
+
+/* Stats Strip */
+.stats-numbers .stat { animation: fadeUp .7s ease both; }
+.stats-numbers .stat:nth-child(1) { animation-delay: .05s; }
+.stats-numbers .stat:nth-child(2) { animation-delay: .15s; }
+.stats-numbers .stat:nth-child(3) { animation-delay: .25s; }
+.stats-numbers .stat:nth-child(4) { animation-delay: .35s; }
+.stats-trust-bar .trust-item { animation: fadeUp .6s ease both; }
+.stats-trust-bar .trust-item:nth-child(1) { animation-delay: .4s; }
+.stats-trust-bar .trust-item:nth-child(2) { animation-delay: .5s; }
+.stats-trust-bar .trust-item:nth-child(3) { animation-delay: .6s; }
+.stats-trust-bar .trust-item:nth-child(4) { animation-delay: .7s; }
 
 /* Course Hero */
 .ch-inner > * { animation: fadeUp .75s ease both; }

@@ -29,25 +29,6 @@
       <a href="#contact" class="btn-outline">Contact Us</a>
     </div>
 
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-num">500+</span>
-        <span class="stat-label">Students Enrolled</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">8</span>
-        <span class="stat-label">Expert Courses</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">30+</span>
-        <span class="stat-label">Countries Reached</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">4.9&#9733;</span>
-        <span class="stat-label">Average Rating</span>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -64,7 +45,7 @@
   <div class="courses-grid">
 
     <a href="{{ url_for('course_tajweed') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Quranic Studies</span>
         <h3>Tajweed Course</h3>
@@ -79,7 +60,7 @@
     </a>
 
     <a href="{{ url_for('course_quran_recitation') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Quranic Studies</span>
         <h3>Quran Recitation</h3>
@@ -94,7 +75,7 @@
     </a>
 
     <a href="{{ url_for('course_hifz') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Quranic Studies</span>
         <h3>Quran Hifz Course</h3>
@@ -109,7 +90,7 @@
     </a>
 
     <a href="{{ url_for('course_qirat') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_qirat.svg') }}" alt="Qirat Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Quranic Studies</span>
         <h3>Qirat Course</h3>
@@ -124,7 +105,7 @@
     </a>
 
     <a href="{{ url_for('course_arabic') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic Speaking Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic Speaking Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Language</span>
         <h3>Basic Arabic Speaking</h3>
@@ -139,7 +120,7 @@
     </a>
 
     <a href="{{ url_for('course_urdu') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Language</span>
         <h3>Urdu Language Course</h3>
@@ -154,7 +135,7 @@
     </a>
 
     <a href="{{ url_for('course_english') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English Course" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English Course" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Language</span>
         <h3>Basic English Course</h3>
@@ -169,7 +150,7 @@
     </a>
 
     <div class="course-card course-card--no-link">
-      <img src="{{ url_for('static', filename='images/course_academic.svg') }}" alt="Academic Subjects" class="course-img"/>
+      <img src="{{ url_for('static', filename='images/courses/Academic_Subjects.webp') }}" alt="Academic Subjects" class="course-img"/>
       <div class="course-card-body">
         <span class="course-cat">Academic</span>
         <h3>Academic Subjects</h3>
@@ -187,14 +168,40 @@
 </section>
 
 
+<!-- ══ STATS ══ -->
+<section class="stats-strip">
+  <div class="stats-numbers">
+    <div class="stat">
+      <span class="stat-num">500+</span>
+      <span class="stat-label">Students Enrolled</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">1000+</span>
+      <span class="stat-label">Classes Delivered</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">30+</span>
+      <span class="stat-label">Countries Reached</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">4.9&#9733;</span>
+      <span class="stat-label">Avg. Rating</span>
+    </div>
+  </div>
+  <div class="stats-trust-bar">
+    <div class="trust-item"><span class="trust-check">&#10003;</span> Certified &amp; experienced tutors</div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span> Authentic Tajweed &amp; Quranic education</div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span> Flexible online class timings</div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span> Official certification awarded</div>
+  </div>
+</section>
+
+
 <!-- ══ ABOUT ══ -->
 <section class="about-strip" id="about">
   <div class="about-inner">
-    <div class="about-logo-wrap">
-      <div class="about-logo-circle">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
-        <div class="about-logo-ring"></div>
-      </div>
+    <div class="about-img-wrap">
+      <img src="{{ url_for('static', filename='images/Who We are.webp') }}" alt="Who We Are — Al-Qur'an Global Institute" class="about-full-img"/>
     </div>
     <div>
       <span class="section-tag">Who We Are</span>
@@ -210,6 +217,72 @@
         <li>Supportive and encouraging global learning community</li>
       </ul>
     </div>
+  </div>
+</section>
+
+
+<!-- ══ CTA BANNER ══ -->
+<section class="cta-banner">
+  <div class="cta-pattern"></div>
+  <div class="cta-banner-inner">
+    <div class="cta-text">
+      <p class="cta-arabic">&#x644;&#x627; &#x62A;&#x62F;&#x639; &#x627;&#x644;&#x634;&#x64A;&#x637;&#x627;&#x646; &#x64A;&#x624;&#x62E;&#x631;&#x643;</p>
+      <h2>Do not let Shaitan delay you from starting<br>to learn your <em>deen</em>.</h2>
+    </div>
+    <a href="#contact" class="btn-cta-white">Quick Start Now</a>
+  </div>
+</section>
+
+
+<!-- ══ WHY CHOOSE US ══ -->
+<section class="why-choose">
+  <div class="center-hdr">
+    <span class="section-tag">Why To Choose Us</span>
+    <h2 class="section-title">Why Choose Our <span>Islamic Institute</span></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="features-grid">
+
+    <div class="feat-card">
+      <div class="feat-img-wrap feat-img-wrap--1">
+        <img src="{{ url_for('static', filename='images/why/expert_tutor.webp') }}" alt="Expert Quran Tutors" class="feat-img" onerror="this.style.display='none'">
+      </div>
+      <div class="feat-body">
+        <h3>Expert Quran Tutors</h3>
+        <p>Our teachers hold verified Ijazah credentials and are trained in authentic Tajweed methodology, ensuring proper Quranic education.</p>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-img-wrap feat-img-wrap--2">
+        <img src="{{ url_for('static', filename='images/why/student_value.webp') }}" alt="We Value Our Students" class="feat-img" onerror="this.style.display='none'">
+      </div>
+      <div class="feat-body">
+        <h3>We Value Our Students</h3>
+        <p>Every student receives personalised guidance, progress tracking, and consistent encouragement tailored to their individual learning pace.</p>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-img-wrap feat-img-wrap--3">
+        <img src="{{ url_for('static', filename='images/why/one_on_one.webp') }}" alt="One-on-One Classes" class="feat-img" onerror="this.style.display='none'">
+      </div>
+      <div class="feat-body">
+        <h3>One-on-One Classes</h3>
+        <p>Live private sessions give each student the teacher’s full attention — perfect for focused learning, quick corrections, and real progress.</p>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-img-wrap feat-img-wrap--4">
+        <img src="{{ url_for('static', filename='images/why/flexible_timing.webp') }}" alt="Flexible Timings" class="feat-img" onerror="this.style.display='none'">
+      </div>
+      <div class="feat-body">
+        <h3>Flexible Timings</h3>
+        <p>Classes are available across all time zones, seven days a week — fitting seamlessly around your work, school, or family schedule.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -473,81 +546,6 @@
 </section>
 
 
-<!-- ══ CONTACT ══ -->
-<section class="contact" id="contact">
-  <span class="section-tag">Get in Touch</span>
-  <h2 class="section-title">Enroll or <span style="color:var(--gold)">Ask a Question</span></h2>
-  <div class="divider"></div>
-
-  <div class="contact-grid">
-    <div class="ci">
-      <h3>We'd Love to Hear From You</h3>
-      <p>Reach out for course details, enrollment, fees, or any queries. We respond within 24 hours, insha'Allah.</p>
-      <div class="cd">
-        <div class="cdi">&#x1F4DE;</div>
-        <div class="cdt"><strong>Phone / WhatsApp</strong>+91 8226970167</div>
-      </div>
-      <div class="cd">
-        <div class="cdi">&#x2709;&#xFE0F;</div>
-        <div class="cdt"><strong>Email</strong>osamasamastipur@gmail.com</div>
-      </div>
-      <div class="cd">
-        <div class="cdi">&#x1F4BB;</div>
-        <div class="cdt"><strong>Mode</strong>100% Online &middot; Worldwide</div>
-      </div>
-      <div class="cd">
-        <div class="cdi">&#x1F550;</div>
-        <div class="cdt"><strong>Available</strong>Mon&ndash;Sat &middot; Flexible Timing</div>
-      </div>
-    </div>
-
-    <div>
-      <form id="contactForm">
-        <div class="form-row">
-          <div class="fg"><label>Your Name</label><input type="text" name="name" placeholder="Full Name" required/></div>
-          <div class="fg"><label>Phone / WhatsApp</label><input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/></div>
-        </div>
-        <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com"/></div>
-        <div class="form-row">
-          <div class="fg">
-            <label>Course Interested In</label>
-            <select name="course">
-              <option value="">Select a Course</option>
-              <option>Tajweed Course</option>
-              <option>Quran Recitation</option>
-              <option>Quran Hifz</option>
-              <option>Qirat Course</option>
-              <option>Basic Arabic Speaking</option>
-              <option>Urdu Language Course</option>
-              <option>Basic English Course</option>
-              <option>Academic Subjects (Maths / Science)</option>
-            </select>
-          </div>
-          <div class="fg">
-            <label>Student Age Group</label>
-            <select name="age">
-              <option value="">Select Age</option>
-              <option>4&ndash;8 years</option>
-              <option>9&ndash;13 years</option>
-              <option>14&ndash;17 years</option>
-              <option>18+ (Adult)</option>
-            </select>
-          </div>
-        </div>
-        <div class="fg">
-          <label>Your Message</label>
-          <textarea name="message" placeholder="Tell us about your learning goals, current level, or any questions..."></textarea>
-        </div>
-        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;">
-          &#10022; Send Message
-        </button>
-        <div class="form-success" id="formSuccess"></div>
-      </form>
-    </div>
-  </div>
-</section>
-
-
 <!-- ══ SOCIAL MEDIA ══ -->
 <section class="social-media" id="social">
   <div class="center-hdr">
@@ -610,6 +608,135 @@
       </div>
     </a>
 
+  </div>
+</section>
+
+
+<!-- ══ CONTACT ══ -->
+<section class="contact" id="contact">
+  <span class="section-tag">Get in Touch</span>
+  <h2 class="section-title">Enroll or <span>Ask a Question</span></h2>
+  <div class="divider"></div>
+
+  <div class="contact-grid">
+    <div class="ci">
+      <h3>We'd Love to Hear From You</h3>
+      <p>Reach out for course details, enrollment, fees, or any queries. We respond within 24 hours, insha'Allah.</p>
+      <div class="cd">
+        <div class="cdi">&#x1F4DE;</div>
+        <div class="cdt"><strong>Phone / WhatsApp</strong>+91 8226970167</div>
+      </div>
+      <div class="cd">
+        <div class="cdi">&#x2709;&#xFE0F;</div>
+        <div class="cdt"><strong>Email</strong>osamasamastipur@gmail.com</div>
+      </div>
+      <div class="cd">
+        <div class="cdi">&#x1F4BB;</div>
+        <div class="cdt"><strong>Mode</strong>100% Online &middot; Worldwide</div>
+      </div>
+      <div class="cd">
+        <div class="cdi">&#x1F550;</div>
+        <div class="cdt"><strong>Available</strong>Mon&ndash;Sat &middot; Flexible Timing</div>
+      </div>
+    </div>
+
+    <div>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="fg"><label>Your Name</label><input type="text" name="name" placeholder="Full Name" required/></div>
+          <div class="fg"><label>Phone / WhatsApp</label><input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/></div>
+        </div>
+        <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com"/></div>
+        <div class="form-row">
+          <div class="fg">
+            <label>Course Interested In</label>
+            <select name="course">
+              <option value="">Select a Course</option>
+              <option>Tajweed Course</option>
+              <option>Quran Recitation</option>
+              <option>Quran Hifz</option>
+              <option>Qirat Course</option>
+              <option>Basic Arabic Speaking</option>
+              <option>Urdu Language Course</option>
+              <option>Basic English Course</option>
+              <option>Academic Subjects (Maths / Science)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Student Age</label>
+            <select name="age">
+              <option value="">Select Age</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+              <option>13</option>
+              <option>14</option>
+              <option>15</option>
+              <option>16</option>
+              <option>17</option>
+              <option>18</option>
+              <option>19</option>
+              <option>20</option>
+              <option>21</option>
+              <option>22</option>
+              <option>23</option>
+              <option>24</option>
+              <option>25</option>
+              <option>26</option>
+              <option>27</option>
+              <option>28</option>
+              <option>29</option>
+              <option>30</option>
+              <option>31</option>
+              <option>32</option>
+              <option>33</option>
+              <option>34</option>
+              <option>35</option>
+              <option>36</option>
+              <option>37</option>
+              <option>38</option>
+              <option>39</option>
+              <option>40</option>
+              <option>41</option>
+              <option>42</option>
+              <option>43</option>
+              <option>44</option>
+              <option>45</option>
+              <option>46</option>
+              <option>47</option>
+              <option>48</option>
+              <option>49</option>
+              <option>50</option>
+              <option>51</option>
+              <option>52</option>
+              <option>53</option>
+              <option>54</option>
+              <option>55</option>
+              <option>56</option>
+              <option>57</option>
+              <option>58</option>
+              <option>59</option>
+              <option>60</option>
+              <option>60+</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Your Message</label>
+          <textarea name="message" placeholder="Tell us about your learning goals, current level, or any questions..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;">
+          &#10022; Send Message
+        </button>
+        <div class="form-success" id="formSuccess"></div>
+      </form>
+    </div>
   </div>
 </section>
 

@@ -21,9 +21,9 @@
 
 .btn-outline {
   background: transparent;
-  color: var(--gold-light);
+  color: var(--white);
   padding: .9rem 2.2rem;
-  border: 2px solid rgba(201,168,76,0.55);
+  border: 2px solid rgba(255,255,255,0.7);
   border-radius: 50px;
   font-size: .9rem;
   font-weight: 700;
@@ -34,4 +34,4 @@
   transition: all .3s;
   display: inline-block;
 }
-.btn-outline:hover { background: rgba(201,168,76,0.13); border-color: var(--gold); }
+.btn-outline:hover { background: rgba(255,255,255,0.15); border-color: var(--white); }
