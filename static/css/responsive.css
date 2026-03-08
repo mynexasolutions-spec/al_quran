@@ -15,13 +15,14 @@
   .cta-banner-inner { flex-direction: column; text-align: center; }
   .cta-text h2 { font-size: 1.5rem; }
   .features-grid { grid-template-columns: 1fr 1fr; }
+  .social-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 660px) {
   section { padding: 60px 5%; }
   .about-strip { padding: 60px 5%; }
-  .hero { padding: 110px 5% 55px; }
-  .course-hero { padding: 110px 5% 55px; }
+  .hero { padding: 146px 5% 55px; }
+  .course-hero { padding: 146px 5% 55px; }
   .hero-wm { display: none; }
   .stats-numbers { flex-direction: column; }
   .stats-strip { padding: 0; }

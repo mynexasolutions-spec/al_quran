@@ -6,10 +6,10 @@
 .comp-hero {
   min-height: 62vh;
   background:
-    linear-gradient(150deg, rgba(10,61,51,0.96) 0%, rgba(13,74,63,0.88) 55%, rgba(17,85,68,0.76) 100%),
-    url('../images/hero-bg.jpg') center / cover no-repeat;
+    linear-gradient(150deg, rgba(4,25,18,0.92) 0%, rgba(6,50,35,0.86) 55%, rgba(5,85,50,0.78) 100%),
+    url('../../images/Banner_image.webp') center / cover no-repeat;
   display: flex; align-items: center; justify-content: center;
-  padding: 140px 8% 90px;
+  padding: 176px 8% 90px;
   text-align: center;
   position: relative; overflow: hidden;
 }
@@ -48,36 +48,37 @@
 
 /* ────────────────── STATS BAR ────────────────── */
 .comp-stats-bar {
-  background: var(--teal-dark);
+  background: var(--white);
   padding: 0 8%;
   display: flex;
   align-items: stretch;
-  border-bottom: 3px solid rgba(201,168,76,0.25);
+  border-bottom: 2px solid #E5E7EB;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
 }
 
 .comp-stat {
   flex: 1;
   padding: 2.2rem 1.5rem;
   text-align: center;
-  border-right: 1px solid rgba(201,168,76,0.15);
+  border-right: 1px solid #E5E7EB;
 }
 .comp-stat:last-child { border-right: none; }
 
 .comp-stat-num {
   display: block;
   font-family: 'Playfair Display', serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--gold-light);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--teal-main);
   line-height: 1;
   margin-bottom: .3rem;
 }
 .comp-stat-lbl {
   display: block;
-  font-size: .7rem;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: rgba(215,242,235,0.8);
+  font-size: .88rem;
+  color: #6B7280;
+  font-weight: 500;
+  margin-top: .4rem;
 }
 
 /* ────────────────── FILTER TABS ────────────────── */
@@ -250,13 +251,13 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
 }
 
 /* ────────────────── HOW TO PARTICIPATE ────────────────── */
-.comp-how { background: var(--teal-dark); }
+.comp-how { background: var(--cream); }
 
 .comp-how-inner { max-width: 940px; margin: 0 auto; }
-.comp-how .section-tag  { color: var(--gold-light); }
-.comp-how .section-title { color: var(--white); }
-.comp-how .section-sub   { color: rgba(215,242,235,0.9); }
-.comp-how .divider { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.comp-how .section-tag  { color: var(--teal-main); }
+.comp-how .section-title { color: var(--text-dark); }
+.comp-how .section-sub   { color: var(--text-mid); }
+.comp-how .divider { background: linear-gradient(90deg, var(--teal-main), var(--teal-light)); }
 
 .comp-steps {
   display: grid;
@@ -269,19 +270,19 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
   display: flex;
   gap: 1.2rem;
   align-items: flex-start;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(201,168,76,0.18);
-  border-radius: 6px;
+  background: var(--white);
+  border: 1.5px solid var(--teal-pale);
+  border-radius: 10px;
   padding: 1.6rem;
-  transition: background .3s;
+  transition: box-shadow .3s, transform .3s;
 }
-.comp-step:hover { background: rgba(255,255,255,0.09); }
+.comp-step:hover { box-shadow: 0 8px 28px rgba(5,150,105,0.1); transform: translateY(-3px); }
 
 .comp-step-num {
   font-family: 'Playfair Display', serif;
   font-size: 2rem;
   font-weight: 700;
-  color: rgba(201,168,76,0.45);
+  color: rgba(5,150,105,0.3);
   line-height: 1;
   flex-shrink: 0;
   min-width: 2.5rem;
@@ -290,12 +291,12 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
 .comp-step h4 {
   font-family: 'Playfair Display', serif;
   font-size: 1.05rem;
-  color: var(--gold-light);
+  color: var(--teal-dark);
   margin-bottom: .45rem;
 }
 .comp-step p {
   font-size: .9rem;
-  color: rgba(215,242,235,0.85);
+  color: var(--text-mid);
   line-height: 1.8;
   font-weight: 400;
 }
@@ -351,7 +352,7 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
 
 /* ────────────────── CTA BANNER ────────────────── */
 .comp-cta-banner {
-  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-main) 60%, var(--teal-light) 100%);
+  background: linear-gradient(105deg, #059669 0%, #10B981 40%, #C9A84C 100%);
   padding: 80px 8%;
   text-align: center;
   position: relative;
@@ -393,7 +394,7 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
 /* ────────────────── RESPONSIVE ────────────────── */
 @media (max-width: 900px) {
   .comp-stats-bar { flex-wrap: wrap; }
-  .comp-stat { flex: 1 1 45%; border-right: none; border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .comp-stat { flex: 1 1 45%; border-right: none; border-bottom: 1px solid #E5E7EB; }
   .comp-steps { grid-template-columns: 1fr; }
 }
 

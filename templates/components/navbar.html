@@ -6,24 +6,24 @@
   </a>
 
   <ul class="nav-links">
-    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('index') }}" data-i18n="navHome">Home</a></li>
     <li class="has-dropdown">
       <a href="#">Courses <span class="chevron">&#9660;</span></a>
       <ul class="dropdown-menu">
-        <li><a href="{{ url_for('course_tajweed') }}">&#128218; Tajweed Course</a></li>
-        <li><a href="{{ url_for('course_quran_recitation') }}">&#128276; Quran Recitation</a></li>
-        <li><a href="{{ url_for('course_hifz') }}">&#10024; Quran Hifz</a></li>
-        <li><a href="{{ url_for('course_qirat') }}">&#127908; Qirat Course</a></li>
-        <li><a href="{{ url_for('course_arabic') }}">&#127462;&#127479; Basic Arabic</a></li>
-        <li><a href="{{ url_for('course_urdu') }}">&#128012; Urdu Language</a></li>
-        <li><a href="{{ url_for('course_english') }}">&#127466;&#127475; Basic English</a></li>
+        <li><a href="{{ url_for('course_tajweed') }}" data-i18n="navCourseTajweed">&#128218; Tajweed Course</a></li>
+        <li><a href="{{ url_for('course_quran_recitation') }}" data-i18n="navCourseRecitation">&#128276; Quran Recitation</a></li>
+        <li><a href="{{ url_for('course_hifz') }}" data-i18n="navCourseHifz">&#10024; Quran Hifz</a></li>
+        <li><a href="{{ url_for('course_qirat') }}" data-i18n="navCourseQirat">&#127908; Qirat Course</a></li>
+        <li><a href="{{ url_for('course_arabic') }}" data-i18n="navCourseArabic">&#127462;&#127479; Basic Arabic</a></li>
+        <li><a href="{{ url_for('course_urdu') }}" data-i18n="navCourseUrdu">&#128012; Urdu Language</a></li>
+        <li><a href="{{ url_for('course_english') }}" data-i18n="navCourseEnglish">&#127466;&#127475; Basic English</a></li>
       </ul>
     </li>
-    <li><a href="{{ url_for('competitions') }}">Competitions</a></li>
-    <li><a href="{{ url_for('index') }}#about">About</a></li>
-    <li><a href="{{ url_for('index') }}#reviews">Reviews</a></li>
-    <li><a href="{{ url_for('index') }}#faq">FAQ</a></li>
-    <li><a href="{{ url_for('index') }}#contact" class="nav-cta">Enroll Now</a></li>
+    <li><a href="{{ url_for('competitions') }}" data-i18n="navCompetitions">Competitions</a></li>
+    <li><a href="{{ url_for('index') }}#about" data-i18n="navAbout">About</a></li>
+    <li><a href="{{ url_for('index') }}#reviews" data-i18n="navReviews">Reviews</a></li>
+    <li><a href="{{ url_for('index') }}#faq" data-i18n="navFaq">FAQ</a></li>
+    <li><a href="{{ url_for('index') }}#contact" class="nav-cta" data-i18n="navEnroll">Enroll Now</a></li>
   </ul>
 
   <button class="hamburger" id="hbg" aria-label="Toggle menu">
@@ -34,24 +34,24 @@
 <!-- ══ MOBILE DRAWER ══ -->
 <div class="nav-drawer" id="drawer">
   <ul>
-    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('index') }}" data-i18n="navHome">Home</a></li>
     <li>
       <a href="#" class="drawer-toggle" id="drawer-courses-btn">Courses <span class="drawer-chevron">&#9660;</span></a>
       <ul class="drawer-sub-list" id="drawer-courses-list">
-        <li><a href="{{ url_for('course_tajweed') }}" class="drawer-sub">&#128218; Tajweed Course</a></li>
-        <li><a href="{{ url_for('course_quran_recitation') }}" class="drawer-sub">&#128276; Quran Recitation</a></li>
-        <li><a href="{{ url_for('course_hifz') }}" class="drawer-sub">&#10024; Quran Hifz</a></li>
-        <li><a href="{{ url_for('course_qirat') }}" class="drawer-sub">&#127908; Qirat Course</a></li>
-        <li><a href="{{ url_for('course_arabic') }}" class="drawer-sub">&#127462;&#127479; Basic Arabic</a></li>
-        <li><a href="{{ url_for('course_urdu') }}" class="drawer-sub">&#128012; Urdu Language</a></li>
-        <li><a href="{{ url_for('course_english') }}" class="drawer-sub">&#127466;&#127475; Basic English</a></li>
+        <li><a href="{{ url_for('course_tajweed') }}" class="drawer-sub" data-i18n="navCourseTajweed">&#128218; Tajweed Course</a></li>
+        <li><a href="{{ url_for('course_quran_recitation') }}" class="drawer-sub" data-i18n="navCourseRecitation">&#128276; Quran Recitation</a></li>
+        <li><a href="{{ url_for('course_hifz') }}" class="drawer-sub" data-i18n="navCourseHifz">&#10024; Quran Hifz</a></li>
+        <li><a href="{{ url_for('course_qirat') }}" class="drawer-sub" data-i18n="navCourseQirat">&#127908; Qirat Course</a></li>
+        <li><a href="{{ url_for('course_arabic') }}" class="drawer-sub" data-i18n="navCourseArabic">&#127462;&#127479; Basic Arabic</a></li>
+        <li><a href="{{ url_for('course_urdu') }}" class="drawer-sub" data-i18n="navCourseUrdu">&#128012; Urdu Language</a></li>
+        <li><a href="{{ url_for('course_english') }}" class="drawer-sub" data-i18n="navCourseEnglish">&#127466;&#127475; Basic English</a></li>
       </ul>
     </li>
-    <li><a href="{{ url_for('competitions') }}">&#127942; Competitions</a></li>
-    <li><a href="{{ url_for('index') }}#about">About</a></li>
-    <li><a href="{{ url_for('index') }}#reviews">Reviews</a></li>
-    <li><a href="{{ url_for('index') }}#faq">FAQ</a></li>
-    <li><a href="{{ url_for('index') }}#contact">&#128197; Enroll Now</a></li>
+    <li><a href="{{ url_for('competitions') }}" data-i18n="navCompetitions">&#127942; Competitions</a></li>
+    <li><a href="{{ url_for('index') }}#about" data-i18n="navAbout">About</a></li>
+    <li><a href="{{ url_for('index') }}#reviews" data-i18n="navReviews">Reviews</a></li>
+    <li><a href="{{ url_for('index') }}#faq" data-i18n="navFaq">FAQ</a></li>
+    <li><a href="{{ url_for('index') }}#contact" data-i18n="navEnroll">&#128197; Enroll Now</a></li>
   </ul>
 </div>
 

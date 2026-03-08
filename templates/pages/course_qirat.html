@@ -81,10 +81,10 @@
 
 {# ── Other Courses ── #}
 {% block other_courses %}
-  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed" class="oc-icon"/><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></a>
-  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_recitation.svg') }}" alt="Quran Recitation" class="oc-icon"/><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></a>
-  <a href="{{ url_for('course_hifz') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_hifz.svg') }}" alt="Quran Hifz" class="oc-icon"/><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></a>
-  <a href="{{ url_for('course_arabic') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_arabic.svg') }}" alt="Basic Arabic" class="oc-icon"/><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></a>
-  <a href="{{ url_for('course_urdu') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language" class="oc-icon"/><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></a>
-  <a href="{{ url_for('course_english') }}" class="oc-card"><img src="{{ url_for('static', filename='images/course_english.svg') }}" alt="Basic English" class="oc-icon"/><h4>Basic English</h4><p>Speak English confidently</p></a>
+  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed" class="oc-img"/></div><div class="oc-body"><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></div></a>
+  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation" class="oc-img"/></div><div class="oc-body"><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></div></a>
+  <a href="{{ url_for('course_hifz') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz" class="oc-img"/></div><div class="oc-body"><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></div></a>
+  <a href="{{ url_for('course_arabic') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic" class="oc-img"/></div><div class="oc-body"><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></div></a>
+  <a href="{{ url_for('course_urdu') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language" class="oc-img"/></div><div class="oc-body"><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></div></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English" class="oc-img"/></div><div class="oc-body"><h4>Basic English</h4><p>Speak English confidently</p></div></a>
 {% endblock %}

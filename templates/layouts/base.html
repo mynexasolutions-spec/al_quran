@@ -16,6 +16,15 @@
 </head>
 <body>
 
+  <!-- ══ LANGUAGE BAR ══ -->
+  <div class="lang-bar" id="langBar">
+    <span class="lang-bar-label" data-i18n="langBarLabel">🌐 Select Language:</span>
+    <div class="lang-toggle" id="langToggle" role="group" aria-label="Language selection">
+      <button class="lang-btn lang-btn--active" id="btnEn" data-lang="en">English</button>
+      <button class="lang-btn" id="btnUr" data-lang="ur">اردو</button>
+    </div>
+  </div>
+
   {% include 'components/navbar.html' %}
 
   <!-- ══ PAGE CONTENT ══ -->

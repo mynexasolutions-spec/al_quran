@@ -19,3 +19,39 @@ body {
 }
 
 p { color: var(--text-body); font-size: 1rem; line-height: 1.88; }
+
+/* ── Urdu / RTL overrides ── */
+body.lang-ur,
+body.lang-ur p,
+body.lang-ur h1,
+body.lang-ur h2,
+body.lang-ur h3,
+body.lang-ur h4,
+body.lang-ur span,
+body.lang-ur a,
+body.lang-ur li,
+body.lang-ur label,
+body.lang-ur button,
+body.lang-ur div {
+  font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+  direction: rtl;
+  text-align: right;
+}
+body.lang-ur input,
+body.lang-ur textarea,
+body.lang-ur select {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+}
+body.lang-ur .hero-inst { text-align: right; }
+body.lang-ur .hero-logo-row { flex-direction: row-reverse; }
+body.lang-ur .center-hdr { text-align: center; }
+body.lang-ur .mission-list li { text-align: right; }
+body.lang-ur .nav-links { flex-direction: row-reverse; }
+body.lang-ur .social-card-inner { text-align: right; }
+body.lang-ur .contact-grid .ci { direction: rtl; }
+body.lang-ur .cta-banner-inner { flex-direction: row-reverse; }
+body.lang-ur .feat-body { text-align: right; }
+body.lang-ur .stats-trust-bar { flex-direction: row-reverse; }
+body.lang-ur .trust-item { flex-direction: row-reverse; }

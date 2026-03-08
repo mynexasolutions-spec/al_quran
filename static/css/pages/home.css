@@ -7,10 +7,10 @@
 .hero {
   min-height: 100vh;
   background:
-    linear-gradient(150deg, rgba(4,25,18,0.72) 0%, rgba(6,50,35,0.62) 50%, rgba(5,85,50,0.50) 100%),
+    linear-gradient(150deg, rgba(4,25,18,0.92) 0%, rgba(6,50,35,0.86) 50%, rgba(5,85,50,0.78) 100%),
     url('../../images/Banner_image.webp') center/cover no-repeat;
   display: flex; align-items: center; justify-content: center;
-  padding: 120px 8% 80px;
+  padding: 156px 8% 80px;
   position: relative; overflow: hidden;
   text-align: center;
 }
@@ -268,7 +268,7 @@
 
 .social-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.8rem;
   margin-top: 3rem;
 }
@@ -299,6 +299,11 @@
 .social-card--youtube .social-card-bg {
   position: absolute; inset: 0;
   background: linear-gradient(145deg, #8B0000 0%, #CC0000 55%, #FF0000 100%);
+  transition: opacity .35s;
+}
+.social-card--whatsapp .social-card-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(145deg, #075E54 0%, #128C7E 45%, #25D366 100%);
   transition: opacity .35s;
 }
 
