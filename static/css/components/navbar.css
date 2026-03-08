@@ -43,9 +43,32 @@ body.lang-ur .nav-links a {
   font-size: .96rem;
   text-transform: none;
   letter-spacing: 0;
+  line-height: 1.7;
 }
 body.lang-ur .lang-btn--ur {
   font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ── Urdu mobile drawer: prevent line overlap ── */
+body.lang-ur .lang-bar {
+  height: auto;
+  min-height: 36px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+body.lang-ur .nav-drawer ul li a {
+  line-height: 1.8;
+  padding: 1rem 0;
+  white-space: normal;
+}
+body.lang-ur .nav-drawer .drawer-sub-list li a {
+  line-height: 1.8;
+  padding: .9rem 1rem;
+}
+body.lang-ur .dropdown-menu li a {
+  line-height: 1.7;
+  padding: .85rem 1.25rem;
 }
 
 /* ── Desktop Nav ── */

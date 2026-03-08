@@ -51,3 +51,40 @@
   .features-grid { grid-template-columns: 1fr; }
   .cta-text h2 { font-size: 1.3rem; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   Urdu / Arabic script — global line-height & spacing fixes
+   Urdu glyphs with diacritics need more vertical room than
+   Latin; without this lines visually overlap on all screens.
+   ══════════════════════════════════════════════════════════ */
+body.lang-ur {
+  line-height: 1.85;
+}
+body.lang-ur .section-title {
+  line-height: 1.65;
+}
+body.lang-ur .section-tag,
+body.lang-ur .section-sub {
+  line-height: 1.9;
+  letter-spacing: 0;
+  text-transform: none;
+}
+body.lang-ur h1, body.lang-ur h2,
+body.lang-ur h3, body.lang-ur h4 {
+  line-height: 1.65;
+}
+body.lang-ur p,
+body.lang-ur li,
+body.lang-ur .cb-intro,
+body.lang-ur .cb-quote p,
+body.lang-ur .footer-desc,
+body.lang-ur .oc-body p,
+body.lang-ur .course-card p,
+body.lang-ur label {
+  line-height: 2;
+}
+body.lang-ur .ch-badge {
+  line-height: 1.6;
+  padding-top: .35rem;
+  padding-bottom: .35rem;
+}
