@@ -139,4 +139,8 @@ body.lang-ur .footer-logo-text small {
     display: block;
     margin-top: .75rem;
   }
+  body.lang-ur .hero > .hero-content p {
+    line-height: 2.5;
+    font-size: 1.08rem;
+  }
 }
