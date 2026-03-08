@@ -65,12 +65,17 @@ body.lang-ur {
 }
 body.lang-ur .section-title {
   line-height: 1.65;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
 }
-body.lang-ur .section-tag,
-body.lang-ur .section-sub {
+body.lang-ur .section-tag {
   line-height: 1.9;
   letter-spacing: 0;
   text-transform: none;
+  font-size: 1rem;
+}
+body.lang-ur .section-sub {
+  line-height: 1.9;
+  letter-spacing: 0;
 }
 body.lang-ur h1, body.lang-ur h2,
 body.lang-ur h3, body.lang-ur h4 {
@@ -92,10 +97,33 @@ body.lang-ur .ch-badge {
   padding-bottom: .35rem;
 }
 body.lang-ur .hero-badge {
-  font-size: .95rem;
+  font-size: 1.08rem;
   letter-spacing: 0;
   text-transform: none;
-  line-height: 1.9;
-  padding: .55rem 1.3rem;
+  line-height: 2;
+  padding: .65rem 2rem;
   text-align: center;
+  word-spacing: .35rem;
+}
+body.lang-ur .course-cat {
+  font-size: .82rem;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.7;
+}
+body.lang-ur .hl-card p {
+  font-size: 1.02rem;
+  line-height: 2;
+}
+body.lang-ur .fg label {
+  font-size: 1.1rem;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.8;
+}
+body.lang-ur .footer-logo-text small {
+  font-size: 1rem;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: .85;
 }

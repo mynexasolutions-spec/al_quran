@@ -21,7 +21,7 @@
 .hero-inst { font-family: 'Playfair Display', serif; }
 .hero-inst strong { display: block; font-size: 1.48rem; color: var(--gold-light); font-weight: 700; }
 .hero-inst span { font-size: .72rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,230,140,0.92); text-shadow: 0 1px 4px rgba(0,0,0,0.55); }
-.hero-badge { display: inline-block; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.42); color: var(--gold-light); font-size: .78rem; letter-spacing: 3px; text-transform: uppercase; padding: .38rem 1.05rem; border-radius: 20px; margin-bottom: 1.3rem; font-weight: 700; }
+.hero-badge { display: inline-block; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.42); color: var(--gold-light); font-size: .82rem; letter-spacing: 3px; text-transform: uppercase; padding: .42rem 1.4rem; border-radius: 20px; margin-bottom: 1.3rem; font-weight: 700; }
 .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.3rem,5.5vw,4.5rem); color: var(--white); line-height: 1.1; margin-bottom: .65rem; }
 .hero h1 em { font-style: italic; color: var(--gold-light); }
 .hero-arabic-sub { font-family: 'Amiri', serif; font-size: 1.8rem; color: rgba(201,168,76,0.8); margin-bottom: 1.45rem; display: block; }
@@ -47,7 +47,7 @@
 .course-card:hover::before { transform: scaleX(1); }
 .course-card-body { padding: 1.6rem 1.9rem 2rem; }
 .course-img { width: 100%; aspect-ratio: 3/2; object-fit: cover; display: block; border-radius: 6px 6px 0 0; }
-.course-cat { font-size: .65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-light); font-weight: 700; margin-bottom: .5rem; display: block; }
+.course-cat { font-size: .68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-light); font-weight: 700; margin-bottom: .5rem; display: block; }
 .course-card h3 { font-family: 'Playfair Display', serif; font-size: 1.22rem; color: var(--text-dark); margin-bottom: .65rem; }
 .course-card p { color: var(--text-mid); font-size: .94rem; line-height: 1.78; font-weight: 400; margin-bottom: 1.2rem; }
 .course-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.3rem; }

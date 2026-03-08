@@ -57,7 +57,7 @@
 .hl-card { background: var(--cream); border-radius: 5px; padding: 1.45rem; border-left: 3px solid var(--gold); }
 .hl-icon { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; margin-bottom: .65rem; display: block; }
 .hl-card h4 { font-family: 'Playfair Display', serif; font-size: 1.03rem; color: var(--text-dark); margin-bottom: .42rem; }
-.hl-card p { color: var(--text-mid); font-size: .9rem; line-height: 1.7; font-weight: 400; }
+.hl-card p { color: var(--text-mid); font-size: .96rem; line-height: 1.75; font-weight: 400; }
 
 /* ────────────────── OTHER COURSES ────────────────── */
 .other-courses { background: var(--cream); }
