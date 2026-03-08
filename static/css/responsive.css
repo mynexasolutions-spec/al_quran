@@ -135,4 +135,8 @@ body.lang-ur .footer-logo-text small {
     padding: .8rem 1.6rem;
     margin-bottom: 2rem;
   }
+  body.lang-ur .hero h1 em {
+    display: block;
+    margin-top: .75rem;
+  }
 }
