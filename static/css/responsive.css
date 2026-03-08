@@ -91,3 +91,11 @@ body.lang-ur .ch-badge {
   padding-top: .35rem;
   padding-bottom: .35rem;
 }
+body.lang-ur .hero-badge {
+  font-size: .95rem;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.9;
+  padding: .55rem 1.3rem;
+  text-align: center;
+}
