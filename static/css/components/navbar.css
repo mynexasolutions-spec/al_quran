@@ -34,8 +34,18 @@
   color: var(--teal-dark);
 }
 .lang-btn--ur {
-  font-size: .9rem;
+  font-size: 1rem;
   letter-spacing: 0;
+}
+
+/* ── Urdu-active nav: larger text, no forced uppercase ── */
+body.lang-ur .nav-links a {
+  font-size: .96rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+body.lang-ur .lang-btn--ur {
+  font-size: 1.05rem;
 }
 
 /* ── Desktop Nav ── */

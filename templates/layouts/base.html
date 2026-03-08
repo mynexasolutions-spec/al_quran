@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
   {% block head %}{% endblock %}
 </head>
-<body>
+<body class="{% if lang == 'ur' %}lang-ur{% endif %}">
 
   <!-- ══ LANGUAGE BAR ══ -->
   <div class="lang-bar">
