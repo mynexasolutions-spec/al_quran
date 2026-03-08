@@ -21,7 +21,7 @@
     <span class="lang-bar-label">{{ t.langBarLabel }}</span>
     <div class="lang-toggle" role="group" aria-label="Language selection">
       <a href="{{ url_for('set_lang', lang='en') }}" class="lang-btn{% if lang == 'en' %} lang-btn--active{% endif %}">English</a>
-      <a href="{{ url_for('set_lang', lang='ur') }}" class="lang-btn{% if lang == 'ur' %} lang-btn--active{% endif %}">اردو</a>
+      <a href="{{ url_for('set_lang', lang='ur') }}" class="lang-btn lang-btn--ur{% if lang == 'ur' %} lang-btn--active{% endif %}">اردو</a>
     </div>
   </div>
 

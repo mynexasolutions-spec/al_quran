@@ -4,18 +4,18 @@
        course_duration, course_schedule, course_mode,
        course_eligibility, course_certificate              -->
 <div class="sidebar-card">
-  <div class="sc-title">Course Details</div>
-  <div class="sc-row"><span class="sc-label">Duration</span>    <span class="sc-val">{{ course_duration }}</span></div>
-  <div class="sc-row"><span class="sc-label">Schedule</span>    <span class="sc-val">{{ course_schedule }}</span></div>
-  <div class="sc-row"><span class="sc-label">Mode</span>        <span class="sc-val">{{ course_mode | default('Online (Live)') }}</span></div>
-  <div class="sc-row"><span class="sc-label">Eligibility</span> <span class="sc-val">{{ course_eligibility }}</span></div>
-  <div class="sc-row"><span class="sc-label">Certificate</span> <span class="sc-val">{{ course_certificate }}</span></div>
-  <div class="sc-row"><span class="sc-label">Course Fee</span>  <span class="sc-val">Contact Us</span></div>
-  <a href="{{ url_for('index') }}#contact" class="sc-enroll">&#10022; Enroll Now</a>
+  <div class="sc-title">{{ t.sidebarTitle }}</div>
+  <div class="sc-row"><span class="sc-label">{{ t.sidebarDuration }}</span>    <span class="sc-val">{{ course_duration }}</span></div>
+  <div class="sc-row"><span class="sc-label">{{ t.sidebarSchedule }}</span>    <span class="sc-val">{{ course_schedule }}</span></div>
+  <div class="sc-row"><span class="sc-label">{{ t.sidebarMode }}</span>        <span class="sc-val">{{ course_mode | default(t.sidebarModeVal) }}</span></div>
+  <div class="sc-row"><span class="sc-label">{{ t.sidebarEligibility }}</span> <span class="sc-val">{{ course_eligibility }}</span></div>
+  <div class="sc-row"><span class="sc-label">{{ t.sidebarCertificate }}</span> <span class="sc-val">{{ course_certificate }}</span></div>
+  <div class="sc-row"><span class="sc-label">{{ t.sidebarFee }}</span>         <span class="sc-val">{{ t.sidebarFeeVal }}</span></div>
+  <a href="{{ url_for('index') }}#contact" class="sc-enroll">{{ t.sidebarEnroll }}</a>
 </div>
 
 <div class="sc-contact">
-  <p>Have questions? Reach out directly &mdash; we respond within 24 hours, insha'Allah.</p>
+  <p>{{ t.sidebarContactP }}</p>
   <a href="mailto:osamasamastipur@gmail.com">&#x2709; osamasamastipur@gmail.com</a>
   <a href="tel:+918226970167">&#x1F4DE; +91 8226970167</a>
   <a href="https://wa.me/918226970167" target="_blank">&#x1F4AC; WhatsApp Us</a>

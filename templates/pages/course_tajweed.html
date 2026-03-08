@@ -2,96 +2,96 @@
 {% block title %}Tajweed Course | Al-Qur'an Global Institute{% endblock %}
 
 {# ── Sidebar variables (used by components/course_sidebar.html) ── #}
-{% set course_duration    = "Flexible" %}
-{% set course_schedule    = "Flexible Timing" %}
-{% set course_eligibility = "All Levels" %}
-{% set course_certificate = "Yes — On Completion" %}
+{% set course_duration    = t.tajweedDuration %}
+{% set course_schedule    = t.tajweedSchedule %}
+{% set course_eligibility = t.tajweedEligibility %}
+{% set course_certificate = t.tajweedCertVal %}
 
 {# ── Hero content ── #}
-{% block course_category %}Quranic Studies{% endblock %}
+{% block course_category %}{{ t.tajweedCategory }}{% endblock %}
 {% block course_icon %}<img src="{{ url_for('static', filename='images/course_tajweed.svg') }}" alt="Tajweed Course" class="ch-icon"/>{% endblock %}
-{% block course_title %}Tajweed Course{% endblock %}
+{% block course_title %}{{ t.tajweedTitle }}{% endblock %}
 {% block course_arabic %}&#x648;&#x631;&#x62A;&#x644; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x62A;&#x631;&#x62A;&#x64A;&#x644;&#x627;{% endblock %}
-{% block course_tagline %}Let's Connect with the Qur'an Through Correct Recitation &mdash; recite every letter as it was revealed to the Prophet &#xFDFA;.{% endblock %}
+{% block course_tagline %}{{ t.tajweedTagline }}{% endblock %}
 {% block course_badges %}
-  <span class="ch-badge">All Levels</span>
-  <span class="ch-badge">Online</span>
-  <span class="ch-badge">Certificate</span>
-  <span class="ch-badge">Flexible Timing</span>
+  <span class="ch-badge">{{ t.tajweedBadge1 }}</span>
+  <span class="ch-badge">{{ t.tajweedBadge2 }}</span>
+  <span class="ch-badge">{{ t.tajweedBadge3 }}</span>
+  <span class="ch-badge">{{ t.tajweedBadge4 }}</span>
 {% endblock %}
 
 {# ── Main course body ── #}
 {% block course_body %}
 <div class="cb-quote">
-  <p>"And recite the Qur'an distinctly in a measured tone."</p>
-  <cite>&mdash; Al-Muzzammil: 4</cite>
+  <p>{{ t.tajweedQuote }}</p>
+  <cite>{{ t.tajweedQuoteCite }}</cite>
 </div>
 
-<p class="cb-intro">Reciting the Qur'an is more than reading words &mdash; it is an act of worship, a way to draw closer to Allah &#x62C;&#x644; &#x62C;&#x644;&#x627;&#x644;&#x647;, and a chance to reflect on His message with the respect it deserves. Our Tajweed Course is designed to help you recite the Qur'an beautifully and accurately, just as it was revealed. Whether you are a beginner or looking to refine your skills, we will guide you with care and clarity. Every letter you recite will become a source of peace for your heart and reward in your Hereafter.</p>
+<p class="cb-intro">{{ t.tajweedIntro }}</p>
 
 <div class="content-block">
-  <h3>What You'll Learn</h3>
+  <h3>{{ t.tajweedLearnH }}</h3>
   <ul class="learn-list">
-    <li>Basic rules of Tajweed explained simply and clearly for easy understanding at every level</li>
-    <li>Makharij &mdash; the origin and articulation points of each Arabic letter for perfect pronunciation</li>
-    <li>Sifaat &mdash; the characteristics of letters that affect how they are pronounced</li>
-    <li>Rules of Noon Saakin, Tanween, Meem Saakin, and their different applications</li>
-    <li>Madd (elongation) rules &mdash; all types covered with practical recitation examples</li>
-    <li>Rules of Waqf (stopping) and Ibtida (starting) to preserve the meaning of verses</li>
-    <li>How to avoid the most common mistakes made in Qur'an recitation</li>
-    <li>Memorisation of the last 20 Surahs with proper Tajweed application</li>
-    <li>Daily practice with personalised correction and feedback from experienced instructors</li>
+    <li>{{ t.tajweedLearn1 }}</li>
+    <li>{{ t.tajweedLearn2 }}</li>
+    <li>{{ t.tajweedLearn3 }}</li>
+    <li>{{ t.tajweedLearn4 }}</li>
+    <li>{{ t.tajweedLearn5 }}</li>
+    <li>{{ t.tajweedLearn6 }}</li>
+    <li>{{ t.tajweedLearn7 }}</li>
+    <li>{{ t.tajweedLearn8 }}</li>
+    <li>{{ t.tajweedLearn9 }}</li>
   </ul>
 </div>
 
 <div class="content-block">
-  <h3>Course Highlights</h3>
+  <h3>{{ t.tajweedHighH }}</h3>
   <div class="highlights-grid">
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_instructor.svg') }}" alt="Expert Instructors" class="hl-icon"/>
-      <h4>Expert Instructors</h4>
-      <p>Certified scholars with Tajweed Ijazah, experienced with learners at all levels and ages</p>
+      <h4>{{ t.tajweedHl1H }}</h4>
+      <p>{{ t.tajweedHl1P }}</p>
     </div>
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_feedback.svg') }}" alt="Live Feedback" class="hl-icon"/>
-      <h4>Live Feedback</h4>
-      <p>Real-time pronunciation correction and personalised feedback every single session</p>
+      <h4>{{ t.tajweedHl2H }}</h4>
+      <p>{{ t.tajweedHl2P }}</p>
     </div>
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_global.svg') }}" alt="Global Community" class="hl-icon"/>
-      <h4>Global Community</h4>
-      <p>Join students from around the world for motivation, support and peer learning</p>
+      <h4>{{ t.tajweedHl3H }}</h4>
+      <p>{{ t.tajweedHl3P }}</p>
     </div>
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_certificate.svg') }}" alt="Certification" class="hl-icon"/>
-      <h4>Certification</h4>
-      <p>Official certificate awarded upon 70% attendance and passing the Tajweed assessment</p>
+      <h4>{{ t.tajweedHl4H }}</h4>
+      <p>{{ t.tajweedHl4P }}</p>
     </div>
   </div>
 </div>
 
 <div class="content-block">
-  <h3>Why This Course?</h3>
-  <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;margin-bottom:1rem;">Through this course, you will not only improve your recitation but also develop a deeper emotional and spiritual connection with the Qur'an. Every rule learned brings you closer to reciting the words of Allah exactly as they were revealed &mdash; a tremendous honour and blessing.</p>
-  <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;">Begin your journey today &mdash; beautify your recitation, strengthen your faith, and let the Qur'an be your lifelong companion. &#128218;</p>
+  <h3>{{ t.tajweedWhyH }}</h3>
+  <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;margin-bottom:1rem;">{{ t.tajweedWhyP1 }}</p>
+  <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;">{{ t.tajweedWhyP2 }}</p>
 </div>
 
 <div class="content-block">
-  <h3>Certification Requirements</h3>
+  <h3>{{ t.tajweedCertH }}</h3>
   <ul class="detail-list">
-    <li>Maintain at least 70% attendance throughout the course</li>
-    <li>Demonstrate correct application of Tajweed rules in live recitation</li>
-    <li>Pass a final Tajweed proficiency assessment set by the instructor</li>
+    <li>{{ t.tajweedCert1 }}</li>
+    <li>{{ t.tajweedCert2 }}</li>
+    <li>{{ t.tajweedCert3 }}</li>
   </ul>
 </div>
 {% endblock %}
 
 {# ── Other Courses ── #}
 {% block other_courses %}
-  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation" class="oc-img"/></div><div class="oc-body"><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></div></a>
-  <a href="{{ url_for('course_hifz') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz" class="oc-img"/></div><div class="oc-body"><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></div></a>
-  <a href="{{ url_for('course_qirat') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat Course" class="oc-img"/></div><div class="oc-body"><h4>Qirat Course</h4><p>Master the 10 authentic Qira'at</p></div></a>
-  <a href="{{ url_for('course_arabic') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic" class="oc-img"/></div><div class="oc-body"><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></div></a>
-  <a href="{{ url_for('course_urdu') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language" class="oc-img"/></div><div class="oc-body"><h4>Urdu Language</h4><p>Read, write &amp; speak Urdu</p></div></a>
-  <a href="{{ url_for('course_english') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English" class="oc-img"/></div><div class="oc-body"><h4>Basic English</h4><p>Speak English confidently</p></div></a>
+  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocRecitationTitle }}</h4><p>{{ t.ocRecitationP }}</p></div></a>
+  <a href="{{ url_for('course_hifz') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocHifzTitle }}</h4><p>{{ t.ocHifzP }}</p></div></a>
+  <a href="{{ url_for('course_qirat') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat Course" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocQiratTitle }}</h4><p>{{ t.ocQiratP }}</p></div></a>
+  <a href="{{ url_for('course_arabic') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocArabicTitle }}</h4><p>{{ t.ocArabicP }}</p></div></a>
+  <a href="{{ url_for('course_urdu') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocUrduTitle }}</h4><p>{{ t.ocUrduP }}</p></div></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocEnglishTitle }}</h4><p>{{ t.ocEnglishP }}</p></div></a>
 {% endblock %}

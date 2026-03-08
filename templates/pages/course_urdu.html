@@ -2,98 +2,98 @@
 {% block title %}Urdu Language Course | Al-Qur'an Global Institute{% endblock %}
 
 {# ── Sidebar variables ── #}
-{% set course_duration    = "Flexible" %}
-{% set course_schedule    = "Tue & Wed, 2:30–3:30 PM" %}
-{% set course_eligibility = "All Levels Welcome" %}
-{% set course_certificate = "Urdu Proficiency Exam" %}
+{% set course_duration    = t.urduDuration %}
+{% set course_schedule    = t.urduSchedule %}
+{% set course_eligibility = t.urduEligibility %}
+{% set course_certificate = t.urduCertVal %}
 
 {# ── Hero content ── #}
-{% block course_category %}Language Course{% endblock %}
+{% block course_category %}{{ t.urduCategory }}{% endblock %}
 {% block course_icon %}<img src="{{ url_for('static', filename='images/course_urdu.svg') }}" alt="Urdu Language Course" class="ch-icon"/>{% endblock %}
-{% block course_title %}Online Urdu Language Course{% endblock %}
+{% block course_title %}{{ t.urduTitle }}{% endblock %}
 {% block course_arabic %}&#x632;&#x628;&#x627;&#x646; &#x627;&#x631;&#x62F;&#x648;{% endblock %}
-{% block course_tagline %}Learn Urdu, Connect with Culture, and Enhance Your Quranic Journey &mdash; through live interactive online classes.{% endblock %}
+{% block course_tagline %}{{ t.urduTagline }}{% endblock %}
 {% block course_badges %}
-  <span class="ch-badge">Tue &amp; Wed</span>
-  <span class="ch-badge">2:30&ndash;3:30 PM IST</span>
-  <span class="ch-badge">All Levels</span>
-  <span class="ch-badge">Certificate</span>
+  <span class="ch-badge">{{ t.urduBadge1 }}</span>
+  <span class="ch-badge">{{ t.urduBadge2 }}</span>
+  <span class="ch-badge">{{ t.urduBadge3 }}</span>
+  <span class="ch-badge">{{ t.urduBadge4 }}</span>
 {% endblock %}
 
 {# ── Main course body ── #}
 {% block course_body %}
 <div class="cb-quote">
-  <p>"The beauty of a language opens the door to its culture and wisdom."</p>
-  <cite>&mdash; Al-Qur'an Global Institute</cite>
+  <p>{{ t.urduQuote }}</p>
+  <cite>{{ t.urduQuoteCite }}</cite>
 </div>
 
-<p class="cb-intro">Unlock the beauty of the Urdu language with our Online Urdu Language Course. Designed for learners of all ages and skill levels, this program offers a comprehensive and engaging way to master Urdu speaking, reading, and writing, with a special focus on understanding Quranic terms and Islamic contexts. Taught through live interactive online classes, this course bridges language, culture, and faith in one beautiful journey.</p>
+<p class="cb-intro">{{ t.urduIntro }}</p>
 
 <div class="content-block">
-  <h3>Why Join Our Urdu Language Course?</h3>
+  <h3>{{ t.urduWhyH }}</h3>
   <ul class="learn-list">
-    <li>Master Urdu to read, write, and speak with growing confidence and fluency</li>
-    <li>Understand Quranic terms and Islamic texts in their original Urdu context</li>
-    <li>Connect with the rich cultural and literary heritage of the Urdu language</li>
-    <li>Enhance your ability to engage meaningfully with Urdu-speaking communities worldwide</li>
-    <li>Build a strong foundation for advanced Islamic studies or Quranic understanding</li>
+    <li>{{ t.urduWhy1 }}</li>
+    <li>{{ t.urduWhy2 }}</li>
+    <li>{{ t.urduWhy3 }}</li>
+    <li>{{ t.urduWhy4 }}</li>
+    <li>{{ t.urduWhy5 }}</li>
   </ul>
 </div>
 
 <div class="content-block">
-  <h3>What You'll Learn</h3>
+  <h3>{{ t.urduLearnH }}</h3>
   <ul class="learn-list">
-    <li>Urdu Basics: Master the beautiful Nastaliq script, pronunciation, and foundational grammar</li>
-    <li>Conversational Skills: Build fluency in everyday Urdu communication for real-world use</li>
-    <li>Reading &amp; Writing: Read Urdu texts including Islamic literature and classic Urdu poetry</li>
-    <li>Quranic Urdu: Understand key Quranic terms and phrases commonly used in Urdu communities</li>
-    <li>Cultural Insights: Explore Urdu's central role in Islamic heritage, poetry, and modern life</li>
+    <li>{{ t.urduLearn1 }}</li>
+    <li>{{ t.urduLearn2 }}</li>
+    <li>{{ t.urduLearn3 }}</li>
+    <li>{{ t.urduLearn4 }}</li>
+    <li>{{ t.urduLearn5 }}</li>
   </ul>
 </div>
 
 <div class="content-block">
-  <h3>Course Highlights</h3>
+  <h3>{{ t.urduHighH }}</h3>
   <div class="highlights-grid">
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_instructor.svg') }}" alt="Expert Instructors" class="hl-icon"/>
-      <h4>Expert Instructors</h4>
-      <p>Native Urdu-speaking teachers with deep expertise in language and Islamic studies</p>
+      <h4>{{ t.urduHl1H }}</h4>
+      <p>{{ t.urduHl1P }}</p>
     </div>
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_curriculum.svg') }}" alt="Full Curriculum" class="hl-icon"/>
-      <h4>Full Curriculum</h4>
-      <p>Script, grammar, vocabulary, conversation, and Islamic Quranic terminology covered</p>
+      <h4>{{ t.urduHl2H }}</h4>
+      <p>{{ t.urduHl2P }}</p>
     </div>
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_feedback.svg') }}" alt="Personal Feedback" class="hl-icon"/>
-      <h4>Personal Feedback</h4>
-      <p>Tailored guidance to improve your pronunciation, writing, and comprehension skills</p>
+      <h4>{{ t.urduHl3H }}</h4>
+      <p>{{ t.urduHl3P }}</p>
     </div>
     <div class="hl-card">
       <img src="{{ url_for('static', filename='images/hl_certificate.svg') }}" alt="Certification" class="hl-icon"/>
-      <h4>Certification</h4>
-      <p>Certificate with 70% attendance and passing the Urdu Proficiency Exam</p>
+      <h4>{{ t.urduHl4H }}</h4>
+      <p>{{ t.urduHl4P }}</p>
     </div>
   </div>
 </div>
 
 <div class="content-block">
-  <h3>Requirements &amp; Certification</h3>
+  <h3>{{ t.urduCertH }}</h3>
   <ul class="detail-list">
-    <li>No prior Urdu knowledge required &mdash; completely open to all beginners</li>
-    <li>Stable internet connection, a device for online classes, and a notebook for practice</li>
-    <li>Maintain at least 70% attendance throughout the course duration</li>
-    <li>Pass the Urdu Proficiency Exam assessing reading, writing, and speaking skills</li>
+    <li>{{ t.urduCert1 }}</li>
+    <li>{{ t.urduCert2 }}</li>
+    <li>{{ t.urduCert3 }}</li>
+    <li>{{ t.urduCert4 }}</li>
   </ul>
 </div>
 {% endblock %}
 
 {# ── Other Courses ── #}
 {% block other_courses %}
-  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed" class="oc-img"/></div><div class="oc-body"><h4>Tajweed Course</h4><p>Beautiful, precise recitation</p></div></a>
-  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation" class="oc-img"/></div><div class="oc-body"><h4>Quran Recitation</h4><p>Complete the full Quran in 1 year</p></div></a>
-  <a href="{{ url_for('course_hifz') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz" class="oc-img"/></div><div class="oc-body"><h4>Quran Hifz</h4><p>Memorize the entire Holy Quran</p></div></a>
-  <a href="{{ url_for('course_qirat') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat" class="oc-img"/></div><div class="oc-body"><h4>Qirat Course</h4><p>Master the 10 Qira'at styles</p></div></a>
-  <a href="{{ url_for('course_arabic') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic" class="oc-img"/></div><div class="oc-body"><h4>Basic Arabic</h4><p>Speak Arabic in 3 months</p></div></a>
-  <a href="{{ url_for('course_english') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English" class="oc-img"/></div><div class="oc-body"><h4>Basic English</h4><p>Speak English confidently</p></div></a>
+  <a href="{{ url_for('course_tajweed') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocTajweedTitle }}</h4><p>{{ t.ocTajweedP }}</p></div></a>
+  <a href="{{ url_for('course_quran_recitation') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocRecitationTitle }}</h4><p>{{ t.ocRecitationP }}</p></div></a>
+  <a href="{{ url_for('course_hifz') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocHifzTitle }}</h4><p>{{ t.ocHifzP }}</p></div></a>
+  <a href="{{ url_for('course_qirat') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocQiratTitle }}</h4><p>{{ t.ocQiratP }}</p></div></a>
+  <a href="{{ url_for('course_arabic') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocArabicTitle }}</h4><p>{{ t.ocArabicP }}</p></div></a>
+  <a href="{{ url_for('course_english') }}" class="oc-card"><div class="oc-img-wrap"><img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English" class="oc-img"/></div><div class="oc-body"><h4>{{ t.ocEnglishTitle }}</h4><p>{{ t.ocEnglishP }}</p></div></a>
 {% endblock %}

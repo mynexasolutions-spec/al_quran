@@ -4,9 +4,9 @@
     <div>
       <div class="footer-logo">
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
-        <div class="footer-logo-text">Al-Qur'an Global Institute<br><small>Illuminating Hearts Worldwide</small></div>
+        <div class="footer-logo-text">Al-Qur'an Global Institute<br><small>{{ t.footerTagline }}</small></div>
       </div>
-      <p class="footer-desc">Dedicated to providing authentic Quranic and language education for all ages. Rooted in tradition, powered by passion, available worldwide.</p>
+      <p class="footer-desc">{{ t.footerDesc }}</p>
       <div class="social-links">
         <a href="#" title="WhatsApp">&#x1F4AC;</a>
         <a href="#" title="Facebook">f</a>
@@ -15,34 +15,34 @@
       </div>
     </div>
     <div class="footer-col">
-      <h4>Quranic Courses</h4>
+      <h4>{{ t.footerQuranicH }}</h4>
       <ul class="footer-links">
-        <li><a href="{{ url_for('course_tajweed') }}">Tajweed Course</a></li>
-        <li><a href="{{ url_for('course_quran_recitation') }}">Quran Recitation</a></li>
-        <li><a href="{{ url_for('course_hifz') }}">Quran Hifz</a></li>
-        <li><a href="{{ url_for('course_qirat') }}">Qirat Course</a></li>
+        <li><a href="{{ url_for('course_tajweed') }}">{{ t.footerLinkTajweed }}</a></li>
+        <li><a href="{{ url_for('course_quran_recitation') }}">{{ t.footerLinkRecitation }}</a></li>
+        <li><a href="{{ url_for('course_hifz') }}">{{ t.footerLinkHifz }}</a></li>
+        <li><a href="{{ url_for('course_qirat') }}">{{ t.footerLinkQirat }}</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h4>Language Courses</h4>
+      <h4>{{ t.footerLanguageH }}</h4>
       <ul class="footer-links">
-        <li><a href="{{ url_for('course_arabic') }}">Basic Arabic</a></li>
-        <li><a href="{{ url_for('course_urdu') }}">Urdu Language</a></li>
-        <li><a href="{{ url_for('course_english') }}">Basic English</a></li>
+        <li><a href="{{ url_for('course_arabic') }}">{{ t.footerLinkArabic }}</a></li>
+        <li><a href="{{ url_for('course_urdu') }}">{{ t.footerLinkUrdu }}</a></li>
+        <li><a href="{{ url_for('course_english') }}">{{ t.footerLinkEnglish }}</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h4>Contact</h4>
+      <h4>{{ t.footerContactH }}</h4>
       <ul class="footer-links">
         <li><a href="mailto:osamasamastipur@gmail.com">osamasamastipur@gmail.com</a></li>
         <li><a href="tel:+918226970167">+91 8226970167</a></li>
-        <li><a href="https://wa.me/918226970167" target="_blank">WhatsApp Us</a></li>
-        <li><a href="{{ url_for('index') }}#about">About Us</a></li>
-        <li><a href="{{ url_for('index') }}#contact">Enroll Now</a></li>
+        <li><a href="https://wa.me/918226970167" target="_blank">{{ t.footerWhatsApp }}</a></li>
+        <li><a href="{{ url_for('index') }}#about">{{ t.footerAbout }}</a></li>
+        <li><a href="{{ url_for('index') }}#contact">{{ t.footerEnroll }}</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>&copy; 2025 Al-Qur'an Global Institute. Made with <span>&hearts;</span> &amp; Barakah.</p>
+    <p>{{ t.footerCopy | safe }}</p>
   </div>
 </footer>

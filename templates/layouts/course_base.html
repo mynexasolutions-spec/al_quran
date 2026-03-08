@@ -15,7 +15,7 @@
 <!-- ══ COURSE HERO ══ -->
 <section class="course-hero">
   <div class="ch-inner">
-    <a href="{{ url_for('index') }}" class="ch-back">&#8592; Back to All Courses</a>
+    <a href="{{ url_for('index') }}" class="ch-back">{{ t.courseBackLink }}</a>
     <span class="ch-cat">{% block course_category %}{% endblock %}</span>
     <span class="ch-icon">{% block course_icon %}{% endblock %}</span>
     <h1>{% block course_title %}{% endblock %}</h1>
@@ -25,8 +25,8 @@
       {% block course_badges %}{% endblock %}
     </div>
     <div class="ch-btns">
-      <a href="{{ url_for('index') }}#contact" class="btn-primary">Enroll Now</a>
-      <a href="#details" class="btn-outline">Course Details</a>
+      <a href="{{ url_for('index') }}#contact" class="btn-primary">{{ t.courseEnrollBtn }}</a>
+      <a href="#details" class="btn-outline">{{ t.courseDetailsBtn }}</a>
     </div>
   </div>
 </section>
@@ -51,8 +51,8 @@
 <!-- ══ OTHER COURSES ══ -->
 <section class="other-courses">
   <div class="center-hdr">
-    <span class="section-tag">Explore More</span>
-    <h2 class="section-title">Other <span>Courses</span></h2>
+    <span class="section-tag">{{ t.otherCoursesTag }}</span>
+    <h2 class="section-title">{{ t.otherCoursesH2 }} <span>{{ t.otherCoursesH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
   <div class="oc-grid">

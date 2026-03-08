@@ -33,6 +33,10 @@
   background: var(--white);
   color: var(--teal-dark);
 }
+.lang-btn--ur {
+  font-size: .9rem;
+  letter-spacing: 0;
+}
 
 /* ── Desktop Nav ── */
 nav {
