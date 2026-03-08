@@ -127,3 +127,12 @@ body.lang-ur .footer-logo-text small {
   text-transform: none;
   opacity: .85;
 }
+
+/* ── Phone-only Urdu hero badge spacing ── */
+@media (max-width: 660px) {
+  body.lang-ur .hero-badge {
+    line-height: 2.4;
+    padding: .8rem 1.6rem;
+    margin-bottom: 2rem;
+  }
+}
