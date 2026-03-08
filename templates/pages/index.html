@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+﻿{% extends "layouts/base.html" %}
 {% block title %}Home | Al-Qur'an Global Institute{% endblock %}
 
 {% block content %}
@@ -16,17 +16,17 @@
       </div>
     </div>
 
-    <span class="hero-badge" data-i18n="heroBadge">&#10022; Certified Online Courses &bull; All Ages Welcome</span>
+    <span class="hero-badge">{{ t.heroBadge }}</span>
 
-    <h1><span data-i18n="heroH1Line1">Learn Quran With</span><br><em data-i18n="heroH1Em">Heart &amp; Understanding</em></h1>
+    <h1><span>{{ t.heroH1Line1 }}</span><br><em>{{ t.heroH1Em | safe }}</em></h1>
 
     <span class="hero-arabic-sub">&#x648;&#x631;&#x62A;&#x644; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x62A;&#x631;&#x62A;&#x64A;&#x644;&#x627;</span>
 
-    <p data-i18n="heroP">From Tajweed, Hifz &amp; Basic Islamic Education to Arabic, Urdu &amp; English &mdash; Al-Qur'an Global Institute offers world-class online courses to nurture your spiritual growth and language skills from anywhere in the world.</p>
+    <p>{{ t.heroP | safe }}</p>
 
     <div class="hero-btns">
-      <a href="#courses" class="btn-primary" data-i18n="heroExplore">Explore Courses</a>
-      <a href="#contact" class="btn-outline" data-i18n="heroContact">Contact Us</a>
+      <a href="#courses" class="btn-primary">{{ t.heroExplore }}</a>
+      <a href="#contact" class="btn-outline">{{ t.heroContact }}</a>
     </div>
 
   </div>
@@ -36,10 +36,10 @@
 <!-- ══ COURSES OVERVIEW ══ -->
 <section class="courses" id="courses">
   <div class="center-hdr">
-    <span class="section-tag" data-i18n="coursesSectionTag">Our Programs</span>
-    <h2 class="section-title"><span data-i18n="coursesH2">All</span> <span data-i18n="coursesH2Span">Courses</span></h2>
+    <span class="section-tag">{{ t.coursesSectionTag }}</span>
+    <h2 class="section-title"><span>{{ t.coursesH2 }}</span> <span>{{ t.coursesH2Span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub" data-i18n="coursesSub">Choose from eight expertly designed courses &mdash; Quranic, language, and academic programs for learners of all ages and backgrounds.</p>
+    <p class="section-sub">{{ t.coursesSub }}</p>
   </div>
 
   <div class="courses-grid">
@@ -47,120 +47,120 @@
     <a href="{{ url_for('course_tajweed') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catQuranic">Quranic Studies</span>
-        <h3 data-i18n="tajweedTitle">Tajweed Course</h3>
-        <p data-i18n="tajweedDesc">Master the rules of Quranic recitation &mdash; from Makharij to Madd &mdash; and beautify every letter with precision and devotion.</p>
+        <span class="course-cat">{{ t.catQuranic }}</span>
+        <h3>{{ t.tajweedTitle }}</h3>
+        <p>{{ t.tajweedDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badgeAllLevels">All Levels</span>
-          <span class="badge" data-i18n="badgeOnline">Online</span>
-          <span class="badge" data-i18n="badgeCertificate">Certificate</span>
+          <span class="badge">{{ t.badgeAllLevels }}</span>
+          <span class="badge">{{ t.badgeOnline }}</span>
+          <span class="badge">{{ t.badgeCertificate }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <a href="{{ url_for('course_quran_recitation') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catQuranic">Quranic Studies</span>
-        <h3 data-i18n="recitationTitle">Quran Recitation</h3>
-        <p data-i18n="recitationDesc">A 1-year comprehensive program to complete the entire Quran with proper Tajweed, guided by expert instructors worldwide.</p>
+        <span class="course-cat">{{ t.catQuranic }}</span>
+        <h3>{{ t.recitationTitle }}</h3>
+        <p>{{ t.recitationDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badge1Year">1 Year</span>
-          <span class="badge" data-i18n="badgeAllLevels">All Levels</span>
-          <span class="badge" data-i18n="badgeNazira">Nazira Exam</span>
+          <span class="badge">{{ t.badge1Year }}</span>
+          <span class="badge">{{ t.badgeAllLevels }}</span>
+          <span class="badge">{{ t.badgeNazira }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <a href="{{ url_for('course_hifz') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catQuranic">Quranic Studies</span>
-        <h3 data-i18n="hifzTitle">Quran Hifz Course</h3>
-        <p data-i18n="hifzDesc">Memorize the entire Holy Quran with structured daily plans, personalized feedback, and expert Tajweed mastery.</p>
+        <span class="course-cat">{{ t.catQuranic }}</span>
+        <h3>{{ t.hifzTitle }}</h3>
+        <p>{{ t.hifzDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badgeMonSat">Mon&ndash;Sat</span>
-          <span class="badge" data-i18n="badgeAllAges">All Ages</span>
-          <span class="badge" data-i18n="badgeHafiz">Hafiz/Hafiza</span>
+          <span class="badge">{{ t.badgeMonSat }}</span>
+          <span class="badge">{{ t.badgeAllAges }}</span>
+          <span class="badge">{{ t.badgeHafiz }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <a href="{{ url_for('course_qirat') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catQuranic">Quranic Studies</span>
-        <h3 data-i18n="qiratTitle">Qirat Course</h3>
-        <p data-i18n="qiratDesc">Explore the 10 authentic Qira'at recitation styles under certified scholars with Ijazah and earn your own certification.</p>
+        <span class="course-cat">{{ t.catQuranic }}</span>
+        <h3>{{ t.qiratTitle }}</h3>
+        <p>{{ t.qiratDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badgeFlexible">Flexible</span>
-          <span class="badge" data-i18n="badgeIjazah">Ijazah Path</span>
-          <span class="badge" data-i18n="badgeAdvanced">Advanced</span>
+          <span class="badge">{{ t.badgeFlexible }}</span>
+          <span class="badge">{{ t.badgeIjazah }}</span>
+          <span class="badge">{{ t.badgeAdvanced }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <a href="{{ url_for('course_arabic') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic Speaking Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catLanguage">Language</span>
-        <h3 data-i18n="arabicTitle">Basic Arabic Speaking</h3>
-        <p data-i18n="arabicDesc">A 3-month intensive speaking course covering everyday Arabic and Quranic vocabulary, with 70% conversational focus.</p>
+        <span class="course-cat">{{ t.catLanguage }}</span>
+        <h3>{{ t.arabicTitle }}</h3>
+        <p>{{ t.arabicDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badge3Months">3 Months</span>
-          <span class="badge" data-i18n="badgeBeginner">Beginner</span>
-          <span class="badge" data-i18n="badge5xWeek">5x / Week</span>
+          <span class="badge">{{ t.badge3Months }}</span>
+          <span class="badge">{{ t.badgeBeginner }}</span>
+          <span class="badge">{{ t.badge5xWeek }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <a href="{{ url_for('course_urdu') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catLanguage">Language</span>
-        <h3 data-i18n="urduTitle">Urdu Language Course</h3>
-        <p data-i18n="urduDesc">Learn to speak, read, and write Urdu with Islamic context &mdash; connecting you with Urdu-speaking communities worldwide.</p>
+        <span class="course-cat">{{ t.catLanguage }}</span>
+        <h3>{{ t.urduTitle }}</h3>
+        <p>{{ t.urduDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badgeTueWed">Tue &amp; Wed</span>
-          <span class="badge" data-i18n="badgeAllLevels">All Levels</span>
-          <span class="badge" data-i18n="badgeCertificate">Certificate</span>
+          <span class="badge">{{ t.badgeTueWed | safe }}</span>
+          <span class="badge">{{ t.badgeAllLevels }}</span>
+          <span class="badge">{{ t.badgeCertificate }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <a href="{{ url_for('course_english') }}" class="course-card">
       <img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English Course" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catLanguage">Language</span>
-        <h3 data-i18n="englishTitle">Basic English Course</h3>
-        <p data-i18n="englishDesc">A 3-month beginner program to build conversational English skills with Islamic contexts &mdash; speak confidently in a global world.</p>
+        <span class="course-cat">{{ t.catLanguage }}</span>
+        <h3>{{ t.englishTitle }}</h3>
+        <p>{{ t.englishDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badge3Months">3 Months</span>
-          <span class="badge" data-i18n="badgeBeginner">Beginner</span>
-          <span class="badge" data-i18n="badge5xWeek">5x / Week</span>
+          <span class="badge">{{ t.badge3Months }}</span>
+          <span class="badge">{{ t.badgeBeginner }}</span>
+          <span class="badge">{{ t.badge5xWeek }}</span>
         </div>
-        <span class="course-link" data-i18n="courseLinkText">View Course <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
 
     <div class="course-card course-card--no-link">
       <img src="{{ url_for('static', filename='images/courses/Academic_Subjects.webp') }}" alt="Academic Subjects" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat" data-i18n="catAcademic">Academic</span>
-        <h3 data-i18n="academicTitle">Academic Subjects</h3>
-        <p data-i18n="academicDesc">Structured tuition in Maths, Science, and other core academic subjects &mdash; personalised online sessions for all school levels.</p>
+        <span class="course-cat">{{ t.catAcademic }}</span>
+        <h3>{{ t.academicTitle }}</h3>
+        <p>{{ t.academicDesc }}</p>
         <div class="course-meta">
-          <span class="badge" data-i18n="badgeMaths">Maths</span>
-          <span class="badge" data-i18n="badgeScience">Science</span>
-          <span class="badge" data-i18n="badgeAllAges">All Ages</span>
+          <span class="badge">{{ t.badgeMaths }}</span>
+          <span class="badge">{{ t.badgeScience }}</span>
+          <span class="badge">{{ t.badgeAllAges }}</span>
         </div>
-        <span class="course-link" data-i18n="enrollViaContact">Enroll via Contact <span class="course-link-arrow">&#8594;</span></span>
+        <span class="course-link">{{ t.enrollViaContact }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </div>
 
@@ -172,27 +172,27 @@
 <section class="stats-strip">
   <div class="stats-numbers">
     <div class="stat">
-      <span class="stat-num" data-i18n="stat1Num">500+</span>
-      <span class="stat-label" data-i18n="stat1Label">Students Enrolled</span>
+      <span class="stat-num">{{ t.stat1Num }}</span>
+      <span class="stat-label">{{ t.stat1Label }}</span>
     </div>
     <div class="stat">
-      <span class="stat-num" data-i18n="stat2Num">1000+</span>
-      <span class="stat-label" data-i18n="stat2Label">Classes Delivered</span>
+      <span class="stat-num">{{ t.stat2Num }}</span>
+      <span class="stat-label">{{ t.stat2Label }}</span>
     </div>
     <div class="stat">
-      <span class="stat-num" data-i18n="stat3Num">30+</span>
-      <span class="stat-label" data-i18n="stat3Label">Countries Reached</span>
+      <span class="stat-num">{{ t.stat3Num }}</span>
+      <span class="stat-label">{{ t.stat3Label }}</span>
     </div>
     <div class="stat">
-      <span class="stat-num" data-i18n="stat4Num">4.9&#9733;</span>
-      <span class="stat-label" data-i18n="stat4Label">Avg. Rating</span>
+      <span class="stat-num">{{ t.stat4Num }}</span>
+      <span class="stat-label">{{ t.stat4Label }}</span>
     </div>
   </div>
   <div class="stats-trust-bar">
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span data-i18n="trust1"> Certified &amp; experienced tutors</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span data-i18n="trust2"> Authentic Tajweed &amp; Quranic education</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span data-i18n="trust3"> Flexible online class timings</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span data-i18n="trust4"> Official certification awarded</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust1 | safe }}</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust2 | safe }}</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust3 }}</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust4 }}</span></div>
   </div>
 </section>
 
@@ -204,17 +204,17 @@
       <img src="{{ url_for('static', filename='images/who_we_are.webp') }}" alt="Who We Are — Al-Qur'an Global Institute" class="about-full-img"/>
     </div>
     <div>
-      <span class="section-tag" data-i18n="aboutTag">Who We Are</span>
-      <h2 class="section-title"><span data-i18n="aboutH2">Al-Qur'an</span> <span style="color:var(--gold)" data-i18n="aboutH2Gold">Global Institute</span></h2>
+      <span class="section-tag">{{ t.aboutTag }}</span>
+      <h2 class="section-title"><span>{{ t.aboutH2 }}</span> <span style="color:var(--gold)">{{ t.aboutH2Gold }}</span></h2>
       <div class="divider"></div>
-      <p class="section-sub" data-i18n="aboutSub">Al-Qur'an Global Institute is dedicated to empowering learners worldwide with authentic Quranic and language education. Our mission is to make sacred knowledge accessible to everyone, regardless of age, background, or location.</p>
+      <p class="section-sub">{{ t.aboutSub }}</p>
       <ul class="mission-list">
-        <li data-i18n="aboutLi1">Expert instructors with verified Tajweed Ijazah credentials</li>
-        <li data-i18n="aboutLi2">Live, interactive online classes with real-time feedback</li>
-        <li data-i18n="aboutLi3">Courses for all ages &mdash; children, teens, and adults</li>
-        <li data-i18n="aboutLi4">Globally accessible &mdash; students from 30+ countries</li>
-        <li data-i18n="aboutLi5">Official certification upon successful course completion</li>
-        <li data-i18n="aboutLi6">Supportive and encouraging global learning community</li>
+        <li>{{ t.aboutLi1 }}</li>
+        <li>{{ t.aboutLi2 }}</li>
+        <li>{{ t.aboutLi3 }}</li>
+        <li>{{ t.aboutLi4 }}</li>
+        <li>{{ t.aboutLi5 }}</li>
+        <li>{{ t.aboutLi6 }}</li>
       </ul>
     </div>
   </div>
@@ -227,9 +227,9 @@
   <div class="cta-banner-inner">
     <div class="cta-text">
       <p class="cta-arabic">&#x644;&#x627; &#x62A;&#x62F;&#x639; &#x627;&#x644;&#x634;&#x64A;&#x637;&#x627;&#x646; &#x64A;&#x624;&#x62E;&#x631;&#x643;</p>
-      <h2 data-i18n="ctaH2">Do not let Shaitan delay you from starting<br>to learn your <em>deen</em>.</h2>
+      <h2>{{ t.ctaH2 | safe }}</h2>
     </div>
-    <a href="#contact" class="btn-cta-white" data-i18n="ctaBtn">Quick Start Now</a>
+    <a href="#contact" class="btn-cta-white">{{ t.ctaBtn }}</a>
   </div>
 </section>
 
@@ -237,8 +237,8 @@
 <!-- ══ WHY CHOOSE US ══ -->
 <section class="why-choose">
   <div class="center-hdr">
-    <span class="section-tag">Why To Choose Us</span>
-    <h2 class="section-title">Why Choose Our <span>Islamic Institute</span></h2>
+    <span class="section-tag">{{ t.whyTag }}</span>
+    <h2 class="section-title">{{ t.whyH2 }} <span>{{ t.whyH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
   <div class="features-grid">
@@ -248,8 +248,8 @@
         <img src="{{ url_for('static', filename='images/why/expert_tutor.webp') }}" alt="Expert Quran Tutors" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
-        <h3>Expert Quran Tutors</h3>
-        <p>Our teachers hold verified Ijazah credentials and are trained in authentic Tajweed methodology, ensuring proper Quranic education.</p>
+        <h3>{{ t.feat1H }}</h3>
+        <p>{{ t.feat1P }}</p>
       </div>
     </div>
 
@@ -258,8 +258,8 @@
         <img src="{{ url_for('static', filename='images/why/student_value.webp') }}" alt="We Value Our Students" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
-        <h3>We Value Our Students</h3>
-        <p>Every student receives personalised guidance, progress tracking, and consistent encouragement tailored to their individual learning pace.</p>
+        <h3>{{ t.feat2H }}</h3>
+        <p>{{ t.feat2P }}</p>
       </div>
     </div>
 
@@ -268,8 +268,8 @@
         <img src="{{ url_for('static', filename='images/why/one_on_one.webp') }}" alt="One-on-One Classes" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
-        <h3>One-on-One Classes</h3>
-        <p>Live private sessions give each student the teacher’s full attention — perfect for focused learning, quick corrections, and real progress.</p>
+        <h3>{{ t.feat3H }}</h3>
+        <p>{{ t.feat3P }}</p>
       </div>
     </div>
 
@@ -278,8 +278,8 @@
         <img src="{{ url_for('static', filename='images/why/flexible_timing.webp') }}" alt="Flexible Timings" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
-        <h3>Flexible Timings</h3>
-        <p>Classes are available across all time zones, seven days a week — fitting seamlessly around your work, school, or family schedule.</p>
+        <h3>{{ t.feat4H }}</h3>
+        <p>{{ t.feat4P }}</p>
       </div>
     </div>
 
@@ -288,10 +288,11 @@
 
 
 <!-- ══ REVIEWS ══ -->
+
 <section class="reviews" id="reviews">
   <div class="center-hdr">
-    <span class="section-tag" data-i18n="reviewsTag">Student Testimonials</span>
-    <h2 class="section-title"><span data-i18n="reviewsH2">What Our</span> <span data-i18n="reviewsH2Span">Students Say</span></h2>
+    <span class="section-tag">{{ t.reviewsTag }}</span>
+    <h2 class="section-title"><span>{{ t.reviewsH2 }}</span> <span>{{ t.reviewsH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
 
@@ -389,8 +390,8 @@
 
   <!-- Share your review CTA -->
   <div class="rev-submit-cta">
-    <p data-i18n="reviewCta">Alhamdulillah — did we make a difference for you?</p>
-    <button type="button" id="openReviewModal" class="btn-primary" data-i18n="reviewCtaBtn">Share Your Review</button>
+    <p>{{ t.reviewCta }}</p>
+    <button type="button" id="openReviewModal" class="btn-primary">{{ t.reviewCtaBtn }}</button>
   </div>
 </section>
 
@@ -399,14 +400,14 @@
   <div class="rev-modal">
     <button class="rev-modal-close" id="revModalClose" aria-label="Close">&times;</button>
     <div class="rev-modal-hdr">
-      <span class="section-tag">Share Your Experience</span>
-      <h2 id="revModalTitle">Leave a Review</h2>
+      <span class="section-tag">{{ t.modalTag }}</span>
+      <h2 id="revModalTitle">{{ t.modalH2 }}</h2>
     </div>
 
     <form method="post" action="{{ url_for('review_submit') }}" class="rev-modal-form">
       <!-- Star rating -->
       <div class="rev-star-row">
-        <label>Your Rating <span class="req">*</span></label>
+        <label>{{ t.modalRating }} <span class="req">*</span></label>
         <div class="rev-stars" id="revStars">
           {% for i in range(1,6) %}
           <button type="button" class="rev-star-btn" data-val="{{ i }}" aria-label="{{ i }} stars">&#9733;</button>
@@ -417,17 +418,17 @@
 
       <div class="rev-modal-grid">
         <div class="rmg">
-          <label>Full Name <span class="req">*</span></label>
-          <input type="text" name="name" placeholder="Your name" required/>
+          <label>{{ t.modalName }} <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="{{ t.modalNamePh }}" required/>
         </div>
         <div class="rmg">
-          <label>Location</label>
-          <input type="text" name="location" placeholder="City, Country"/>
+          <label>{{ t.modalLocation }}</label>
+          <input type="text" name="location" placeholder="{{ t.modalLocationPh }}"/>
         </div>
         <div class="rmg rmg--full">
-          <label>Course Taken</label>
+          <label>{{ t.modalCourse }}</label>
           <select name="course">
-            <option value="">Select a course (optional)</option>
+            <option value="">{{ t.modalCourseOpt }}</option>
             <option>Tajweed Course</option>
             <option>Quran Recitation</option>
             <option>Quran Hifz Course</option>
@@ -439,13 +440,13 @@
           </select>
         </div>
         <div class="rmg rmg--full">
-          <label>Your Review <span class="req">*</span></label>
-          <textarea name="review_text" rows="4" placeholder="Share your experience with Al-Qur'an Global Institute..." required></textarea>
+          <label>{{ t.modalReviewLabel }} <span class="req">*</span></label>
+          <textarea name="review_text" rows="4" placeholder="{{ t.modalReviewPh }}" required></textarea>
         </div>
       </div>
 
-      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;padding:1rem;text-align:center;">Submit Review</button>
-      <p class="rev-modal-note">Your review will be visible after admin verification, insha'Allah.</p>
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;padding:1rem;text-align:center;">{{ t.modalSubmit }}</button>
+      <p class="rev-modal-note">{{ t.modalNote }}</p>
     </form>
   </div>
 </div>
@@ -455,10 +456,10 @@
 <section class="comp-preview" id="competitions">
 
   <div class="center-hdr">
-    <span class="section-tag" data-i18n="compTag">Events &amp; Programs</span>
-    <h2 class="section-title"><span data-i18n="compH2">Our</span> <span data-i18n="compH2Span">Competitions</span></h2>
+    <span class="section-tag">{{ t.compTag | safe }}</span>
+    <h2 class="section-title"><span>{{ t.compH2 }}</span> <span>{{ t.compH2Span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub" data-i18n="compSub">We regularly host exciting Islamic and Quranic competitions, open to learners worldwide. Showcase your skills, earn recognition, and grow with our community.</p>
+    <p class="section-sub">{{ t.compSub }}</p>
   </div>
 
   <div class="comp-preview-grid">
@@ -479,15 +480,15 @@
       </div>
     </div>
     {% else %}
-    <div style="grid-column:1/-1;text-align:center;color:var(--text-light);padding:2rem;" data-i18n="compComingSoon">
-      Competitions coming soon, insha'Allah.
+    <div style="grid-column:1/-1;text-align:center;color:var(--text-light);padding:2rem;">
+      {{ t.compComingSoon }}
     </div>
     {% endfor %}
 
   </div>
 
   <div class="comp-preview-cta">
-    <a href="{{ url_for('competitions') }}" class="btn-primary" data-i18n="compViewAll">View All Competitions</a>
+    <a href="{{ url_for('competitions') }}" class="btn-primary">{{ t.compViewAll }}</a>
   </div>
 </section>
 
@@ -495,51 +496,51 @@
 <!-- ══ FAQ ══ -->
 <section class="faq" id="faq">
   <div class="center-hdr">
-    <span class="section-tag" data-i18n="faqTag">Common Questions</span>
-    <h2 class="section-title"><span data-i18n="faqH2">Frequently Asked</span> <span data-i18n="faqH2Span">Questions</span></h2>
+    <span class="section-tag">{{ t.faqTag }}</span>
+    <h2 class="section-title"><span>{{ t.faqH2 }}</span> <span>{{ t.faqH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
 
   <div class="faq-list">
 
     <div class="faq-item open">
-      <div class="faq-q" data-i18n="faq1Q">Is there a free trial lesson?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq1A">Yes! Every new student is offered one completely free trial lesson &mdash; no payment, no commitment required. This allows both the student and teacher to assess compatibility, set learning goals, and experience the teaching style before enrolling.</div>
+      <div class="faq-q">{{ t.faq1Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq1A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq2Q">What ages do you teach?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq2A">We welcome students from age 4 upwards, including adults of all ages. Every lesson is tailored to the student's age, level, and learning pace. Adult learners are very warmly encouraged and well supported throughout their journey.</div>
+      <div class="faq-q">{{ t.faq2Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq2A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq3Q">Do you teach female students?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq3A">Female students are welcome for all online sessions. We maintain full Islamic etiquette in all interactions, and lessons are conducted in a respectful, professional environment. Female students can enroll in any of our courses.</div>
+      <div class="faq-q">{{ t.faq3Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq3A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq4Q">What platform is used for online lessons?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq4A">We use Zoom or Skype &mdash; whichever is more convenient for you. A tablet or laptop with a stable internet connection and a working microphone is recommended for the best interactive learning experience.</div>
+      <div class="faq-q">{{ t.faq4Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq4A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq5Q">How many lessons per week are recommended?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq5A">For best results, 3&ndash;5 sessions per week are recommended, especially for Hifz and language students. However, even 2 sessions per week yields great progress over time. We fully accommodate your schedule and commitments.</div>
+      <div class="faq-q">{{ t.faq5Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq5A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq6Q">Are the courses available worldwide?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq6A">Yes! All our courses are available 100% online, meaning students from anywhere in the world can enroll and attend live classes. We currently have students from the UK, USA, Canada, UAE, and across Asia and Africa.</div>
+      <div class="faq-q">{{ t.faq6Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq6A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq7Q">What certification do students receive?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq7A">Students who maintain at least 70% attendance and pass the relevant assessment receive an official certificate from Al-Qur'an Global Institute. Hifz students receive a Hifz Certificate, and Qirat students can pursue an Ijazah pathway.</div>
+      <div class="faq-q">{{ t.faq7Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq7A }}</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" data-i18n="faq8Q">How do I enroll or find out about fees?<span class="faq-icon">+</span></div>
-      <div class="faq-a" data-i18n="faq8A">Simply fill out the contact form below, WhatsApp us, or send an email. We'll get back to you within 24 hours with full details about fees, schedules, and how to get started, insha'Allah. The first trial lesson is always free.</div>
+      <div class="faq-q">{{ t.faq8Q }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ t.faq8A }}</div>
     </div>
 
   </div>
@@ -549,10 +550,10 @@
 <!-- ══ SOCIAL MEDIA ══ -->
 <section class="social-media" id="social">
   <div class="center-hdr">
-    <span class="section-tag" data-i18n="socialTag">Stay Connected</span>
-    <h2 class="section-title"><span data-i18n="socialH2">Follow Us on</span> <span data-i18n="socialH2Span">Social Media</span></h2>
+    <span class="section-tag">{{ t.socialTag }}</span>
+    <h2 class="section-title"><span>{{ t.socialH2 }}</span> <span>{{ t.socialH2Span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub" data-i18n="socialSub">Stay updated with our latest courses, upcoming competitions, Islamic reminders, and student achievements. Join our growing global community online.</p>
+    <p class="section-sub">{{ t.socialSub }}</p>
   </div>
 
   <div class="social-grid">
@@ -569,9 +570,9 @@
           </svg>
         </div>
         <h3>Instagram</h3>
-        <p data-i18n="igDesc">Daily Quranic verses, student spotlights, course highlights, and behind-the-scenes from our online classrooms.</p>
+        <p>{{ t.igDesc }}</p>
         <span class="social-handle">@alquranglobalinstitute</span>
-        <div class="social-follow-btn" data-i18n="igBtn">Follow Us</div>
+        <div class="social-follow-btn">{{ t.igBtn }}</div>
       </div>
     </a>
 
@@ -585,9 +586,9 @@
           </svg>
         </div>
         <h3>Facebook</h3>
-        <p data-i18n="fbDesc">Join our community page for live session announcements, competition updates, Islamic articles, and parent resources.</p>
+        <p>{{ t.fbDesc }}</p>
         <span class="social-handle">Al-Qur'an Global Institute</span>
-        <div class="social-follow-btn" data-i18n="fbBtn">Like Page</div>
+        <div class="social-follow-btn">{{ t.fbBtn }}</div>
       </div>
     </a>
 
@@ -602,9 +603,9 @@
           </svg>
         </div>
         <h3>YouTube</h3>
-        <p data-i18n="ytDesc">Free Tajweed tutorials, Quran recitation lessons, competition recordings, and inspiring Islamic education content.</p>
+        <p>{{ t.ytDesc }}</p>
         <span class="social-handle">Al-Qur'an Global Institute</span>
-        <div class="social-follow-btn" data-i18n="ytBtn">Subscribe</div>
+        <div class="social-follow-btn">{{ t.ytBtn }}</div>
       </div>
     </a>
 
@@ -619,9 +620,9 @@
           </svg>
         </div>
         <h3>WhatsApp</h3>
-        <p data-i18n="waDesc">Join our WhatsApp channel for instant updates, class reminders, Islamic content, and direct announcements from our team.</p>
+        <p>{{ t.waDesc }}</p>
         <span class="social-handle">Al-Qur'an Global Institute</span>
-        <div class="social-follow-btn" data-i18n="waBtn">Join Channel</div>
+        <div class="social-follow-btn">{{ t.waBtn }}</div>
       </div>
     </a>
 
@@ -631,44 +632,44 @@
 
 <!-- ══ CONTACT ══ -->
 <section class="contact" id="contact">
-  <span class="section-tag" data-i18n="contactTag">Get in Touch</span>
-  <h2 class="section-title"><span data-i18n="contactH2">Enroll or</span> <span data-i18n="contactH2Span">Ask a Question</span></h2>
+  <span class="section-tag">{{ t.contactTag }}</span>
+  <h2 class="section-title"><span>{{ t.contactH2 }}</span> <span>{{ t.contactH2Span }}</span></h2>
   <div class="divider"></div>
 
   <div class="contact-grid">
     <div class="ci">
-      <h3 data-i18n="contactCiH">We'd Love to Hear From You</h3>
-      <p data-i18n="contactCiP">Reach out for course details, enrollment, fees, or any queries. We respond within 24 hours, insha'Allah.</p>
+      <h3>{{ t.contactCiH }}</h3>
+      <p>{{ t.contactCiP }}</p>
       <div class="cd">
         <div class="cdi">&#x1F4DE;</div>
-        <div class="cdt"><strong data-i18n="contactPhone">Phone / WhatsApp</strong>+91 8226970167</div>
+        <div class="cdt"><strong>{{ t.contactPhone }}</strong>+91 8226970167</div>
       </div>
       <div class="cd">
         <div class="cdi">&#x2709;&#xFE0F;</div>
-        <div class="cdt"><strong data-i18n="contactEmail">Email</strong>osamasamastipur@gmail.com</div>
+        <div class="cdt"><strong>{{ t.contactEmail }}</strong>osamasamastipur@gmail.com</div>
       </div>
       <div class="cd">
         <div class="cdi">&#x1F4BB;</div>
-        <div class="cdt"><strong data-i18n="contactMode">Mode</strong><span data-i18n="contactModeVal">100% Online &middot; Worldwide</span></div>
+        <div class="cdt"><strong>{{ t.contactMode }}</strong><span>{{ t.contactModeVal }}</span></div>
       </div>
       <div class="cd">
         <div class="cdi">&#x1F550;</div>
-        <div class="cdt"><strong data-i18n="contactAvail">Available</strong><span data-i18n="contactAvailVal">Mon&ndash;Sat &middot; Flexible Timing</span></div>
+        <div class="cdt"><strong>{{ t.contactAvail }}</strong><span>{{ t.contactAvailVal }}</span></div>
       </div>
     </div>
 
     <div>
       <form id="contactForm">
         <div class="form-row">
-          <div class="fg"><label data-i18n="formNameLabel">Your Name</label><input type="text" name="name" placeholder="Full Name" data-i18n="formNamePh" required/></div>
-          <div class="fg"><label data-i18n="formPhoneLabel">Phone / WhatsApp</label><input type="tel" name="phone" placeholder="+XX XXXX XXXXXX" data-i18n="formPhonePh"/></div>
+          <div class="fg"><label>{{ t.formNameLabel }}</label><input type="text" name="name" placeholder="{{ t.formNamePh }}" required/></div>
+          <div class="fg"><label>{{ t.formPhoneLabel }}</label><input type="tel" name="phone" placeholder="{{ t.formPhonePh }}"/></div>
         </div>
-        <div class="fg"><label data-i18n="formEmailLabel">Email Address</label><input type="email" name="email" placeholder="your@email.com" data-i18n="formEmailPh"/></div>
+        <div class="fg"><label>{{ t.formEmailLabel }}</label><input type="email" name="email" placeholder="{{ t.formEmailPh }}"/></div>
         <div class="form-row">
           <div class="fg">
-            <label data-i18n="formCourseLabel">Course Interested In</label>
+            <label>{{ t.formCourseLabel }}</label>
             <select name="course">
-              <option value="" data-i18n="formCourseOpt">Select a Course</option>
+              <option value="">{{ t.formCourseOpt }}</option>
               <option>Tajweed Course</option>
               <option>Quran Recitation</option>
               <option>Quran Hifz</option>
@@ -680,9 +681,9 @@
             </select>
           </div>
           <div class="fg">
-            <label data-i18n="formAgeLabel">Student Age</label>
+            <label>{{ t.formAgeLabel }}</label>
             <select name="age">
-              <option value="" data-i18n="formAgeOpt">Select Age</option>
+              <option value="">{{ t.formAgeOpt }}</option>
               <option>4</option>
               <option>5</option>
               <option>6</option>
@@ -745,11 +746,11 @@
           </div>
         </div>
         <div class="fg">
-          <label data-i18n="formMsgLabel">Your Message</label>
-          <textarea name="message" placeholder="Tell us about your learning goals, current level, or any questions..." data-i18n="formMsgPh"></textarea>
+          <label>{{ t.formMsgLabel }}</label>
+          <textarea name="message" placeholder="{{ t.formMsgPh }}"></textarea>
         </div>
-        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;" data-i18n="formSubmit">
-          &#10022; Send Message
+        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;">
+          {{ t.formSubmit }}
         </button>
         <div class="form-success" id="formSuccess"></div>
       </form>

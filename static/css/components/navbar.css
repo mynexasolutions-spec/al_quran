@@ -27,7 +27,7 @@
   font-size: .72rem; font-weight: 700; letter-spacing: .5px;
   background: transparent; color: rgba(255,255,255,0.72);
   transition: background .25s, color .25s;
-  font-family: inherit;
+  font-family: inherit; text-decoration: none; display: inline-block;
 }
 .lang-btn--active {
   background: var(--white);

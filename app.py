@@ -2,6 +2,7 @@ import os
 import io
 import functools
 import cloudinary
+from translations import TRANSLATIONS
 import cloudinary.uploader
 from flask import (
     Flask, render_template, request, jsonify,
@@ -80,6 +81,29 @@ def inject_pending_reviews():
     except Exception:
         pass
     return {'pending_reviews_count': 0}
+
+
+@app.context_processor
+def inject_translations():
+    """Inject current-language translation dict (`t`) and `lang` into every template."""
+    lang = session.get('lang', 'en')
+    t_obj = TRANSLATIONS.get(lang, TRANSLATIONS['en'])
+    # Wrap in a simple attribute-access object so templates can use t.key
+    class _T(dict):
+        def __getattr__(self, item):
+            try:
+                return self[item]
+            except KeyError:
+                return ''
+    return {'t': _T(t_obj), 'lang': lang}
+
+
+@app.route('/set-lang/<lang>')
+def set_lang(lang):
+    """Set the UI language via session cookie, then redirect back."""
+    if lang in ('en', 'ur'):
+        session['lang'] = lang
+    return redirect(request.referrer or url_for('index'))
 
 
 def _parse_tags(raw):
