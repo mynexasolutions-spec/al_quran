@@ -16,6 +16,7 @@
   .cta-text h2 { font-size: 1.5rem; }
   .features-grid { grid-template-columns: 1fr 1fr; }
   .social-grid { grid-template-columns: repeat(2, 1fr); }
+  .social-card { min-height: unset; }
 }
 
 @media (max-width: 660px) {
@@ -40,6 +41,7 @@
   .reviews-carousel { gap: 0; }
   .reviews-track { gap: 0; }
   .review-card { flex: 0 0 100%; }
+  .social-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 430px) {
@@ -49,6 +51,7 @@
   .courses-grid { grid-template-columns: 1fr; }
   .highlights-grid, .oc-grid { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: 1fr; }
+  .social-grid { grid-template-columns: 1fr; }
   .cta-text h2 { font-size: 1.3rem; }
 }
 
