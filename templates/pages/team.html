@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+{% block title %}Our Team | Al-Qur'an Global Institute{% endblock %}
+
+{% block content %}
+
+<!-- ══ TEAM HERO ══ -->
+<section class="team-hero">
+  <div class="team-hero-wm">&#x641;&#x631;&#x64A;&#x642;</div>
+  <div class="team-hero-content">
+    <span class="section-tag" style="color:var(--gold-light)">{{ t.teamTag }}</span>
+    <h1 class="team-hero-title">{{ t.teamH1 }} <span>{{ t.teamH1Span }}</span></h1>
+    <div class="divider" style="margin-left:auto;margin-right:auto;"></div>
+    <p>{{ t.teamHeroP }}</p>
+  </div>
+</section>
+
+
+<!-- ══ TEAM GRID ══ -->
+<section class="team-section">
+  <div class="center-hdr">
+    <span class="section-tag">{{ t.teamSectionTag }}</span>
+    <h2 class="section-title"><span>{{ t.teamSectionH2 }}</span> <span>{{ t.teamSectionH2Span }}</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">{{ t.teamSectionSub }}</p>
+  </div>
+
+  <div class="team-grid">
+
+    <!-- Maulana Osama Quasmi -->
+    <div class="team-card">
+      <div class="team-card-img-wrap">
+        <img src="{{ url_for('static', filename='images/team/Maulana Osama Quasmi .jpeg') }}" alt="Maulana Osama Quasmi" class="team-card-img"/>
+      </div>
+      <div class="team-card-body">
+        <h3>{{ t.member1Name }}</h3>
+        <span class="team-badge">{{ t.member1Subject }}</span>
+        <p class="team-edu">&#127891; {{ t.member1Edu }}</p>
+      </div>
+    </div>
+
+    <!-- Mufti Maaz Quasmi -->
+    <div class="team-card">
+      <div class="team-card-img-wrap">
+        <img src="{{ url_for('static', filename='images/team/Mufti Maaz Quasmi.jpeg') }}" alt="Mufti Maaz Quasmi" class="team-card-img"/>
+      </div>
+      <div class="team-card-body">
+        <h3>{{ t.member2Name }}</h3>
+        <span class="team-badge">{{ t.member2Subject }}</span>
+      </div>
+    </div>
+
+    <!-- Aalima Rahnuma Fatima -->
+    <div class="team-card">
+      <div class="team-card-img-wrap team-card-img-wrap--default">
+        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Aalima Rahnuma Fatima" class="team-card-img team-card-img--default"/>
+      </div>
+      <div class="team-card-body">
+        <h3>{{ t.member3Name }}</h3>
+        <span class="team-badge">{{ t.member3Subject }}</span>
+      </div>
+    </div>
+
+    <!-- Hafiza Sumaiya Fatima -->
+    <div class="team-card">
+      <div class="team-card-img-wrap team-card-img-wrap--default">
+        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Hafiza Sumaiya Fatima" class="team-card-img team-card-img--default"/>
+      </div>
+      <div class="team-card-body">
+        <h3>{{ t.member4Name }}</h3>
+        <span class="team-badge">{{ t.member4Subject }}</span>
+      </div>
+    </div>
+
+    <!-- Hafiza Safia Junaid -->
+    <div class="team-card">
+      <div class="team-card-img-wrap team-card-img-wrap--default">
+        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Hafiza Safia Junaid" class="team-card-img team-card-img--default"/>
+      </div>
+      <div class="team-card-body">
+        <h3>{{ t.member5Name }}</h3>
+        <span class="team-badge">{{ t.member5Subject }}</span>
+      </div>
+    </div>
+
+    <!-- Dr Noorussama Fatima -->
+    <div class="team-card">
+      <div class="team-card-img-wrap team-card-img-wrap--default">
+        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Dr Noorussama Fatima" class="team-card-img team-card-img--default"/>
+      </div>
+      <div class="team-card-body">
+        <h3>{{ t.member6Name }}</h3>
+        <span class="team-badge">{{ t.member6Subject }}</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

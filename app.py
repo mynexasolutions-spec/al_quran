@@ -221,6 +221,11 @@ def course_english():
     return render_template('pages/course_english.html')
 
 
+@app.route('/team')
+def team():
+    return render_template('pages/team.html')
+
+
 # ═══════════════════════════════════════════════════════════════
 #  Public Routes — Competitions
 # ═══════════════════════════════════════════════════════════════

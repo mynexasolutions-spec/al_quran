@@ -105,6 +105,10 @@ body.lang-ur .hero-badge {
   text-align: center;
   word-spacing: .35rem;
 }
+body.lang-ur .hero h1 em {
+  font-style: normal;
+  font-size: 1.15em;
+}
 body.lang-ur .course-cat {
   font-size: .82rem;
   letter-spacing: 0;

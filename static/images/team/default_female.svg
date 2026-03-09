@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#0A3D33"/>
+  <circle cx="100" cy="100" r="96" fill="none" stroke="#C9A84C" stroke-width="2"/>
+  <circle cx="100" cy="100" r="87" fill="none" stroke="#C9A84C" stroke-width="0.5" stroke-dasharray="3,4" opacity="0.35"/>
+
+  <!-- Body / abaya -->
+  <path d="M15,200 Q20,155 100,140 Q180,155 185,200Z" fill="#1b6248"/>
+
+  <!-- Hijab rounded head area -->
+  <circle cx="100" cy="105" r="48" fill="#1b6248"/>
+
+  <!-- Face oval -->
+  <ellipse cx="100" cy="97" rx="30" ry="34" fill="#f2c48c"/>
+
+  <!-- Hijab dome top -->
+  <path d="M70,97 Q72,57 100,53 Q128,57 130,97 Q118,83 100,80 Q82,83 70,97Z" fill="#135040"/>
+
+  <!-- Hijab side drape framing face -->
+  <path d="M70,97 L68,122 Q85,136 100,137 Q115,136 132,122 L130,97 Q118,112 100,115 Q82,112 70,97Z" fill="#135040"/>
+
+  <!-- Chest front drape -->
+  <path d="M83,137 Q100,150 117,137 Q114,158 100,162 Q86,158 83,137Z" fill="#135040"/>
+
+  <!-- Gold accent line at bottom of hijab -->
+  <path d="M68,122 Q85,136 100,137 Q115,136 132,122" fill="none" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/>
+</svg>
