@@ -19,8 +19,8 @@ footer {
 
 .footer-logo { display: flex; align-items: center; gap: .92rem; margin-bottom: 1rem; }
 .footer-logo img { width: 48px; height: 48px; object-fit: contain; border-radius: 50%; border: 2px solid rgba(201,168,76,0.3); }
-.footer-logo-text { font-family: 'Playfair Display', serif; color: #6EE7B7; font-size: 1.05rem; font-weight: 700; line-height: 1.2; }
-.footer-logo-text small { display: block; font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(110,231,183,0.55); font-family: 'Lato', sans-serif; }
+.footer-logo-text { font-family: 'Playfair Display', serif; color: #6EE7B7; font-size: 1.05rem; font-weight: 700; line-height: 1.5; }
+.footer-logo-text small { display: block; font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(110,231,183,0.55); font-family: 'Lato', sans-serif; margin-top: .55rem; line-height: 1.8; }
 
 .footer-desc { font-size: .93rem; line-height: 1.78; color: rgba(200,240,225,0.75); font-weight: 400; margin-bottom: 1.2rem; }
 
@@ -37,3 +37,8 @@ footer {
 
 .footer-bottom { margin-top: 1.68rem; text-align: center; font-size: .82rem; color: rgba(110,231,183,0.45); }
 .footer-bottom span { color: #6EE7B7; }
+
+/* Urdu script spacing in footer */
+.lang-ur .footer-logo-text small { letter-spacing: 0; font-size: .72rem; }
+.lang-ur .footer-desc { line-height: 2.2; }
+.lang-ur .footer-logo-text { line-height: 1.6; }

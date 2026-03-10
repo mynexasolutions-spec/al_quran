@@ -70,3 +70,12 @@
 .oc-body { padding: 1.1rem 1.3rem 1.4rem; }
 .oc-body h4 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-dark); margin-bottom: .32rem; font-weight: 700; }
 .oc-body p { color: var(--text-mid); font-size: .86rem; line-height: 1.6; font-weight: 400; margin: 0; }
+
+/* ────────────────── URDU SCRIPT OVERRIDES ────────────────── */
+.lang-ur .ch-tagline { line-height: 2.3; }
+.lang-ur .cb-intro { line-height: 2.3; margin-bottom: 2.8rem; }
+.lang-ur .cb-quote p { line-height: 2.3; }
+.lang-ur .learn-list li,
+.lang-ur .detail-list li { line-height: 2.2; padding: .9rem 0; }
+.lang-ur .hl-card p { line-height: 2.2; }
+.lang-ur .oc-body p { line-height: 2.0; }
