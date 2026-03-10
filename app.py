@@ -491,6 +491,17 @@ def admin_registrations():
                            selected_id=cid)
 
 
+@app.route('/admin/registrations/<int:rid>/delete', methods=['POST'])
+@admin_required
+def admin_registration_delete(rid):
+    cid = request.form.get('competition_id', type=int)
+    DB.delete_registration(rid)
+    flash('Registration deleted.', 'info')
+    if cid:
+        return redirect(url_for('admin_registrations', competition_id=cid))
+    return redirect(url_for('admin_registrations'))
+
+
 @app.route('/admin/registrations/export')
 @admin_required
 def admin_registrations_export():

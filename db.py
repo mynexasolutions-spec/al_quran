@@ -347,6 +347,13 @@ def get_registration_count(competition_id):
     return cnt
 
 
+def delete_registration(rid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM registrations WHERE id=%s", (rid,))
+    conn.commit(); cur.close(); conn.close()
+
+
 # ─────────────────────────────────────────────────────────────
 #  Reviews
 # ─────────────────────────────────────────────────────────────
