@@ -24,6 +24,21 @@
     <p class="section-sub">{{ t.teamSectionSub }}</p>
   </div>
 
+  <!-- Director — full width row -->
+  <div class="team-grid team-grid--director">
+    <div class="team-card team-card--director">
+      <div class="team-card-img-wrap team-card-img-wrap--director">
+        <img src="{{ url_for('static', filename='images/team/director_shariq_zafar.jpeg') }}" alt="Qari Mohammad Shariq Zafar" class="team-card-img"/>
+      </div>
+      <div class="team-card-body">
+        <span class="team-director-label">{{ t.directorLabel }}</span>
+        <h3>{{ t.directorName }}</h3>
+        <span class="team-badge">{{ t.directorSubject }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rest of the team -->
   <div class="team-grid">
 
     <!-- Maulana Osama Quasmi -->

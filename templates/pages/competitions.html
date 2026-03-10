@@ -237,7 +237,7 @@
     <p>Join hundreds of students from around the world and let your skills shine. Contact us today to register for an upcoming competition, insha&rsquo;Allah.</p>
     <div class="comp-cta-btns">
       <a href="{{ url_for('index') }}#contact" class="btn-primary">&#128231;&nbsp; Register Now</a>
-      <a href="https://wa.me/918226970167" target="_blank" rel="noopener" class="btn-outline" style="border-color:rgba(255,255,255,0.6);color:var(--white);">&#128172;&nbsp; WhatsApp Us</a>
+      <a href="https://wa.me/919045520249" target="_blank" rel="noopener" class="btn-outline" style="border-color:rgba(255,255,255,0.6);color:var(--white);">&#128172;&nbsp; WhatsApp Us</a>
     </div>
   </div>
 </section>
@@ -257,28 +257,20 @@
           <input type="text" name="name" placeholder="Your full name" required/>
         </div>
         <div class="rmg">
-          <label>Email Address <span class="req">*</span></label>
-          <input type="email" name="email" placeholder="your@email.com" required/>
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="your@email.com"/>
         </div>
         <div class="rmg">
           <label>Phone / WhatsApp</label>
           <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/>
         </div>
         <div class="rmg">
-          <label>Age Group</label>
-          <select name="age">
-            <option value="">Select Age Group</option>
-            <option>Under 8</option>
-            <option>8–11 years</option>
-            <option>12–15 years</option>
-            <option>16–18 years</option>
-            <option>19–25 years</option>
-            <option>26+ (Adult)</option>
-          </select>
+          <label>Age</label>
+          <input type="number" name="age" placeholder="Your age" min="1" max="120"/>
         </div>
         <div class="rmg rmg--full">
-          <label>Country</label>
-          <input type="text" name="country" placeholder="Your country of residence"/>
+          <label>Full Address</label>
+          <input type="text" name="country" placeholder="Street, City, Country"/>
         </div>
         <div class="rmg rmg--full">
           <label>Previous Experience</label>
