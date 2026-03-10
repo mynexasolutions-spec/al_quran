@@ -259,9 +259,10 @@ def register_submit(cid):
 
     name  = request.form.get('name', '').strip()
     email = request.form.get('email', '').strip()
+    phone = request.form.get('phone', '').strip()
 
-    if not name or not email:
-        flash('Name and email are required.', 'error')
+    if not name or not phone:
+        flash('Name and phone number are required.', 'error')
         return redirect(url_for('competitions') + '#all-competitions')
 
     DB.create_registration({
