@@ -71,14 +71,9 @@
           </a>
         </td>
         <td class="adm-td-muted">{{ reg.created_at.strftime('%Y-%m-%d') if reg.created_at else '—' }}</td>
-        <td style="white-space:nowrap;">
+        <td>
           <button class="adm-btn adm-btn--view adm-expand-btn"
                   data-id="{{ reg.id }}" title="View details">&#9660;</button>
-          <form method="post" action="{{ url_for('admin_registration_delete', rid=reg.id) }}"
-                style="display:inline;" onsubmit="return confirm('Delete this registration? This cannot be undone.')">
-            <input type="hidden" name="competition_id" value="{{ selected_id or '' }}">
-            <button type="submit" class="adm-btn adm-btn--del" title="Delete registration">&#128465;</button>
-          </form>
         </td>
       </tr>
       <!-- Expandable detail row -->
@@ -94,6 +89,13 @@
             {% if not reg.experience and not reg.notes %}
               <em class="adm-td-muted">No additional details provided.</em>
             {% endif %}
+            <div style="margin-top:.8rem;">
+              <form method="post" action="{{ url_for('admin_registration_delete', rid=reg.id) }}"
+                    style="display:inline;" onsubmit="return confirm('Delete this registration? This cannot be undone.')">
+                <input type="hidden" name="competition_id" value="{{ selected_id or '' }}">
+                <button type="submit" class="adm-btn adm-btn--del">&#128465;&nbsp; Delete Entry</button>
+              </form>
+            </div>
           </div>
         </td>
       </tr>
