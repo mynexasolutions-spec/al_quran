@@ -359,6 +359,7 @@ TRANSLATIONS = {
         "footerContactH": "Contact",
         "footerWhatsApp": "WhatsApp Us",
         "footerAbout": "About Us",
+        "footerTeam": "Our Team",
         "footerEnroll": "Enroll Now",
         "footerCopy": "© 2025 Al-Qur'an Global Institute. Made with ♥ &amp; Barakah.",
 
@@ -1018,6 +1019,7 @@ TRANSLATIONS = {
         "footerContactH": "رابطہ",
         "footerWhatsApp": "واٹس ایپ کریں",
         "footerAbout": "ہمارے بارے میں",
+        "footerTeam": "ہماری ٹیم",
         "footerEnroll": "ابھی داخلہ لیں",
         "footerCopy": "© 2025 القرآن گلوبل انسٹیٹیوٹ۔ ♥ اور برکت کے ساتھ بنایا گیا۔",
 
