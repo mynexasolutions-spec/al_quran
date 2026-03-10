@@ -137,7 +137,7 @@
 /* Card tops — image banner */
 .comp-card-top {
   position: relative;
-  height: 188px;
+  height: 230px;
   overflow: hidden;
   display: flex;
   align-items: flex-start;
