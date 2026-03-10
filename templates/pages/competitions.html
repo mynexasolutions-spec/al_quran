@@ -257,29 +257,30 @@
           <input type="text" name="name" placeholder="Your full name" required/>
         </div>
         <div class="rmg">
-          <label>Email Address</label>
+          <label>Email Address <span class="form-optional">(Optional)</span></label>
           <input type="email" name="email" placeholder="your@email.com"/>
         </div>
         <div class="rmg">
-          <label>Phone / WhatsApp</label>
-          <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/>
+          <label>Phone / WhatsApp <span class="req">*</span></label>
+          <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX" required/>
         </div>
         <div class="rmg">
-          <label>Age</label>
-          <input type="number" name="age" placeholder="Your age" min="1" max="120"/>
+          <label>Age <span class="req">*</span></label>
+          <input type="number" name="age" placeholder="Your age" min="1" max="120" required/>
         </div>
         <div class="rmg rmg--full">
-          <label>Full Address</label>
-          <input type="text" name="country" placeholder="Street, City, Country"/>
+          <label>Full Address <span class="req">*</span></label>
+          <input type="text" name="country" placeholder="Street, City, Country" required/>
         </div>
         <div class="rmg rmg--full">
-          <label>Previous Experience</label>
-          <textarea name="experience" rows="3" placeholder="Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)..."></textarea>
+          <label>Previous Experience <span class="req">*</span></label>
+          <textarea name="experience" rows="3" required placeholder="Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)..."></textarea>
         </div>
         <div class="rmg rmg--full">
-          <label>Additional Notes</label>
+          <label>Additional Notes <span class="form-optional">(Optional)</span></label>
           <textarea name="notes" rows="2" placeholder="Any questions or special requirements?"></textarea>
         </div>
+        <p class="form-req-note" style="grid-column:1/-1;"><span class="req">*</span> Required &nbsp;|&nbsp; <span class="form-optional">Optional</span> fields are not mandatory</p>
       </div>
       <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;text-align:center;padding:1rem;">Submit Registration</button>
       <p class="reg-modal-privacy">Your information is kept private and only used for competition coordination.</p>

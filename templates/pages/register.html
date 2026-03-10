@@ -75,42 +75,44 @@
 
         <div class="form-row">
           <div class="fg">
-            <label>Full Name <span style="color:var(--gold)">*</span></label>
+            <label>Full Name <span style="color:#c0392b;font-weight:700">*</span></label>
             <input type="text" name="name" placeholder="Your full name" required/>
           </div>
           <div class="fg">
-            <label>Email Address</label>
+            <label>Email Address <span class="form-optional">(Optional)</span></label>
             <input type="email" name="email" placeholder="your@email.com"/>
           </div>
         </div>
 
         <div class="form-row">
           <div class="fg">
-            <label>Phone / WhatsApp</label>
-            <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX"/>
+            <label>Phone / WhatsApp <span style="color:#c0392b;font-weight:700">*</span></label>
+            <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX" required/>
           </div>
           <div class="fg">
-            <label>Age</label>
-            <input type="number" name="age" placeholder="Your age" min="1" max="120"/>
+            <label>Age <span style="color:#c0392b;font-weight:700">*</span></label>
+            <input type="number" name="age" placeholder="Your age" min="1" max="120" required/>
           </div>
         </div>
 
         <div class="fg">
-          <label>Full Address</label>
-          <input type="text" name="country" placeholder="Street, City, Country"/>
+          <label>Full Address <span style="color:#c0392b;font-weight:700">*</span></label>
+          <input type="text" name="country" placeholder="Street, City, Country" required/>
         </div>
 
         <div class="fg">
-          <label>Previous Experience</label>
-          <textarea name="experience" rows="3"
+          <label>Previous Experience <span style="color:#c0392b;font-weight:700">*</span></label>
+          <textarea name="experience" rows="3" required
             placeholder="Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)..."></textarea>
         </div>
 
         <div class="fg">
-          <label>Additional Notes</label>
+          <label>Additional Notes <span class="form-optional">(Optional)</span></label>
           <textarea name="notes" rows="2"
             placeholder="Any questions or special requirements?"></textarea>
         </div>
+
+        <p style="font-size:.8rem;color:#888;margin:.4rem 0 1rem;"><span style="color:#c0392b;font-weight:700">*</span> Required &nbsp;|&nbsp; <span class="form-optional">Optional</span> fields are not mandatory</p>
 
         <button type="submit" class="btn-primary"
                 style="width:100%;padding:1rem 1.5rem;justify-content:center;font-size:1rem;">
