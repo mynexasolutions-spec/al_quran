@@ -308,8 +308,7 @@
     <div class="reviews-track-outer" id="rev-track-outer">
       <div class="reviews-track" id="rev-track">
 
-        {% if reviews %}
-          {% for rev in reviews %}
+        {% for rev in reviews %}
           <div class="review-card">
             <div class="rq">&#x201C;</div>
             <div class="rs">{% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}</div>
@@ -322,64 +321,62 @@
               </div>
             </div>
           </div>
-          {% endfor %}
-        {% else %}
-          {# Fallback static reviews shown until DB has approved entries #}
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
-            <div class="reviewer">
-              <div class="ra">FA</div>
-              <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
-            </div>
+        {% endfor %}
+        {# Static reviews always visible #}
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
+          <div class="reviewer">
+            <div class="ra">FA</div>
+            <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
           </div>
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
-            <div class="reviewer">
-              <div class="ra">KM</div>
-              <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
-            </div>
+        </div>
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
+          <div class="reviewer">
+            <div class="ra">KM</div>
+            <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
           </div>
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
-            <div class="reviewer">
-              <div class="ra">ZR</div>
-              <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
-            </div>
+        </div>
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
+          <div class="reviewer">
+            <div class="ra">ZR</div>
+            <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
           </div>
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
-            <div class="reviewer">
-              <div class="ra">NA</div>
-              <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
-            </div>
+        </div>
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
+          <div class="reviewer">
+            <div class="ra">NA</div>
+            <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
           </div>
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
-            <div class="reviewer">
-              <div class="ra">OB</div>
-              <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
-            </div>
+        </div>
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
+          <div class="reviewer">
+            <div class="ra">OB</div>
+            <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
           </div>
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
-            <div class="reviewer">
-              <div class="ra">SI</div>
-              <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
-            </div>
+        </div>
+        <div class="review-card">
+          <div class="rq">&#x201C;</div>
+          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
+          <div class="reviewer">
+            <div class="ra">SI</div>
+            <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
           </div>
-        {% endif %}
+        </div>
 
       </div>
     </div>
