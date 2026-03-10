@@ -171,9 +171,9 @@
   border-radius: 20px;
   backdrop-filter: blur(4px);
 }
-.comp-badge--upcoming  { background: rgba(201,168,76,0.22); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.5); }
-.comp-badge--ongoing   { background: rgba(34,180,100,0.18); color: #5AE08A; border: 1px solid rgba(34,180,100,0.45); }
-.comp-badge--completed { background: rgba(255,255,255,0.1);  color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.25); }
+.comp-badge--upcoming  { background: rgba(180,140,20,0.88);  color: #fff8dc; border: 1px solid rgba(201,168,76,0.6); }
+.comp-badge--ongoing   { background: rgba(5,120,70,0.90);    color: #d1fae5;  border: 1px solid rgba(34,180,100,0.5); }
+.comp-badge--completed { background: rgba(40,40,40,0.82);    color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.2); }
 
 /* Card body */
 .comp-card-body { padding: 1.7rem 1.9rem 2rem; }
@@ -221,11 +221,6 @@
 
 /* Tags */
 .comp-tags { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.4rem; }
-.comp-tags .badge {
-  background: #0D5E46;
-  color: #A7F3D0;
-  border: 1px solid rgba(110,231,183,0.3);
-}
 
 /* CTAs */
 .comp-cta {
