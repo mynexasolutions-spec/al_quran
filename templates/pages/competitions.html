@@ -7,10 +7,10 @@
 <section class="comp-hero">
   <div class="comp-hero-wm">&#x645;&#x633;&#x627;&#x628;&#x642;&#x629;</div>
   <div class="comp-hero-content">
-    <span class="section-tag" style="color:var(--gold-light)">Events &amp; Programs</span>
-    <h1 class="comp-hero-title">Our <span>Competitions</span></h1>
+    <span class="section-tag" style="color:var(--gold-light)">{{ t.compTag }}</span>
+    <h1 class="comp-hero-title">{{ t.compH2 }} <span>{{ t.compH2Span }}</span></h1>
     <div class="divider" style="margin-left:auto;margin-right:auto;"></div>
-    <p>At Al-Qur&rsquo;an Global Institute, we regularly host competitions to inspire excellence, celebrate talent, and strengthen our global community of learners. From Quranic recitation to Islamic knowledge, every competition is an opportunity to grow in faith and skill.</p>
+    <p>{{ t.compHeroDesc }}</p>
   </div>
 </section>
 
@@ -19,19 +19,19 @@
 <section class="comp-stats-bar">
   <div class="comp-stat">
     <span class="comp-stat-num">10+</span>
-    <span class="comp-stat-lbl">Competitions Hosted</span>
+    <span class="comp-stat-lbl">{{ t.compStat1Lbl }}</span>
   </div>
   <div class="comp-stat">
     <span class="comp-stat-num">300+</span>
-    <span class="comp-stat-lbl">Participants Worldwide</span>
+    <span class="comp-stat-lbl">{{ t.compStat2Lbl }}</span>
   </div>
   <div class="comp-stat">
     <span class="comp-stat-num">30+</span>
-    <span class="comp-stat-lbl">Countries Represented</span>
+    <span class="comp-stat-lbl">{{ t.compStat3Lbl }}</span>
   </div>
   <div class="comp-stat">
     <span class="comp-stat-num">6</span>
-    <span class="comp-stat-lbl">Active Categories</span>
+    <span class="comp-stat-lbl">{{ t.compStat4Lbl }}</span>
   </div>
 </section>
 
@@ -48,18 +48,18 @@
     {% endif %}
   {% endwith %}  
   <div class="center-hdr">
-    <span class="section-tag">All Events</span>
-    <h2 class="section-title">Open &amp; Upcoming <span>Competitions</span></h2>
+    <span class="section-tag">{{ t.compAllTag }}</span>
+    <h2 class="section-title">{{ t.compAllH2 }} <span>{{ t.compAllH2Span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub">Participate in our prestigious competitions, open to all enrolled and non-enrolled students worldwide. Join us, sharpen your skills, and win recognition for your dedication.</p>
+    <p class="section-sub">{{ t.compAllSub }}</p>
   </div>
 
   <!-- Filter Tabs -->
   <div class="comp-filters">
-    <button class="comp-filter active" data-filter="all">All</button>
-    <button class="comp-filter" data-filter="upcoming">Upcoming</button>
-    <button class="comp-filter" data-filter="ongoing">Ongoing</button>
-    <button class="comp-filter" data-filter="completed">Completed</button>
+    <button class="comp-filter active" data-filter="all">{{ t.compFilterAll }}</button>
+    <button class="comp-filter" data-filter="upcoming">{{ t.compFilterUpcoming }}</button>
+    <button class="comp-filter" data-filter="ongoing">{{ t.compFilterOngoing }}</button>
+    <button class="comp-filter" data-filter="completed">{{ t.compFilterCompleted }}</button>
   </div>
 
   <div class="comp-grid" id="comp-grid">
@@ -112,18 +112,18 @@
         </div>
         {% endif %}
         {% if comp.status == 'completed' %}
-        <span class="comp-cta comp-cta--disabled">Competition Ended</span>
+        <span class="comp-cta comp-cta--disabled">{{ t.compEnded }}</span>
         {% else %}
         <button type="button" class="comp-cta btn-primary comp-register-btn"
                 data-cid="{{ comp.id }}" data-title="{{ comp.title }}">
-          Register Now
+          {{ t.compRegBtn }}
         </button>
         {% endif %}
       </div>
     </div>
     {% else %}
     <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light);">
-      No competitions available at the moment. Check back soon, insha'Allah.
+      {{ t.compNone }}
     </div>
     {% endfor %}
 
@@ -135,44 +135,44 @@
 <section class="comp-how" id="how-to-participate">
   <div class="comp-how-inner">
     <div>
-      <span class="section-tag">Simple Steps</span>
-      <h2 class="section-title">How to <span>Participate</span></h2>
+      <span class="section-tag">{{ t.compHowTag }}</span>
+      <h2 class="section-title">{{ t.compHowH2 }} <span>{{ t.compHowH2Span }}</span></h2>
       <div class="divider"></div>
-      <p class="section-sub">Joining our competitions is straightforward. Follow these steps to register and compete with learners worldwide.</p>
+      <p class="section-sub">{{ t.compHowSub }}</p>
     </div>
 
     <div class="comp-steps">
       <div class="comp-step">
         <div class="comp-step-num">01</div>
         <div>
-          <h4>Choose Your Competition</h4>
-          <p>Browse the competitions above and find one that matches your skill &mdash; Qirat, Quiz, Tajweed, Hifz, Calligraphy, or Essay.</p>
+          <h4>{{ t.compStep1H }}</h4>
+          <p>{{ t.compStep1P }}</p>
         </div>
       </div>
       <div class="comp-step">
         <div class="comp-step-num">02</div>
         <div>
-          <h4>Click &ldquo;Register Now&rdquo;</h4>
-          <p>Each competition card has a dedicated registration form. Fill in your details and submit &mdash; you&rsquo;ll receive a confirmation message instantly, insha&rsquo;Allah.</p>
+          <h4>{{ t.compStep2H }}</h4>
+          <p>{{ t.compStep2P }}</p>
         </div>
       </div>
       <div class="comp-step">
         <div class="comp-step-num">03</div>
         <div>
-          <h4>Prepare &amp; Perform</h4>
-          <p>Follow the provided rubric to prepare. All competitions are conducted online via video or submission &mdash; participate from anywhere in the world.</p>
+          <h4>{{ t.compStep3H }}</h4>
+          <p>{{ t.compStep3P }}</p>
         </div>
       </div>
       <div class="comp-step">
         <div class="comp-step-num">04</div>
         <div>
-          <h4>Receive Your Award</h4>
-          <p>Winners and outstanding participants receive digital certificates, prizes, and recognition on our platform and social media channels.</p>
+          <h4>{{ t.compStep4H }}</h4>
+          <p>{{ t.compStep4P }}</p>
         </div>
       </div>
     </div>
 
-    <a href="{{ url_for('index') }}#contact" class="btn-primary" style="margin-top:2rem;display:inline-flex;align-items:center;gap:.55rem;">&#128231;&nbsp; Register Your Interest</a>
+    <a href="{{ url_for('index') }}#contact" class="btn-primary" style="margin-top:2rem;display:inline-flex;align-items:center;gap:.55rem;">&#128231;&nbsp; {{ t.compRegInterest }}</a>
   </div>
 </section>
 
@@ -180,50 +180,50 @@
 <!-- ══ PRIZES & RECOGNITION ══ -->
 <section class="comp-prizes">
   <div class="center-hdr">
-    <span class="section-tag">Rewards</span>
-    <h2 class="section-title">Prizes &amp; <span>Recognition</span></h2>
+    <span class="section-tag">{{ t.compPrizesTag }}</span>
+    <h2 class="section-title">{{ t.compPrizesH2 }} <span>{{ t.compPrizesH2Span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub">We celebrate every participant&rsquo;s effort, with special honours for those who excel at the top.</p>
+    <p class="section-sub">{{ t.compPrizesSub }}</p>
   </div>
 
   <div class="comp-prizes-grid">
     <div class="prize-card prize-card--gold">
       <div class="prize-medal">&#129351;</div>
-      <h4>1st Place</h4>
+      <h4>{{ t.compPrize1H }}</h4>
       <ul>
-        <li>Gold Medal &amp; Trophy</li>
-        <li>Cash Prize</li>
-        <li>Official Certificate</li>
-        <li>Feature on Institute Website</li>
-        <li>Free Course Enrollment (1 month)</li>
+        <li>{{ t.compPrize1Li1 }}</li>
+        <li>{{ t.compPrize1Li2 }}</li>
+        <li>{{ t.compPrize1Li3 }}</li>
+        <li>{{ t.compPrize1Li4 }}</li>
+        <li>{{ t.compPrize1Li5 }}</li>
       </ul>
     </div>
     <div class="prize-card prize-card--silver">
       <div class="prize-medal">&#129352;</div>
-      <h4>2nd Place</h4>
+      <h4>{{ t.compPrize2H }}</h4>
       <ul>
-        <li>Silver Medal</li>
-        <li>Certificate of Excellence</li>
-        <li>Course Discount Voucher</li>
-        <li>Social Media Recognition</li>
+        <li>{{ t.compPrize2Li1 }}</li>
+        <li>{{ t.compPrize2Li2 }}</li>
+        <li>{{ t.compPrize2Li3 }}</li>
+        <li>{{ t.compPrize2Li4 }}</li>
       </ul>
     </div>
     <div class="prize-card prize-card--bronze">
       <div class="prize-medal">&#129353;</div>
-      <h4>3rd Place</h4>
+      <h4>{{ t.compPrize3H }}</h4>
       <ul>
-        <li>Bronze Medal</li>
-        <li>Certificate of Merit</li>
-        <li>Social Media Recognition</li>
+        <li>{{ t.compPrize3Li1 }}</li>
+        <li>{{ t.compPrize3Li2 }}</li>
+        <li>{{ t.compPrize3Li3 }}</li>
       </ul>
     </div>
     <div class="prize-card prize-card--part">
       <div class="prize-medal">&#127970;</div>
-      <h4>All Participants</h4>
+      <h4>{{ t.compPrize4H }}</h4>
       <ul>
-        <li>Digital Participation Certificate</li>
-        <li>Community Recognition</li>
-        <li>Feedback from Expert Panel</li>
+        <li>{{ t.compPrize4Li1 }}</li>
+        <li>{{ t.compPrize4Li2 }}</li>
+        <li>{{ t.compPrize4Li3 }}</li>
       </ul>
     </div>
   </div>
@@ -233,11 +233,11 @@
 <!-- ══ CTA BANNER ══ -->
 <section class="comp-cta-banner">
   <div class="comp-cta-banner-inner">
-    <h2>Ready to Compete?</h2>
-    <p>Join hundreds of students from around the world and let your skills shine. Contact us today to register for an upcoming competition, insha&rsquo;Allah.</p>
+    <h2>{{ t.compCtaH2 }}</h2>
+    <p>{{ t.compCtaP }}</p>
     <div class="comp-cta-btns">
-      <a href="{{ url_for('index') }}#contact" class="btn-primary">&#128231;&nbsp; Register Now</a>
-      <a href="https://wa.me/919045520249" target="_blank" rel="noopener" class="btn-outline" style="border-color:rgba(255,255,255,0.6);color:var(--white);">&#128172;&nbsp; WhatsApp Us</a>
+      <a href="{{ url_for('index') }}#contact" class="btn-primary">&#128231;&nbsp; {{ t.compCtaBtn1 }}</a>
+      <a href="https://wa.me/919045520249" target="_blank" rel="noopener" class="btn-outline" style="border-color:rgba(255,255,255,0.6);color:var(--white);">&#128172;&nbsp; {{ t.compCtaBtn2 }}</a>
     </div>
   </div>
 </section>
@@ -247,43 +247,43 @@
   <div class="reg-modal">
     <button class="reg-modal-close" id="regModalClose" aria-label="Close">&times;</button>
     <div class="reg-modal-hdr">
-      <span class="section-tag">Competition Registration</span>
+      <span class="section-tag">{{ t.compModalTag }}</span>
       <h2 class="reg-modal-comp-title" id="regModalTitle"></h2>
     </div>
     <form id="regModalForm" method="post" action="">
       <div class="reg-modal-grid">
         <div class="rmg">
-          <label>Full Name <span class="req">*</span></label>
-          <input type="text" name="name" placeholder="Your full name" required/>
+          <label>{{ t.compModalName }} <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="{{ t.compModalNamePh }}" required/>
         </div>
         <div class="rmg">
-          <label>Email Address <span class="form-optional">(Optional)</span></label>
+          <label>{{ t.compModalEmail }} <span class="form-optional">{{ t.compModalEmailOpt }}</span></label>
           <input type="email" name="email" placeholder="your@email.com"/>
         </div>
         <div class="rmg">
-          <label>Phone / WhatsApp <span class="req">*</span></label>
-          <input type="tel" name="phone" placeholder="+XX XXXX XXXXXX" required/>
+          <label>{{ t.compModalPhone }} <span class="req">*</span></label>
+          <input type="tel" name="phone" placeholder="{{ t.compModalPhonePh }}" required/>
         </div>
         <div class="rmg">
-          <label>Age <span class="req">*</span></label>
-          <input type="number" name="age" placeholder="Your age" min="1" max="120" required/>
+          <label>{{ t.compModalAge }} <span class="req">*</span></label>
+          <input type="number" name="age" placeholder="{{ t.compModalAgePh }}" min="1" max="120" required/>
         </div>
         <div class="rmg rmg--full">
-          <label>Full Address <span class="req">*</span></label>
-          <input type="text" name="country" placeholder="Street, City, Country" required/>
+          <label>{{ t.compModalAddress }} <span class="req">*</span></label>
+          <input type="text" name="country" placeholder="{{ t.compModalAddressPh }}" required/>
         </div>
         <div class="rmg rmg--full">
-          <label>Previous Experience <span class="req">*</span></label>
-          <textarea name="experience" rows="3" required placeholder="Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)..."></textarea>
+          <label>{{ t.compModalExp }} <span class="req">*</span></label>
+          <textarea name="experience" rows="3" required placeholder="{{ t.compModalExpPh }}"></textarea>
         </div>
         <div class="rmg rmg--full">
-          <label>Additional Notes <span class="form-optional">(Optional)</span></label>
-          <textarea name="notes" rows="2" placeholder="Any questions or special requirements?"></textarea>
+          <label>{{ t.compModalNotes }} <span class="form-optional">{{ t.compModalEmailOpt }}</span></label>
+          <textarea name="notes" rows="2" placeholder="{{ t.compModalNotesPh }}"></textarea>
         </div>
-        <p class="form-req-note" style="grid-column:1/-1;"><span class="req">*</span> Required &nbsp;|&nbsp; <span class="form-optional">Optional</span> fields are not mandatory</p>
+        <p class="form-req-note" style="grid-column:1/-1;"><span class="req">*</span> {{ t.compModalReqLabel }} &nbsp;|&nbsp; <span class="form-optional">{{ t.compModalOptLabel }}</span> {{ t.compModalOptNote }}</p>
       </div>
-      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;text-align:center;padding:1rem;">Submit Registration</button>
-      <p class="reg-modal-privacy">Your information is kept private and only used for competition coordination.</p>
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;text-align:center;padding:1rem;">{{ t.compModalSubmit }}</button>
+      <p class="reg-modal-privacy">{{ t.compModalPrivacy }}</p>
     </form>
   </div>
 </div>
