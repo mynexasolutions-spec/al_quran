@@ -661,14 +661,14 @@
     <div>
       <form id="contactForm">
         <div class="form-row">
-          <div class="fg"><label>{{ t.formNameLabel }}</label><input type="text" name="name" placeholder="{{ t.formNamePh }}" required/></div>
-          <div class="fg"><label>{{ t.formPhoneLabel }}</label><input type="tel" name="phone" placeholder="{{ t.formPhonePh }}"/></div>
+          <div class="fg"><label>{{ t.formNameLabel }} <span class="req">*</span></label><input type="text" name="name" placeholder="{{ t.formNamePh }}" required/></div>
+          <div class="fg"><label>{{ t.formPhoneLabel }} <span class="req">*</span></label><input type="tel" name="phone" placeholder="{{ t.formPhonePh }}" required/></div>
         </div>
-        <div class="fg"><label>{{ t.formEmailLabel }}</label><input type="email" name="email" placeholder="{{ t.formEmailPh }}" autocomplete="email"/></div>
+        <div class="fg"><label>{{ t.formEmailLabel }} <span class="form-optional">(Optional)</span></label><input type="email" name="email" placeholder="{{ t.formEmailPh }}" autocomplete="email"/></div>
         <div class="form-row">
           <div class="fg">
-            <label>{{ t.formCourseLabel }}</label>
-            <select name="course">
+            <label>{{ t.formCourseLabel }} <span class="req">*</span></label>
+            <select name="course" required>
               <option value="">{{ t.formCourseOpt }}</option>
               <option>Tajweed Course</option>
               <option>Quran Recitation</option>
@@ -681,14 +681,19 @@
             </select>
           </div>
           <div class="fg">
-            <label>{{ t.formAgeLabel }}</label>
-            <input type="number" name="age" placeholder="Your age" min="1" max="120"/>
+            <label>{{ t.formAgeLabel }} <span class="req">*</span></label>
+            <input type="number" name="age" placeholder="Your age" min="1" max="120" required/>
           </div>
         </div>
         <div class="fg">
-          <label>{{ t.formMsgLabel }}</label>
-          <textarea name="message" placeholder="{{ t.formMsgPh }}"></textarea>
+          <label>Full Address <span class="req">*</span></label>
+          <input type="text" name="address" placeholder="Street, City, Country" required/>
         </div>
+        <div class="fg">
+          <label>{{ t.formMsgLabel }} <span class="req">*</span></label>
+          <textarea name="message" placeholder="{{ t.formMsgPh }}" required></textarea>
+        </div>
+        <p class="form-req-note"><span class="req">*</span> Required &nbsp;|&nbsp; <span class="form-optional">Optional</span> fields are not mandatory</p>
         <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;">
           {{ t.formSubmit }}
         </button>
@@ -762,14 +767,16 @@
     var email   = (form.elements['email']   || {}).value || '';
     var course  = (form.elements['course']  || {}).value || '';
     var age     = (form.elements['age']     || {}).value || '';
+    var address = (form.elements['address'] || {}).value || '';
     var message = (form.elements['message'] || {}).value || '';
     var lines = [];
-    lines.push('*New Enquiry — Al-Qur\u2019an Global Institute*');
+    lines.push('*New Enquiry \u2014 Al-Qur\u2019an Global Institute*');
     if (name)    lines.push('\uD83D\uDC64 *Name:* ' + name);
     if (phone)   lines.push('\uD83D\uDCDE *Phone:* ' + phone);
     if (email)   lines.push('\u2709 *Email:* ' + email);
     if (course)  lines.push('\uD83D\uDCDA *Course:* ' + course);
     if (age)     lines.push('\uD83C\uDF82 *Age:* ' + age);
+    if (address) lines.push('\uD83D\uDCCD *Address:* ' + address);
     if (message) lines.push('\uD83D\uDCAC *Message:* ' + message);
     var text = encodeURIComponent(lines.join('\n'));
     window.open('https://wa.me/919045520249?text=' + text, '_blank');

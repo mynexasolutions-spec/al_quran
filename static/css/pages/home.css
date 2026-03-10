@@ -551,7 +551,9 @@
 }
 .rmg textarea, .rmg--full textarea { resize: vertical; min-height: 100px; }
 .rmg--full { display: flex; flex-direction: column; gap: .38rem; grid-column: 1 / -1; }
-.req { color: #c0392b; margin-left: 2px; }
+.req { color: #c0392b; margin-left: 2px; font-weight: 700; }
+.form-optional { color: var(--text-light); font-size: .82rem; font-weight: 400; }
+.form-req-note { font-size: .8rem; color: var(--text-light); margin: .5rem 0 1rem; }
 
 .rev-modal-note {
   font-size: .8rem;

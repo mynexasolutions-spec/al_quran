@@ -38,7 +38,7 @@ TRANSLATIONS = {
         "teamSectionSub": "Our dedicated team of scholars and educators brings together expertise in Tajweed, Tafseer, Fiqh, Hifz, languages, and academic subjects \u2014 guiding students from across the globe.",
         "directorLabel": "Founder & Director",
         "directorName": "Quari Mohammad Shariq Zafar",
-        "directorSubject": "Quran &amp; Islamic Studies",
+        "directorSubject": "Quran & Islamic Studies",
         "member1Name": "Maulana Osama Quasmi",
         "member1Subject": "Arabic & English Teacher",
         "member1Edu": "Jamia Millia Islamia",
