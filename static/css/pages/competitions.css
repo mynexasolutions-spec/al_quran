@@ -221,6 +221,11 @@
 
 /* Tags */
 .comp-tags { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.4rem; }
+.comp-tags .badge {
+  background: #0D5E46;
+  color: #A7F3D0;
+  border: 1px solid rgba(110,231,183,0.3);
+}
 
 /* CTAs */
 .comp-cta {
