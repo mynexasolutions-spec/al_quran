@@ -24,90 +24,46 @@
     <p class="section-sub">{{ t.teamSectionSub }}</p>
   </div>
 
-  <!-- Director — full width row -->
+  <!-- Directors — full width row -->
+  {% set directors = team_members | selectattr('is_director') | list %}
+  {% if directors %}
   <div class="team-grid team-grid--director">
+    {% for director in directors %}
     <div class="team-card team-card--director">
       <div class="team-card-img-wrap team-card-img-wrap--director">
-        <img src="{{ url_for('static', filename='images/team/director_shariq_zafar.jpeg') }}" alt="Qari Mohammad Shariq Zafar" class="team-card-img"/>
+        <img src="{{ director.image_url if director.image_url else url_for('static', filename='images/team/director_shariq_zafar.jpeg') }}" alt="{{ director.name }}" class="team-card-img"/>
       </div>
       <div class="team-card-body">
-        <span class="team-director-label">{{ t.directorLabel }}</span>
-        <h3>{{ t.directorName }}</h3>
-        <span class="team-badge">{{ t.directorSubject }}</span>
+        <span class="team-director-label">{{ director.role_label or t.directorLabel }}</span>
+        <h3>{{ director.name }}</h3>
+        {% if director.subject %}<span class="team-badge">{{ director.subject }}</span>{% endif %}
+        {% if director.education %}<p class="team-edu">&#127891; {{ director.education }}</p>{% endif %}
       </div>
     </div>
+    {% endfor %}
   </div>
+  {% endif %}
 
-  <!-- Rest of the team -->
+  <!-- Faculty & Team Members -->
   <div class="team-grid">
-
-    <!-- Maulana Osama Quasmi -->
+    {% set faculty = team_members | rejectattr('is_director') | list %}
+    {% for member in faculty %}
     <div class="team-card">
-      <div class="team-card-img-wrap">
-        <img src="{{ url_for('static', filename='images/team/maulana_osama_quasmi.jpeg') }}" alt="Maulana Osama Quasmi" class="team-card-img"/>
+      <div class="team-card-img-wrap {% if not member.image_url or 'default_female' in member.image_url %}team-card-img-wrap--default{% endif %}">
+        <img src="{{ member.image_url if member.image_url else url_for('static', filename='images/team/default_female.svg') }}" alt="{{ member.name }}" class="team-card-img {% if not member.image_url or 'default_female' in member.image_url %}team-card-img--default{% endif %}"/>
       </div>
       <div class="team-card-body">
-        <h3>{{ t.member1Name }}</h3>
-        <span class="team-badge">{{ t.member1Subject }}</span>
-        <p class="team-edu">&#127891; {{ t.member1Edu }}</p>
+        <h3>{{ member.name }}</h3>
+        {% if member.role_label %}<span class="team-director-label" style="font-size:0.7rem;">{{ member.role_label }}</span>{% endif %}
+        {% if member.subject %}<span class="team-badge">{{ member.subject }}</span>{% endif %}
+        {% if member.education %}<p class="team-edu">&#127891; {{ member.education }}</p>{% endif %}
       </div>
     </div>
-
-    <!-- Mufti Maaz Quasmi -->
-    <div class="team-card">
-      <div class="team-card-img-wrap">
-        <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Mufti Maaz Quasmi" class="team-card-img"/>
-      </div>
-      <div class="team-card-body">
-        <h3>{{ t.member2Name }}</h3>
-        <span class="team-badge">{{ t.member2Subject }}</span>
-      </div>
-    </div>
-
-    <!-- Aalima Rahnuma Fatima -->
-    <div class="team-card">
-      <div class="team-card-img-wrap team-card-img-wrap--default">
-        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Aalima Rahnuma Fatima" class="team-card-img team-card-img--default"/>
-      </div>
-      <div class="team-card-body">
-        <h3>{{ t.member3Name }}</h3>
-        <span class="team-badge">{{ t.member3Subject }}</span>
-      </div>
-    </div>
-
-    <!-- Hafiza Sumaiya Fatima -->
-    <div class="team-card">
-      <div class="team-card-img-wrap team-card-img-wrap--default">
-        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Hafiza Sumaiya Fatima" class="team-card-img team-card-img--default"/>
-      </div>
-      <div class="team-card-body">
-        <h3>{{ t.member4Name }}</h3>
-        <span class="team-badge">{{ t.member4Subject }}</span>
-      </div>
-    </div>
-
-    <!-- Hafiza Safia Junaid -->
-    <div class="team-card">
-      <div class="team-card-img-wrap team-card-img-wrap--default">
-        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Hafiza Safia Junaid" class="team-card-img team-card-img--default"/>
-      </div>
-      <div class="team-card-body">
-        <h3>{{ t.member5Name }}</h3>
-        <span class="team-badge">{{ t.member5Subject }}</span>
-      </div>
-    </div>
-
-    <!-- Dr Noorussama Fatima -->
-    <div class="team-card">
-      <div class="team-card-img-wrap team-card-img-wrap--default">
-        <img src="{{ url_for('static', filename='images/team/default_female.svg') }}" alt="Dr Noorussama Fatima" class="team-card-img team-card-img--default"/>
-      </div>
-      <div class="team-card-body">
-        <h3>{{ t.member6Name }}</h3>
-        <span class="team-badge">{{ t.member6Subject }}</span>
-      </div>
-    </div>
-
+    {% else %}
+      {% if not directors %}
+        <div style="grid-column:1/-1; text-align:center; color:#888; padding:3rem;">No team members currently listed.</div>
+      {% endif %}
+    {% endfor %}
   </div>
 </section>
 

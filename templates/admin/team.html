@@ -1,0 +1,204 @@
+{% extends "admin/base.html" %}
+{% block title %}Team Management | Admin{% endblock %}
+{% block topbar_title %}Team Management{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h1 class="adm-title">Team & Educators Management</h1>
+    <p class="adm-subtitle">Add, edit, delete, and manage scholars, teachers, female tutors, and leadership shown on the
+      Team page.</p>
+  </div>
+  <div>
+
+    <button type="button" onclick="openTeamModal()" class="adm-btn-primary">+ Add Team Member</button>
+  </div>
+</div>
+
+<div class="adm-card">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width: 50px;">Order</th>
+        <th style="width: 70px;">Photo</th>
+        <th>Name</th>
+        <th>Role / Position</th>
+        <th>Subject Expertise</th>
+        <th>Education</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th style="width: 140px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in team_members %}
+      <tr>
+        <td><strong>{{ member.display_order }}</strong></td>
+        <td>
+          {% if member.image_url %}
+          <img src="{{ member.image_url }}" alt="{{ member.name }}"
+            style="width:42px; height:42px; object-fit:cover; border-radius:50%; border:1px solid #cde0d8;" />
+          {% else %}
+          <div
+            style="width:42px; height:42px; border-radius:50%; background:var(--teal-pale); display:flex; align-items:center; justify-content:center; color:var(--teal-dark); font-weight:700;">
+            {{ member.name[:2].upper() }}
+          </div>
+          {% endif %}
+        </td>
+        <td><strong>{{ member.name }}</strong></td>
+        <td><span class="adm-badge" style="background:#f4f7f6; color:#0A3D33; font-weight:600;">{{ member.role_label or
+            'Educator' }}</span></td>
+        <td>{{ member.subject or '—' }}</td>
+        <td><small class="badge-tag-input">{{ member.education or '—' }}</small></td>
+        <td>
+          {% if member.is_director %}
+          <span class="adm-badge"
+            style="background:rgba(201,168,76,0.18); color:#7A5A10; font-weight:700;">Director</span>
+          {% else %}
+          <span class="adm-badge" style="background:#e8f4f0; color:#0A3D33;">Faculty</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if member.is_visible %}
+          <span class="adm-status adm-status--upcoming">Active</span>
+          {% else %}
+          <span class="adm-status adm-status--completed">Hidden</span>
+          {% endif %}
+        </td>
+        <td>
+          <button type="button" onclick='editTeamMember({{ member|tojson }})'
+            class="adm-btn-sm adm-btn-edit">Edit</button>
+          <form method="post" action="{{ url_for('admin_team_delete', tid=member.id) }}" style="display:inline;"
+            onsubmit="return confirm('Delete team member {{ member.name }}?');">
+            <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9" style="text-align:center; color:#888; padding:2rem;">No team members added yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- TEAM MEMBER MODAL -->
+<div class="adm-modal-overlay" id="teamModal">
+  <div class="adm-modal" style="max-width: 600px;">
+    <button class="adm-modal-close" onclick="closeTeamModal()">&times;</button>
+    <h2 id="teamModalTitle" class="adm-modal-title">Add Team Member</h2>
+    <form method="post" action="{{ url_for('admin_team_save') }}" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="teamId" />
+
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" name="name" id="teamName" class="adm-input" required
+            placeholder="e.g. Qari Mohammad Shariq Zafar" />
+        </div>
+        <div class="adm-form-group">
+          <label>Role / Title</label>
+          <input type="text" name="role_label" id="teamRole" class="adm-input"
+            placeholder="e.g. Founder & Director, Senior Educator" />
+        </div>
+      </div>
+
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Subject / Specialty</label>
+          <input type="text" name="subject" id="teamSubject" class="adm-input"
+            placeholder="e.g. Tajweed & Qirat Scholar" />
+        </div>
+        <div class="adm-form-group">
+          <label>Education / Qualification</label>
+          <input type="text" name="education" id="teamEdu" class="adm-input" placeholder="e.g. Aalim, Qari & Hafiz" />
+        </div>
+      </div>
+
+      <div class="adm-form-group">
+        <label>Profile Image (Upload to Cloudinary or URL)</label>
+        <input type="file" name="image" class="adm-input" accept="image/*" />
+        <input type="hidden" name="image_url" id="teamImageUrl" />
+        <div id="teamImgPrev" style="margin-top:0.5rem; display:none;">
+          <img id="teamImgPrevSrc" src="" style="max-height:80px; border-radius:6px; border:1px solid #cde0d8;" />
+        </div>
+      </div>
+
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Display Order</label>
+          <input type="number" name="display_order" id="teamOrder" class="adm-input" value="0" />
+        </div>
+        <div class="adm-form-group" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:0.4rem;">
+          <label class="switch-label" style="color:var(--text-dark);">
+            <input type="checkbox" name="is_director" id="teamIsDirector" class="switch-input" />
+            Director / Spotlight Card
+          </label>
+          <label class="switch-label" style="color:var(--text-dark);">
+            <input type="checkbox" name="is_visible" id="teamVisible" class="switch-input" checked />
+            Active / Visible on site
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="adm-btn-primary" style="width:100%; margin-top:1rem;">Save Team Member</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openTeamModal() {
+    document.getElementById('teamModalTitle').innerText = 'Add Team Member';
+    document.getElementById('teamId').value = '';
+    document.getElementById('teamName').value = '';
+    document.getElementById('teamRole').value = '';
+    document.getElementById('teamSubject').value = '';
+    document.getElementById('teamEdu').value = '';
+    document.getElementById('teamImageUrl').value = '';
+    document.getElementById('teamOrder').value = '0';
+    document.getElementById('teamIsDirector').checked = false;
+    document.getElementById('teamVisible').checked = true;
+    document.getElementById('teamImgPrev').style.display = 'none';
+    document.getElementById('teamModal').classList.add('open');
+  }
+
+  function editTeamMember(m) {
+    document.getElementById('teamModalTitle').innerText = 'Edit Team Member';
+    document.getElementById('teamId').value = m.id;
+    document.getElementById('teamName').value = m.name || '';
+    document.getElementById('teamRole').value = m.role_label || '';
+    document.getElementById('teamSubject').value = m.subject || '';
+    document.getElementById('teamEdu').value = m.education || '';
+    document.getElementById('teamImageUrl').value = m.image_url || '';
+    document.getElementById('teamOrder').value = m.display_order || 0;
+    document.getElementById('teamIsDirector').checked = !!m.is_director;
+    document.getElementById('teamVisible').checked = !!m.is_visible;
+    if (m.image_url) {
+      document.getElementById('teamImgPrevSrc').src = m.image_url;
+      document.getElementById('teamImgPrev').style.display = 'block';
+    } else {
+      document.getElementById('teamImgPrev').style.display = 'none';
+    }
+    document.getElementById('teamModal').classList.add('open');
+  }
+
+  function closeTeamModal() {
+    document.getElementById('teamModal').classList.remove('open');
+  }
+
+  // Disable double submits
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('form').forEach(function (form) {
+      form.addEventListener('submit', function () {
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn && !btn.disabled) {
+          btn.disabled = true;
+          btn.style.opacity = '0.75';
+          btn.innerHTML = '⏳ Saving changes...';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

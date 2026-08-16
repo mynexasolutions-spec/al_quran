@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}Al-Qur'an Global Institute{% endblock %}</title>
+  <title>{% if course and course.seo_title %}{{ course.seo_title }}{% elif seo and seo.title %}{{ seo.title }}{% else %}{% block title %}Al-Qur'an Global Institute{% endblock %}{% endif %}</title>
+  {% if course and course.seo_description %}
+    <meta name="description" content="{{ course.seo_description }}"/>
+    <meta property="og:description" content="{{ course.seo_description }}"/>
+  {% elif seo and seo.meta_description %}
+    <meta name="description" content="{{ seo.meta_description }}"/>
+  {% endif %}
+  {% if course and course.seo_title %}
+    <meta property="og:title" content="{{ course.seo_title }}"/>
+  {% elif seo and seo.title %}
+    <meta property="og:title" content="{{ seo.title }}"/>
+  {% endif %}
+  {% if seo and seo.og_image %}<meta property="og:image" content="{{ seo.og_image }}"/>{% endif %}
+  {% if seo and seo.canonical_url %}<link rel="canonical" href="{{ seo.canonical_url }}"/>{% endif %}
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon"       href="{{ url_for('static', filename='images/favicon/favicon.ico') }}"/>
   <link rel="icon" type="image/png" sizes="16x16"  href="{{ url_for('static', filename='images/favicon/favicon-16x16.png') }}"/>

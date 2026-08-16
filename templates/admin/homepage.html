@@ -1,0 +1,1171 @@
+{% extends "admin/base.html" %}
+{% block title %}Homepage CMS | Admin{% endblock %}
+{% block topbar_title %}Homepage CMS & Subject Management{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h1 class="adm-title">Homepage CMS Dashboard</h1>
+    <p class="adm-subtitle">Manage all content, courses, academic subjects, statistics, FAQs, images, and section
+      visibility on the live website.</p>
+  </div>
+  <a href="{{ url_for('index') }}" target="_blank" class="btn-primary"
+    style="padding: 0.6rem 1.2rem; font-size: 0.88rem; text-decoration: none;">
+    🌐 View Live Homepage
+  </a>
+</div>
+
+<!-- ══ CMS NAVIGATION TABS ══ -->
+<style>
+  .cms-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid #e0eae6;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .cms-tab-btn {
+    padding: 0.75rem 1.2rem;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    background: #fff;
+    border: 1px solid #e0eae6;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  .cms-tab-btn:hover {
+    color: var(--teal-main);
+    background: #f8faf9;
+  }
+
+  .cms-tab-btn.active {
+    color: var(--teal-dark);
+    background: #fff;
+    border-color: var(--gold);
+    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.03);
+  }
+
+  .cms-sec-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--teal-dark);
+    color: #fff;
+    padding: 1rem 1.4rem;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 1rem;
+  }
+
+  .cms-sec-hdr h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    margin: 0;
+    color: #fff;
+  }
+
+  .switch-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .switch-input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gold);
+  }
+
+  .cms-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 900px) {
+    .cms-grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .img-prev-sm {
+    max-width: 120px;
+    max-height: 80px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    margin-top: 0.4rem;
+  }
+
+  .badge-tag-input {
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+
+  .cms-tab-panel {
+    transition: opacity 0.15s ease;
+  }
+  .cms-tab-svg {
+    width: 17px;
+    height: 17px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+</style>
+
+<div class="cms-tabs">
+  <button type="button" onclick="switchCmsTab('hero')" class="cms-tab-btn {% if tab == 'hero' %}active{% endif %}"
+    id="btn-tab-hero">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Hero Section</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('courses')" class="cms-tab-btn {% if tab == 'courses' %}active{% endif %}"
+    id="btn-tab-courses">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <span>Courses & Subjects</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('academic')"
+    class="cms-tab-btn {% if tab == 'academic' %}active{% endif %}" id="btn-tab-academic">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    <span>Academic Subjects</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('stats')" class="cms-tab-btn {% if tab == 'stats' %}active{% endif %}"
+    id="btn-tab-stats">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span>Statistics & Trust</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('features')"
+    class="cms-tab-btn {% if tab == 'features' %}active{% endif %}" id="btn-tab-features">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span>Why Choose Us</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('faqs')" class="cms-tab-btn {% if tab == 'faqs' %}active{% endif %}"
+    id="btn-tab-faqs">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span>FAQs</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('about')" class="cms-tab-btn {% if tab == 'about' %}active{% endif %}"
+    id="btn-tab-about">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <span>About Section</span>
+  </button>
+  <button type="button" onclick="switchCmsTab('seo')" class="cms-tab-btn {% if tab == 'seo' %}active{% endif %}"
+    id="btn-tab-seo">
+    <svg class="cms-tab-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>SEO Settings</span>
+  </button>
+</div>
+
+
+<!-- ════════════════ TAB 1: HERO SECTION ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-hero" style="display: {% if tab == 'hero' %}block{% else %}none{% endif %};">
+  <div class="adm-card" style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='hero') }}"
+      enctype="multipart/form-data">
+      <div class="cms-sec-hdr">
+        <h2>Hero Section Controls</h2>
+        <label class="switch-label">
+          <input type="checkbox" name="is_visible" class="switch-input" {% if hero_setting.get('is_visible', True)
+            %}checked{% endif %} />
+          Show Hero Section on Homepage
+        </label>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set h = hero_setting.get('data') or {} %}
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Arabic Calligraphy Heading</label>
+            <input type="text" name="arabic_heading" class="adm-input"
+              value="{{ h.get('arabic_heading', 'وَ رَتِّلِ الْقُرْآنَ تَرْتِيْلًا') }}" dir="rtl" />
+          </div>
+          <div class="adm-form-group">
+            <label>Hero Badge Text</label>
+            <input type="text" name="badge" class="adm-input" value="{{ h.get('badge', '') }}" />
+          </div>
+        </div>
+
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Main Title (H1)</label>
+            <input type="text" name="title" class="adm-input" value="{{ h.get('title', '') }}" required />
+          </div>
+          <div class="adm-form-group">
+            <label>Sub Title / Tagline</label>
+            <input type="text" name="sub_title" class="adm-input" value="{{ h.get('sub_title', '') }}" />
+          </div>
+        </div>
+
+        <div class="adm-form-group">
+          <label>Hero Description</label>
+          <textarea name="description" class="adm-input" rows="3">{{ h.get('description', '') }}</textarea>
+        </div>
+
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Primary CTA Button Text</label>
+            <input type="text" name="primary_cta_text" class="adm-input"
+              value="{{ h.get('primary_cta_text', 'Explore Courses') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Primary CTA URL / Anchor</label>
+            <input type="text" name="primary_cta_url" class="adm-input"
+              value="{{ h.get('primary_cta_url', '#courses') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Secondary CTA Button Text</label>
+            <input type="text" name="secondary_cta_text" class="adm-input"
+              value="{{ h.get('secondary_cta_text', 'Contact via WhatsApp') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Secondary CTA URL</label>
+            <input type="text" name="secondary_cta_url" class="adm-input"
+              value="{{ h.get('secondary_cta_url', 'https://wa.me/919045520249') }}" />
+          </div>
+        </div>
+
+        <div class="adm-form-group">
+          <label>Hero Background / Custom Image (Cloudinary)</label>
+          <input type="file" name="image" class="adm-input" accept="image/*" />
+          {% if h.get('image_url') %}
+          <div><img src="{{ h.image_url }}" alt="Hero Image" class="img-prev-sm" /></div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="adm-btn-primary" style="margin-top: 1rem;">Save Hero Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 2: COURSES & SUBJECTS ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-courses"
+  style="display: {% if tab == 'courses' %}block{% else %}none{% endif %};">
+  <div class="adm-card"
+    style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='courses_header') }}">
+      <div class="cms-sec-hdr">
+        <h2>Courses Section Header</h2>
+        <label class="switch-label">
+          <input type="checkbox" name="is_visible" class="switch-input" {% if courses_hdr_setting.get('is_visible',
+            True) %}checked{% endif %} />
+          Show Courses Section on Homepage
+        </label>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set ch = courses_hdr_setting.get('data') or {} %}
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Section Tag</label>
+            <input type="text" name="tag" class="adm-input" value="{{ ch.get('tag', 'Browse Our Programs') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Section Subtitle</label>
+            <input type="text" name="description" class="adm-input" value="{{ ch.get('description', '') }}" />
+          </div>
+        </div>
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Heading Title</label>
+            <input type="text" name="title" class="adm-input" value="{{ ch.get('title', 'Explore Our') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Heading Title (Highlighted Span)</label>
+            <input type="text" name="title_span" class="adm-input"
+              value="{{ ch.get('title_span', 'Featured Courses') }}" />
+          </div>
+        </div>
+        <button type="submit" class="adm-btn-primary">Save Header Titles</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="adm-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+      <h3 style="margin:0; font-family:'Playfair Display',serif; font-size:1.2rem;">Manage All Courses & Subjects</h3>
+      <button type="button" onclick="openCourseModal()" class="adm-btn-primary">+ Add New Course</button>
+    </div>
+
+    <table class="adm-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">Order</th>
+          <th style="width: 80px;">Image</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Badges / Features</th>
+          <th>Status</th>
+          <th style="width: 140px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for crs in courses %}
+        <tr>
+          <td><strong>{{ crs.display_order }}</strong></td>
+          <td>
+            {% if crs.image_url %}
+            <img src="{{ crs.image_url }}" alt="{{ crs.title }}"
+              style="width:45px; height:35px; object-fit:cover; border-radius:4px;" />
+            {% else %}
+            <span style="font-size:1.4rem;">📖</span>
+            {% endif %}
+          </td>
+          <td>
+            <strong>{{ crs.title }}</strong><br>
+            <small class="badge-tag-input">{{ crs.description[:60] ~ '…' if crs.description and crs.description|length >
+              60 else crs.description }}</small>
+          </td>
+          <td><span class="adm-badge" style="background:#e8f4f0; color:#0A3D33;">{{ crs.category }}</span></td>
+          <td>
+            {% for b in crs.badges or [] %}
+            <span class="adm-badge" style="background:#f0f0f0; color:#444; font-size:0.75rem;">{{ b }}</span>
+            {% endfor %}
+          </td>
+          <td>
+            {% if crs.is_visible %}
+            <span class="adm-status adm-status--upcoming">Active</span>
+            {% else %}
+            <span class="adm-status adm-status--completed">Hidden</span>
+            {% endif %}
+          </td>
+          <td>
+            <button type="button" onclick='editCourse({{ crs|tojson }})' class="adm-btn-sm adm-btn-edit">Edit</button>
+            <form method="post" action="{{ url_for('admin_courses_delete', cid=crs.id) }}" style="display:inline;"
+              onsubmit="return confirm('Delete course {{ crs.title }}?');">
+              <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" style="text-align:center; color:#888;">No courses created yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- COURSE MODAL -->
+<div class="adm-modal-overlay" id="courseModal">
+  <div class="adm-modal" style="max-width: 600px;">
+    <button class="adm-modal-close" onclick="closeCourseModal()">&times;</button>
+    <h2 id="courseModalTitle" class="adm-modal-title">Add New Course</h2>
+    <form method="post" action="{{ url_for('admin_courses_save') }}" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="courseId" />
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Course Title <span class="req">*</span></label>
+          <input type="text" name="title" id="courseTitle" class="adm-input" required />
+        </div>
+        <div class="adm-form-group">
+          <label>Category <span class="req">*</span></label>
+          <select name="category" id="courseCategory" class="adm-input">
+            <option value="Quranic Studies">Quranic Studies</option>
+            <option value="Language Courses">Language Courses</option>
+            <option value="Academic Subjects">Academic Subjects</option>
+            <option value="Islamic Knowledge">Islamic Knowledge</option>
+          </select>
+        </div>
+      </div>
+      <div class="adm-form-group">
+        <label>Course Description</label>
+        <textarea name="description" id="courseDesc" class="adm-input" rows="3"></textarea>
+      </div>
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Badges (Comma separated)</label>
+          <input type="text" name="badges" id="courseBadges" class="adm-input"
+            placeholder="e.g. All Levels, Online, Certificate" />
+        </div>
+        <div class="adm-form-group">
+          <label>Link URL (e.g. /course/tajweed or #contact)</label>
+          <input type="text" name="link_url" id="courseLinkUrl" class="adm-input" placeholder="/course/tajweed" />
+        </div>
+      </div>
+      <div class="cms-grid-2" style="border-top: 1px dashed #cde0d8; padding-top: 0.8rem; margin-top: 0.2rem;">
+        <div class="adm-form-group">
+          <label>SEO Meta Title</label>
+          <input type="text" name="seo_title" id="courseSeoTitle" class="adm-input" placeholder="e.g. Online Tajweed Course | Al-Qur'an Global" />
+        </div>
+        <div class="adm-form-group">
+          <label>SEO Meta Description</label>
+          <input type="text" name="seo_description" id="courseSeoDesc" class="adm-input" placeholder="e.g. Learn Tajweed rules with certified scholars." />
+        </div>
+      </div>
+
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Display Order (0, 1, 2...)</label>
+          <input type="number" name="display_order" id="courseOrder" class="adm-input" value="0" />
+        </div>
+        <div class="adm-form-group" style="display:flex; align-items:center; margin-top:1.4rem;">
+          <label class="switch-label" style="color:var(--text-dark);">
+            <input type="checkbox" name="is_visible" id="courseVisible" class="switch-input" checked />
+            Active / Visible on site
+          </label>
+        </div>
+      </div>
+      <div class="adm-form-group">
+        <label>Course Image (Upload to Cloudinary or URL)</label>
+        <input type="file" name="image" class="adm-input" accept="image/*" />
+        <input type="hidden" name="image_url" id="courseImageUrl" />
+      </div>
+      <button type="submit" class="adm-btn-primary" style="width:100%;">Save Course</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 3: ACADEMIC SUBJECTS ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-academic"
+  style="display: {% if tab == 'academic' %}block{% else %}none{% endif %};">
+  <div class="adm-card"
+    style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='academic_header') }}">
+      <div class="cms-sec-hdr">
+        <h2>Academic Subjects Header</h2>
+        <label class="switch-label">
+          <input type="checkbox" name="is_visible" class="switch-input" {% if academic_hdr_setting.get('is_visible',
+            True) %}checked{% endif %} />
+          Show Academic Subjects Section
+        </label>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set ah = academic_hdr_setting.get('data') or {} %}
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Section Tag</label>
+            <input type="text" name="tag" class="adm-input" value="{{ ah.get('tag', 'School Curriculum Support') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Section Description</label>
+            <input type="text" name="description" class="adm-input" value="{{ ah.get('description', '') }}" />
+          </div>
+        </div>
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Title</label>
+            <input type="text" name="title" class="adm-input" value="{{ ah.get('title', 'Academic') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Title (Highlighted Span)</label>
+            <input type="text" name="title_span" class="adm-input"
+              value="{{ ah.get('title_span', 'Subjects Tuition') }}" />
+          </div>
+        </div>
+        <button type="submit" class="adm-btn-primary">Save Academic Header</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="adm-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+      <h3 style="margin:0; font-family:'Playfair Display',serif; font-size:1.2rem;">Manage Academic Subjects</h3>
+      <button type="button" onclick="openAcademicModal()" class="adm-btn-primary">+ Add Academic Subject</button>
+    </div>
+
+    <table class="adm-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">Order</th>
+          <th style="width: 60px;">Icon</th>
+          <th>Subject Title</th>
+          <th>Description</th>
+          <th>Badges</th>
+          <th>Status</th>
+          <th style="width: 140px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in academic_subjects %}
+        <tr>
+          <td><strong>{{ sub.display_order }}</strong></td>
+          <td style="font-size:1.4rem;">
+            {% if sub.icon_or_image and sub.icon_or_image.startswith('http') %}
+            <img src="{{ sub.icon_or_image }}" style="width:30px; height:30px; object-fit:contain;" />
+            {% else %}
+            {{ sub.icon_or_image or '📚' }}
+            {% endif %}
+          </td>
+          <td><strong>{{ sub.title }}</strong></td>
+          <td><small class="badge-tag-input">{{ sub.description }}</small></td>
+          <td>
+            {% for b in sub.badges or [] %}
+            <span class="adm-badge" style="background:#e8f4f0; color:#0A3D33; font-size:0.75rem;">{{ b }}</span>
+            {% endfor %}
+          </td>
+          <td>
+            {% if sub.is_visible %}
+            <span class="adm-status adm-status--upcoming">Active</span>
+            {% else %}
+            <span class="adm-status adm-status--completed">Hidden</span>
+            {% endif %}
+          </td>
+          <td>
+            <button type="button" onclick='editAcademic({{ sub|tojson }})' class="adm-btn-sm adm-btn-edit">Edit</button>
+            <form method="post" action="{{ url_for('admin_academic_delete', aid=sub.id) }}" style="display:inline;"
+              onsubmit="return confirm('Delete subject {{ sub.title }}?');">
+              <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" style="text-align:center; color:#888;">No academic subjects added.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ACADEMIC MODAL -->
+<div class="adm-modal-overlay" id="academicModal">
+  <div class="adm-modal" style="max-width: 550px;">
+    <button class="adm-modal-close" onclick="closeAcademicModal()">&times;</button>
+    <h2 id="academicModalTitle" class="adm-modal-title">Add Academic Subject</h2>
+    <form method="post" action="{{ url_for('admin_academic_save') }}" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="acadId" />
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Subject Title <span class="req">*</span></label>
+          <input type="text" name="title" id="acadTitle" class="adm-input" required />
+        </div>
+        <div class="adm-form-group">
+          <label>Emoji / Icon</label>
+          <input type="text" name="icon_or_image" id="acadIcon" class="adm-input" placeholder="📐" />
+        </div>
+      </div>
+      <div class="adm-form-group">
+        <label>Description</label>
+        <textarea name="description" id="acadDesc" class="adm-input" rows="3"></textarea>
+      </div>
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Badges (Comma separated)</label>
+          <input type="text" name="badges" id="acadBadges" class="adm-input" placeholder="Grades 1-12, 1-on-1" />
+        </div>
+        <div class="adm-form-group">
+          <label>Display Order</label>
+          <input type="number" name="display_order" id="acadOrder" class="adm-input" value="0" />
+        </div>
+      </div>
+      <div class="adm-form-group" style="display:flex; align-items:center;">
+        <label class="switch-label" style="color:var(--text-dark);">
+          <input type="checkbox" name="is_visible" id="acadVisible" class="switch-input" checked />
+          Active / Visible on site
+        </label>
+      </div>
+      <button type="submit" class="adm-btn-primary" style="width:100%;">Save Subject</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 4: STATISTICS & TRUST ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-stats" style="display: {% if tab == 'stats' %}block{% else %}none{% endif %};">
+  <div class="adm-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+      <h3 style="margin:0; font-family:'Playfair Display',serif; font-size:1.2rem;">Manage Statistics Counters</h3>
+      <button type="button" onclick="openStatModal()" class="adm-btn-primary">+ Add Counter</button>
+    </div>
+
+    <table class="adm-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">Order</th>
+          <th style="width: 50px;">Icon</th>
+          <th>Number Value</th>
+          <th>Label</th>
+          <th>Status</th>
+          <th style="width: 140px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for st in stats %}
+        <tr>
+          <td><strong>{{ st.display_order }}</strong></td>
+          <td style="font-size:1.3rem;">{{ st.icon or '📊' }}</td>
+          <td><strong style="color:var(--teal-dark); font-size:1.1rem;">{{ st.value }}</strong></td>
+          <td>{{ st.label }}</td>
+          <td>
+            {% if st.is_visible %}
+            <span class="adm-status adm-status--upcoming">Active</span>
+            {% else %}
+            <span class="adm-status adm-status--completed">Hidden</span>
+            {% endif %}
+          </td>
+          <td>
+            <button type="button" onclick='editStat({{ st|tojson }})' class="adm-btn-sm adm-btn-edit">Edit</button>
+            <form method="post" action="{{ url_for('admin_stats_delete', sid=st.id) }}" style="display:inline;"
+              onsubmit="return confirm('Delete counter?');">
+              <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" style="text-align:center; color:#888;">No statistics counters.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- STAT MODAL -->
+<div class="adm-modal-overlay" id="statModal">
+  <div class="adm-modal" style="max-width: 450px;">
+    <button class="adm-modal-close" onclick="closeStatModal()">&times;</button>
+    <h2 id="statModalTitle" class="adm-modal-title">Add Statistic Counter</h2>
+    <form method="post" action="{{ url_for('admin_stats_save') }}">
+      <input type="hidden" name="id" id="statId" />
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Value (e.g. 1000+) <span class="req">*</span></label>
+          <input type="text" name="value" id="statValue" class="adm-input" required />
+        </div>
+        <div class="adm-form-group">
+          <label>Icon Emoji</label>
+          <input type="text" name="icon" id="statIcon" class="adm-input" placeholder="🎓" />
+        </div>
+      </div>
+      <div class="adm-form-group">
+        <label>Label <span class="req">*</span></label>
+        <input type="text" name="label" id="statLabel" class="adm-input" required
+          placeholder="Active Students Worldwide" />
+      </div>
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Display Order</label>
+          <input type="number" name="display_order" id="statOrder" class="adm-input" value="0" />
+        </div>
+        <div class="adm-form-group" style="display:flex; align-items:center; margin-top:1.4rem;">
+          <label class="switch-label" style="color:var(--text-dark);">
+            <input type="checkbox" name="is_visible" id="statVisible" class="switch-input" checked />
+            Active / Visible
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="adm-btn-primary" style="width:100%;">Save Statistic</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 5: WHY CHOOSE US ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-features"
+  style="display: {% if tab == 'features' %}block{% else %}none{% endif %};">
+  <div class="adm-card"
+    style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='why_choose_header') }}">
+      <div class="cms-sec-hdr">
+        <h2>Why Choose Us Section Header</h2>
+        <label class="switch-label">
+          <input type="checkbox" name="is_visible" class="switch-input" {% if why_hdr_setting.get('is_visible', True)
+            %}checked{% endif %} />
+          Show Section on Homepage
+        </label>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set wh = why_hdr_setting.get('data') or {} %}
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Section Tag</label>
+            <input type="text" name="tag" class="adm-input" value="{{ wh.get('tag', 'Why Choose Us') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Title</label>
+            <input type="text" name="title" class="adm-input" value="{{ wh.get('title', 'Why Study With') }}" />
+          </div>
+        </div>
+        <div class="adm-form-group">
+          <label>Title Highlight (Span)</label>
+          <input type="text" name="title_span" class="adm-input"
+            value="{{ wh.get('title_span', 'Al-Qur\'an Global Institute') }}" />
+        </div>
+        <button type="submit" class="adm-btn-primary">Save Section Header</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="adm-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+      <h3 style="margin:0; font-family:'Playfair Display',serif; font-size:1.2rem;">Manage Features</h3>
+      <button type="button" onclick="openFeatureModal()" class="adm-btn-primary">+ Add Feature Card</button>
+    </div>
+
+    <table class="adm-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">Order</th>
+          <th style="width: 60px;">Image</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th style="width: 140px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ft in features %}
+        <tr>
+          <td><strong>{{ ft.display_order }}</strong></td>
+          <td>
+            {% if ft.image_url %}
+            <img src="{{ ft.image_url }}" alt="{{ ft.title }}"
+              style="width:40px; height:30px; object-fit:cover; border-radius:4px;" />
+            {% else %}
+            {{ ft.icon or '⭐' }}
+            {% endif %}
+          </td>
+          <td><strong>{{ ft.title }}</strong></td>
+          <td><small class="badge-tag-input">{{ ft.description }}</small></td>
+          <td>
+            {% if ft.is_visible %}
+            <span class="adm-status adm-status--upcoming">Active</span>
+            {% else %}
+            <span class="adm-status adm-status--completed">Hidden</span>
+            {% endif %}
+          </td>
+          <td>
+            <button type="button" onclick='editFeature({{ ft|tojson }})' class="adm-btn-sm adm-btn-edit">Edit</button>
+            <form method="post" action="{{ url_for('admin_features_delete', fid=ft.id) }}" style="display:inline;"
+              onsubmit="return confirm('Delete feature?');">
+              <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" style="text-align:center; color:#888;">No features created.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FEATURE MODAL -->
+<div class="adm-modal-overlay" id="featureModal">
+  <div class="adm-modal" style="max-width: 500px;">
+    <button class="adm-modal-close" onclick="closeFeatureModal()">&times;</button>
+    <h2 id="featureModalTitle" class="adm-modal-title">Add Feature Card</h2>
+    <form method="post" action="{{ url_for('admin_features_save') }}" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="featId" />
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Feature Title <span class="req">*</span></label>
+          <input type="text" name="title" id="featTitle" class="adm-input" required />
+        </div>
+        <div class="adm-form-group">
+          <label>Icon Emoji</label>
+          <input type="text" name="icon" id="featIcon" class="adm-input" placeholder="🎓" />
+        </div>
+      </div>
+      <div class="adm-form-group">
+        <label>Description</label>
+        <textarea name="description" id="featDesc" class="adm-input" rows="3"></textarea>
+      </div>
+      <div class="adm-form-group">
+        <label>Image Upload (Cloudinary)</label>
+        <input type="file" name="image" class="adm-input" accept="image/*" />
+        <input type="hidden" name="image_url" id="featImageUrl" />
+      </div>
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Display Order</label>
+          <input type="number" name="display_order" id="featOrder" class="adm-input" value="0" />
+        </div>
+        <div class="adm-form-group" style="display:flex; align-items:center; margin-top:1.4rem;">
+          <label class="switch-label" style="color:var(--text-dark);">
+            <input type="checkbox" name="is_visible" id="featVisible" class="switch-input" checked />
+            Active / Visible
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="adm-btn-primary" style="width:100%;">Save Feature</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 6: FAQS ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-faqs" style="display: {% if tab == 'faqs' %}block{% else %}none{% endif %};">
+  <div class="adm-card"
+    style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='faq_header') }}">
+      <div class="cms-sec-hdr">
+        <h2>FAQ Section Header</h2>
+        <label class="switch-label">
+          <input type="checkbox" name="is_visible" class="switch-input" {% if faq_hdr_setting.get('is_visible', True)
+            %}checked{% endif %} />
+          Show FAQ Section on Homepage
+        </label>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set fh = faq_hdr_setting.get('data') or {} %}
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Section Tag</label>
+            <input type="text" name="tag" class="adm-input" value="{{ fh.get('tag', 'Frequently Asked Questions') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Title</label>
+            <input type="text" name="title" class="adm-input" value="{{ fh.get('title', 'Got') }}" />
+          </div>
+        </div>
+        <div class="adm-form-group">
+          <label>Title Highlight (Span)</label>
+          <input type="text" name="title_span" class="adm-input" value="{{ fh.get('title_span', 'Questions?') }}" />
+        </div>
+        <button type="submit" class="adm-btn-primary">Save FAQ Header</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="adm-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+      <h3 style="margin:0; font-family:'Playfair Display',serif; font-size:1.2rem;">Manage FAQs Accordion</h3>
+      <button type="button" onclick="openFaqModal()" class="adm-btn-primary">+ Add New FAQ</button>
+    </div>
+
+    <table class="adm-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">Order</th>
+          <th>Question</th>
+          <th>Answer</th>
+          <th>Status</th>
+          <th style="width: 140px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fq in faqs %}
+        <tr>
+          <td><strong>{{ fq.display_order }}</strong></td>
+          <td><strong>{{ fq.question }}</strong></td>
+          <td><small class="badge-tag-input">{{ fq.answer[:90] ~ '…' if fq.answer|length > 90 else fq.answer }}</small>
+          </td>
+          <td>
+            {% if fq.is_visible %}
+            <span class="adm-status adm-status--upcoming">Active</span>
+            {% else %}
+            <span class="adm-status adm-status--completed">Hidden</span>
+            {% endif %}
+          </td>
+          <td>
+            <button type="button" onclick='editFaq({{ fq|tojson }})' class="adm-btn-sm adm-btn-edit">Edit</button>
+            <form method="post" action="{{ url_for('admin_faqs_delete', fid=fq.id) }}" style="display:inline;"
+              onsubmit="return confirm('Delete FAQ?');">
+              <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="text-align:center; color:#888;">No FAQs created.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FAQ MODAL -->
+<div class="adm-modal-overlay" id="faqModal">
+  <div class="adm-modal" style="max-width: 550px;">
+    <button class="adm-modal-close" onclick="closeFaqModal()">&times;</button>
+    <h2 id="faqModalTitle" class="adm-modal-title">Add FAQ Item</h2>
+    <form method="post" action="{{ url_for('admin_faqs_save') }}">
+      <input type="hidden" name="id" id="faqId" />
+      <div class="adm-form-group">
+        <label>Question <span class="req">*</span></label>
+        <input type="text" name="question" id="faqQuestion" class="adm-input" required />
+      </div>
+      <div class="adm-form-group">
+        <label>Answer <span class="req">*</span></label>
+        <textarea name="answer" id="faqAnswer" class="adm-input" rows="4" required></textarea>
+      </div>
+      <div class="cms-grid-2">
+        <div class="adm-form-group">
+          <label>Display Order</label>
+          <input type="number" name="display_order" id="faqOrder" class="adm-input" value="0" />
+        </div>
+        <div class="adm-form-group" style="display:flex; align-items:center; margin-top:1.4rem;">
+          <label class="switch-label" style="color:var(--text-dark);">
+            <input type="checkbox" name="is_visible" id="faqVisible" class="switch-input" checked />
+            Active / Visible
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="adm-btn-primary" style="width:100%;">Save FAQ</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 7: ABOUT SECTION ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-about" style="display: {% if tab == 'about' %}block{% else %}none{% endif %};">
+  <div class="adm-card" style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='about') }}"
+      enctype="multipart/form-data">
+      <div class="cms-sec-hdr">
+        <h2>About Section Controls</h2>
+        <label class="switch-label">
+          <input type="checkbox" name="is_visible" class="switch-input" {% if about_setting.get('is_visible', True)
+            %}checked{% endif %} />
+          Show About Section on Homepage
+        </label>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set a = about_setting.get('data') or {} %}
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Section Tag</label>
+            <input type="text" name="tag" class="adm-input" value="{{ a.get('tag', 'Who We Are') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Heading Title</label>
+            <input type="text" name="title" class="adm-input"
+              value="{{ a.get('title', 'Pioneering Excellence in') }}" />
+          </div>
+        </div>
+        <div class="adm-form-group">
+          <label>Heading Title Highlight (Gold)</label>
+          <input type="text" name="title_gold" class="adm-input"
+            value="{{ a.get('title_gold', 'Islamic & Language Education') }}" />
+        </div>
+        <div class="adm-form-group">
+          <label>Description Paragraph</label>
+          <textarea name="description" class="adm-input" rows="3">{{ a.get('description', '') }}</textarea>
+        </div>
+        <div class="adm-form-group">
+          <label>Mission / Feature Bullet Points (One per line)</label>
+          <textarea name="mission_points" class="adm-input"
+            rows="6">{{ (a.get('mission_points') or []) | join('\n') }}</textarea>
+        </div>
+        <div class="adm-form-group">
+          <label>Section Image (Cloudinary)</label>
+          <input type="file" name="image" class="adm-input" accept="image/*" />
+          {% if a.get('image_url') %}
+          <div><img src="{{ a.image_url }}" alt="About Image" class="img-prev-sm" /></div>
+          {% endif %}
+        </div>
+        <button type="submit" class="adm-btn-primary">Save About Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════ TAB 8: SEO SETTINGS ════════════════ -->
+<div class="cms-tab-panel" id="cms-tab-seo" style="display: {% if tab == 'seo' %}block{% else %}none{% endif %};">
+  <div class="adm-card" style="padding: 0; border: 1px solid #e0eae6; border-radius: 8px; overflow: hidden;">
+    <form method="post" action="{{ url_for('admin_homepage_save_settings', key='seo') }}" enctype="multipart/form-data">
+      <div class="cms-sec-hdr">
+        <h2>SEO & OpenGraph Metadata Controls</h2>
+      </div>
+      <div style="padding: 1.4rem;">
+        {% set s = seo_setting.get('data') or {} %}
+        <div class="adm-form-group">
+          <label>Meta Title Tag <span class="req">*</span></label>
+          <input type="text" name="title" class="adm-input" value="{{ s.get('title', '') }}" required />
+        </div>
+        <div class="adm-form-group">
+          <label>Meta Description Tag</label>
+          <textarea name="meta_description" class="adm-input" rows="3">{{ s.get('meta_description', '') }}</textarea>
+        </div>
+        <div class="cms-grid-2">
+          <div class="adm-form-group">
+            <label>Canonical URL</label>
+            <input type="text" name="canonical_url" class="adm-input"
+              value="{{ s.get('canonical_url', 'https://alquranglobal.com') }}" />
+          </div>
+          <div class="adm-form-group">
+            <label>Social Share OG Image (Cloudinary)</label>
+            <input type="file" name="og_image_file" class="adm-input" accept="image/*" />
+            {% if s.get('og_image') %}
+            <div><img src="{{ s.og_image }}" alt="OG Image" class="img-prev-sm" /></div>
+            {% endif %}
+          </div>
+        </div>
+        <button type="submit" class="adm-btn-primary">Save SEO Settings</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- JavaScript for Client-Side Tab Switching & Instant Feedback -->
+<script>
+  function switchCmsTab(tabName) {
+    document.querySelectorAll('.cms-tab-panel').forEach(function (el) {
+      el.style.display = 'none';
+    });
+    document.querySelectorAll('.cms-tab-btn').forEach(function (btn) {
+      btn.classList.remove('active');
+    });
+    var targetPanel = document.getElementById('cms-tab-' + tabName);
+    var targetBtn = document.getElementById('btn-tab-' + tabName);
+    if (targetPanel) targetPanel.style.display = 'block';
+    if (targetBtn) targetBtn.classList.add('active');
+
+    var url = new URL(window.location.href);
+    url.searchParams.set('tab', tabName);
+    window.history.replaceState(null, '', url.toString());
+  }
+
+  // Global submit handler for loading state & double submit prevention
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('form').forEach(function (form) {
+      form.addEventListener('submit', function () {
+        var submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn && !submitBtn.disabled) {
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.75';
+          submitBtn.style.cursor = 'wait';
+          submitBtn.innerHTML = '⏳ Saving changes...';
+        }
+      });
+    });
+  });
+
+  function openCourseModal() {
+    document.getElementById('courseModalTitle').innerText = 'Add New Course';
+    document.getElementById('courseId').value = '';
+    document.getElementById('courseTitle').value = '';
+    document.getElementById('courseCategory').value = 'Quranic Studies';
+    document.getElementById('courseDesc').value = '';
+    document.getElementById('courseBadges').value = '';
+    document.getElementById('courseLinkUrl').value = '';
+    document.getElementById('courseSeoTitle').value = '';
+    document.getElementById('courseSeoDesc').value = '';
+    document.getElementById('courseOrder').value = '0';
+    document.getElementById('courseVisible').checked = true;
+    document.getElementById('courseModal').classList.add('open');
+  }
+  function editCourse(c) {
+    document.getElementById('courseModalTitle').innerText = 'Edit Course';
+    document.getElementById('courseId').value = c.id;
+    document.getElementById('courseTitle').value = c.title || '';
+    document.getElementById('courseCategory').value = c.category || 'Quranic Studies';
+    document.getElementById('courseDesc').value = c.description || '';
+    document.getElementById('courseBadges').value = (c.badges || []).join(', ');
+    document.getElementById('courseLinkUrl').value = c.link_url || '';
+    document.getElementById('courseSeoTitle').value = c.seo_title || '';
+    document.getElementById('courseSeoDesc').value = c.seo_description || '';
+    document.getElementById('courseOrder').value = c.display_order || 0;
+    document.getElementById('courseVisible').checked = !!c.is_visible;
+    document.getElementById('courseModal').classList.add('open');
+  }
+  function closeCourseModal() { document.getElementById('courseModal').classList.remove('open'); }
+
+
+  function openAcademicModal() {
+    document.getElementById('academicModalTitle').innerText = 'Add Academic Subject';
+    document.getElementById('acadId').value = '';
+    document.getElementById('acadTitle').value = '';
+    document.getElementById('acadIcon').value = '📐';
+    document.getElementById('acadDesc').value = '';
+    document.getElementById('acadBadges').value = '';
+    document.getElementById('acadOrder').value = '0';
+    document.getElementById('acadVisible').checked = true;
+    document.getElementById('academicModal').classList.add('open');
+  }
+  function editAcademic(a) {
+    document.getElementById('academicModalTitle').innerText = 'Edit Academic Subject';
+    document.getElementById('acadId').value = a.id;
+    document.getElementById('acadTitle').value = a.title || '';
+    document.getElementById('acadIcon').value = a.icon_or_image || '';
+    document.getElementById('acadDesc').value = a.description || '';
+    document.getElementById('acadBadges').value = (a.badges || []).join(', ');
+    document.getElementById('acadOrder').value = a.display_order || 0;
+    document.getElementById('acadVisible').checked = !!a.is_visible;
+    document.getElementById('academicModal').classList.add('open');
+  }
+  function closeAcademicModal() { document.getElementById('academicModal').classList.remove('open'); }
+
+  function openStatModal() {
+    document.getElementById('statModalTitle').innerText = 'Add Statistic Counter';
+    document.getElementById('statId').value = '';
+    document.getElementById('statValue').value = '';
+    document.getElementById('statIcon').value = '📊';
+    document.getElementById('statLabel').value = '';
+    document.getElementById('statOrder').value = '0';
+    document.getElementById('statVisible').checked = true;
+    document.getElementById('statModal').classList.add('open');
+  }
+  function editStat(s) {
+    document.getElementById('statModalTitle').innerText = 'Edit Statistic Counter';
+    document.getElementById('statId').value = s.id;
+    document.getElementById('statValue').value = s.value || '';
+    document.getElementById('statIcon').value = s.icon || '📊';
+    document.getElementById('statLabel').value = s.label || '';
+    document.getElementById('statOrder').value = s.display_order || 0;
+    document.getElementById('statVisible').checked = !!s.is_visible;
+    document.getElementById('statModal').classList.add('open');
+  }
+  function closeStatModal() { document.getElementById('statModal').classList.remove('open'); }
+
+  function openFeatureModal() {
+    document.getElementById('featureModalTitle').innerText = 'Add Feature Card';
+    document.getElementById('featId').value = '';
+    document.getElementById('featTitle').value = '';
+    document.getElementById('featIcon').value = '⭐';
+    document.getElementById('featDesc').value = '';
+    document.getElementById('featOrder').value = '0';
+    document.getElementById('featVisible').checked = true;
+    document.getElementById('featureModal').classList.add('open');
+  }
+  function editFeature(f) {
+    document.getElementById('featureModalTitle').innerText = 'Edit Feature Card';
+    document.getElementById('featId').value = f.id;
+    document.getElementById('featTitle').value = f.title || '';
+    document.getElementById('featIcon').value = f.icon || '⭐';
+    document.getElementById('featDesc').value = f.description || '';
+    document.getElementById('featOrder').value = f.display_order || 0;
+    document.getElementById('featVisible').checked = !!f.is_visible;
+    document.getElementById('featureModal').classList.add('open');
+  }
+  function closeFeatureModal() { document.getElementById('featureModal').classList.remove('open'); }
+
+  function openFaqModal() {
+    document.getElementById('faqModalTitle').innerText = 'Add FAQ Item';
+    document.getElementById('faqId').value = '';
+    document.getElementById('faqQuestion').value = '';
+    document.getElementById('faqAnswer').value = '';
+    document.getElementById('faqOrder').value = '0';
+    document.getElementById('faqVisible').checked = true;
+    document.getElementById('faqModal').classList.add('open');
+  }
+  function editFaq(fq) {
+    document.getElementById('faqModalTitle').innerText = 'Edit FAQ Item';
+    document.getElementById('faqId').value = fq.id;
+    document.getElementById('faqQuestion').value = fq.question || '';
+    document.getElementById('faqAnswer').value = fq.answer || '';
+    document.getElementById('faqOrder').value = fq.display_order || 0;
+    document.getElementById('faqVisible').checked = !!fq.is_visible;
+    document.getElementById('faqModal').classList.add('open');
+  }
+  function closeFaqModal() { document.getElementById('faqModal').classList.remove('open'); }
+</script>
+{% endblock %}

@@ -1,224 +1,165 @@
-﻿{% extends "layouts/base.html" %}
-{% block title %}Home | Al-Qur'an Global Institute{% endblock %}
+{% extends "layouts/base.html" %}
+{% block title %}{{ seo.title if seo and seo.title else "Home | Al-Qur'an Global Institute" }}{% endblock %}
 
 {% block content %}
 
 <!-- ══ HERO ══ -->
+{% if hero_visible %}
 <section class="hero" id="home">
   <div class="hero-wm">&#x627;&#x644;&#x642;&#x631;&#x622;&#x646;</div>
   <div class="hero-content">
 
     <div class="hero-logo-row">
-      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
+      <img src="{{ hero.image_url if hero.image_url else url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
       <div class="hero-inst">
         <strong>Al-Qur'an Global Institute</strong>
-        <span>Excellence in Islamic and Language Education</span>
+        <span>{{ hero.sub_title if hero.sub_title else 'Excellence in Islamic and Language Education' }}</span>
       </div>
     </div>
 
-    <span class="hero-badge">{{ t.heroBadge | safe }}</span>
+    {% if hero.badge %}<span class="hero-badge">{{ hero.badge | safe }}</span>{% endif %}
 
-    <h1><span>{{ t.heroH1Line1 }}</span><br><em>{{ t.heroH1Em | safe }}</em></h1>
+    <h1><span>{{ hero.title if hero.title else t.heroH1Line1 }}</span></h1>
 
-    <span class="hero-arabic-sub">&#x648;&#x631;&#x62A;&#x644; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x62A;&#x631;&#x62A;&#x64A;&#x644;&#x627;</span>
+    {% if hero.arabic_heading %}<span class="hero-arabic-sub">{{ hero.arabic_heading }}</span>{% endif %}
 
-    <p>{{ t.heroP | safe }}</p>
+    <p>{{ hero.description if hero.description else t.heroP | safe }}</p>
 
     <div class="hero-btns">
-      <a href="#courses" class="btn-primary">{{ t.heroExplore }}</a>
-      <a href="https://wa.me/919045520249" target="_blank" rel="noopener" class="btn-outline">{{ t.heroContact }}</a>
+      {% if hero.primary_cta_text %}<a href="{{ hero.primary_cta_url or '#courses' }}" class="btn-primary">{{ hero.primary_cta_text }}</a>{% endif %}
+      {% if hero.secondary_cta_text %}<a href="{{ hero.secondary_cta_url or 'https://wa.me/919045520249' }}" target="_blank" rel="noopener" class="btn-outline">{{ hero.secondary_cta_text }}</a>{% endif %}
     </div>
 
   </div>
 </section>
+{% endif %}
 
 
 <!-- ══ COURSES OVERVIEW ══ -->
+{% if courses_hdr_visible %}
 <section class="courses" id="courses">
   <div class="center-hdr">
-    <span class="section-tag">{{ t.coursesSectionTag }}</span>
-    <h2 class="section-title"><span>{{ t.coursesH2 }}</span> <span>{{ t.coursesH2Span }}</span></h2>
+    <span class="section-tag">{{ courses_hdr.tag if courses_hdr.tag else t.coursesSectionTag }}</span>
+    <h2 class="section-title"><span>{{ courses_hdr.title if courses_hdr.title else t.coursesH2 }}</span> <span>{{ courses_hdr.title_span if courses_hdr.title_span else t.coursesH2Span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub">{{ t.coursesSub }}</p>
+    <p class="section-sub">{{ courses_hdr.description if courses_hdr.description else t.coursesSub }}</p>
   </div>
 
   <div class="courses-grid">
 
-    <a href="{{ url_for('course_tajweed') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed Course" class="course-img"/>
+    {% for course in courses %}
+    <a href="{{ course.link_url or url_for('index') + '#contact' }}" class="course-card">
+      <img src="{{ course.image_url if course.image_url else url_for('static', filename='images/courses/tajweed.webp') }}" alt="{{ course.title }}" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.tajweedTitle }}</h3>
-        <p>{{ t.tajweedDesc }}</p>
+        <span class="course-cat">{{ course.category }}</span>
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
         <div class="course-meta">
-          <span class="badge">{{ t.badgeAllLevels }}</span>
-          <span class="badge">{{ t.badgeOnline }}</span>
-          <span class="badge">{{ t.badgeCertificate }}</span>
+          {% for b in course.badges or [] %}
+          <span class="badge">{{ b }}</span>
+          {% endfor %}
         </div>
         <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
-
-    <a href="{{ url_for('course_quran_recitation') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.recitationTitle }}</h3>
-        <p>{{ t.recitationDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badge1Year }}</span>
-          <span class="badge">{{ t.badgeAllLevels }}</span>
-          <span class="badge">{{ t.badgeNazira }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_hifz') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.hifzTitle }}</h3>
-        <p>{{ t.hifzDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeMonSat }}</span>
-          <span class="badge">{{ t.badgeAllAges }}</span>
-          <span class="badge">{{ t.badgeHafiz }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_qirat') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.qiratTitle }}</h3>
-        <p>{{ t.qiratDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeFlexible }}</span>
-          <span class="badge">{{ t.badgeIjazah }}</span>
-          <span class="badge">{{ t.badgeAdvanced }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_arabic') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic Speaking Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catLanguage }}</span>
-        <h3>{{ t.arabicTitle }}</h3>
-        <p>{{ t.arabicDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badge3Months }}</span>
-          <span class="badge">{{ t.badgeBeginner }}</span>
-          <span class="badge">{{ t.badge5xWeek }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_urdu') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catLanguage }}</span>
-        <h3>{{ t.urduTitle }}</h3>
-        <p>{{ t.urduDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeTueWed | safe }}</span>
-          <span class="badge">{{ t.badgeAllLevels }}</span>
-          <span class="badge">{{ t.badgeCertificate }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_english') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catLanguage }}</span>
-        <h3>{{ t.englishTitle }}</h3>
-        <p>{{ t.englishDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badge3Months }}</span>
-          <span class="badge">{{ t.badgeBeginner }}</span>
-          <span class="badge">{{ t.badge5xWeek }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <div class="course-card course-card--no-link">
-      <img src="{{ url_for('static', filename='images/courses/Academic_Subjects.webp') }}" alt="Academic Subjects" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catAcademic }}</span>
-        <h3>{{ t.academicTitle }}</h3>
-        <p>{{ t.academicDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeMaths }}</span>
-          <span class="badge">{{ t.badgeScience }}</span>
-          <span class="badge">{{ t.badgeAllAges }}</span>
-        </div>
-        <span class="course-link">{{ t.enrollViaContact }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
+    {% else %}
+    <div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 2rem;">
+      No courses currently listed.
     </div>
+    {% endfor %}
 
   </div>
 </section>
+{% endif %}
+
+
+<!-- ══ ACADEMIC SUBJECTS ══ -->
+{% if academic_hdr_visible and academic_subjects %}
+<section class="courses" id="academic-subjects" style="background: #f8faf9; padding-top: 2rem;">
+  <div class="center-hdr">
+    <span class="section-tag">{{ academic_hdr.tag if academic_hdr.tag else 'School Curriculum Support' }}</span>
+    <h2 class="section-title"><span>{{ academic_hdr.title if academic_hdr.title else 'Academic' }}</span> <span style="color:var(--gold)">{{ academic_hdr.title_span if academic_hdr.title_span else 'Subjects Tuition' }}</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">{{ academic_hdr.description if academic_hdr.description else '' }}</p>
+  </div>
+
+  <div class="courses-grid">
+    {% for sub in academic_subjects %}
+    <div class="course-card course-card--no-link">
+      {% if sub.icon_or_image and sub.icon_or_image.startswith('http') %}
+        <img src="{{ sub.icon_or_image }}" alt="{{ sub.title }}" class="course-img"/>
+      {% else %}
+        <div style="height:180px; display:flex; align-items:center; justify-content:center; font-size:4rem; background:var(--teal-dark); color:var(--gold);">
+          {{ sub.icon_or_image or '📚' }}
+        </div>
+      {% endif %}
+      <div class="course-card-body">
+        <span class="course-cat">Academic Subject</span>
+        <h3>{{ sub.title }}</h3>
+        <p>{{ sub.description }}</p>
+        <div class="course-meta">
+          {% for b in sub.badges or [] %}
+            <span class="badge">{{ b }}</span>
+          {% endfor %}
+        </div>
+        <a href="{{ sub.cta_url or '#contact' }}" class="course-link" style="text-decoration:none;">{{ sub.cta_text or 'Enroll via Contact' }} <span class="course-link-arrow">&#8594;</span></a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
 
 <!-- ══ STATS ══ -->
+{% if stats %}
 <section class="stats-strip">
   <div class="stats-numbers">
+    {% for st in stats %}
     <div class="stat">
-      <span class="stat-num">{{ t.stat1Num }}</span>
-      <span class="stat-label">{{ t.stat1Label }}</span>
+      <span class="stat-num">{{ st.value }}</span>
+      <span class="stat-label">{{ st.icon or '' }} {{ st.label }}</span>
     </div>
-    <div class="stat">
-      <span class="stat-num">{{ t.stat2Num }}</span>
-      <span class="stat-label">{{ t.stat2Label }}</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ t.stat3Num }}</span>
-      <span class="stat-label">{{ t.stat3Label }}</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ t.stat4Num }}</span>
-      <span class="stat-label">{{ t.stat4Label }}</span>
-    </div>
+    {% endfor %}
   </div>
   <div class="stats-trust-bar">
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust1 | safe }}</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust2 | safe }}</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust3 }}</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust4 }}</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Certified Native Scholars</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Flexible 1-on-1 Classes</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Separated Female Tutors</span></div>
+    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Free Trial Class</span></div>
   </div>
 </section>
+{% endif %}
 
 
 <!-- ══ ABOUT ══ -->
+{% if about_visible %}
 <section class="about-strip" id="about">
   <div class="about-inner">
     <div class="about-img-wrap">
-      <img src="{{ url_for('static', filename='images/who_we_are.webp') }}" alt="Who We Are — Al-Qur'an Global Institute" class="about-full-img"/>
+      <img src="{{ about.image_url if about.image_url else url_for('static', filename='images/who_we_are.webp') }}" alt="Who We Are — Al-Qur'an Global Institute" class="about-full-img"/>
     </div>
     <div>
-      <span class="section-tag">{{ t.aboutTag }}</span>
-      <h2 class="section-title"><span>{{ t.aboutH2 }}</span> <span style="color:var(--gold)">{{ t.aboutH2Gold }}</span></h2>
+      <span class="section-tag">{{ about.tag if about.tag else t.aboutTag }}</span>
+      <h2 class="section-title"><span>{{ about.title if about.title else t.aboutH2 }}</span> <span style="color:var(--gold)">{{ about.title_gold if about.title_gold else t.aboutH2Gold }}</span></h2>
       <div class="divider"></div>
-      <p class="section-sub">{{ t.aboutSub }}</p>
+      <p class="section-sub">{{ about.description if about.description else t.aboutSub }}</p>
       <ul class="mission-list">
-        <li>{{ t.aboutLi1 }}</li>
-        <li>{{ t.aboutLi2 }}</li>
-        <li>{{ t.aboutLi3 }}</li>
-        <li>{{ t.aboutLi4 }}</li>
-        <li>{{ t.aboutLi5 }}</li>
-        <li>{{ t.aboutLi6 }}</li>
+        {% for point in about.mission_points or [] %}
+          <li>{{ point }}</li>
+        {% else %}
+          <li>{{ t.aboutLi1 }}</li>
+          <li>{{ t.aboutLi2 }}</li>
+          <li>{{ t.aboutLi3 }}</li>
+          <li>{{ t.aboutLi4 }}</li>
+          <li>{{ t.aboutLi5 }}</li>
+          <li>{{ t.aboutLi6 }}</li>
+        {% endfor %}
       </ul>
     </div>
   </div>
 </section>
+{% endif %}
 
 
 <!-- ══ CTA BANNER ══ -->
@@ -235,64 +176,44 @@
 
 
 <!-- ══ WHY CHOOSE US ══ -->
+{% if why_hdr_visible %}
 <section class="why-choose">
   <div class="center-hdr">
-    <span class="section-tag">{{ t.whyTag }}</span>
-    <h2 class="section-title">{{ t.whyH2 }} <span>{{ t.whyH2Span }}</span></h2>
+    <span class="section-tag">{{ why_hdr.tag if why_hdr.tag else t.whyTag }}</span>
+    <h2 class="section-title">{{ why_hdr.title if why_hdr.title else t.whyH2 }} <span>{{ why_hdr.title_span if why_hdr.title_span else t.whyH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
   <div class="features-grid">
 
+    {% for ft in features %}
     <div class="feat-card">
-      <div class="feat-img-wrap feat-img-wrap--1">
-        <img src="{{ url_for('static', filename='images/why/expert_tutor.webp') }}" alt="Expert Quran Tutors" class="feat-img" onerror="this.style.display='none'">
+      <div class="feat-img-wrap feat-img-wrap--{{ (loop.index0 % 4) + 1 }}">
+        {% if ft.image_url %}
+          <img src="{{ ft.image_url }}" alt="{{ ft.title }}" class="feat-img" onerror="this.style.display='none'">
+        {% else %}
+          <div style="font-size: 3rem; text-align: center; padding: 1.5rem; color: var(--teal-dark);">{{ ft.icon or '⭐' }}</div>
+        {% endif %}
       </div>
       <div class="feat-body">
-        <h3>{{ t.feat1H }}</h3>
-        <p>{{ t.feat1P }}</p>
+        <h3>{{ ft.title }}</h3>
+        <p>{{ ft.description }}</p>
       </div>
     </div>
-
-    <div class="feat-card">
-      <div class="feat-img-wrap feat-img-wrap--2">
-        <img src="{{ url_for('static', filename='images/why/we_value_our_students.webp') }}" alt="We Value Our Students" class="feat-img" onerror="this.style.display='none'">
-      </div>
-      <div class="feat-body">
-        <h3>{{ t.feat2H }}</h3>
-        <p>{{ t.feat2P }}</p>
-      </div>
-    </div>
-
-    <div class="feat-card">
-      <div class="feat-img-wrap feat-img-wrap--3">
-        <img src="{{ url_for('static', filename='images/why/one-on-one-classes.webp') }}" alt="One-on-One Classes" class="feat-img" onerror="this.style.display='none'">
-      </div>
-      <div class="feat-body">
-        <h3>{{ t.feat3H }}</h3>
-        <p>{{ t.feat3P }}</p>
-      </div>
-    </div>
-
-    <div class="feat-card">
-      <div class="feat-img-wrap feat-img-wrap--4">
-        <img src="{{ url_for('static', filename='images/why/flexible-timings.webp') }}" alt="Flexible Timings" class="feat-img" onerror="this.style.display='none'">
-      </div>
-      <div class="feat-body">
-        <h3>{{ t.feat4H }}</h3>
-        <p>{{ t.feat4P }}</p>
-      </div>
-    </div>
+    {% else %}
+    <div style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No features currently added.</div>
+    {% endfor %}
 
   </div>
 </section>
+{% endif %}
 
 
 <!-- ══ REVIEWS ══ -->
-
+{% if reviews_hdr_visible %}
 <section class="reviews" id="reviews">
   <div class="center-hdr">
-    <span class="section-tag">{{ t.reviewsTag }}</span>
-    <h2 class="section-title"><span>{{ t.reviewsH2 }}</span> <span>{{ t.reviewsH2Span }}</span></h2>
+    <span class="section-tag">{{ reviews_hdr.tag if reviews_hdr.tag else t.reviewsTag }}</span>
+    <h2 class="section-title"><span>{{ reviews_hdr.title if reviews_hdr.title else t.reviewsH2 }}</span> <span>{{ reviews_hdr.title_span if reviews_hdr.title_span else t.reviewsH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
 
@@ -322,61 +243,6 @@
             </div>
           </div>
         {% endfor %}
-        {# Static reviews always visible #}
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
-          <div class="reviewer">
-            <div class="ra">FA</div>
-            <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
-          </div>
-        </div>
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
-          <div class="reviewer">
-            <div class="ra">KM</div>
-            <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
-          </div>
-        </div>
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
-          <div class="reviewer">
-            <div class="ra">ZR</div>
-            <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
-          </div>
-        </div>
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
-          <div class="reviewer">
-            <div class="ra">NA</div>
-            <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
-          </div>
-        </div>
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
-          <div class="reviewer">
-            <div class="ra">OB</div>
-            <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
-          </div>
-        </div>
-        <div class="review-card">
-          <div class="rq">&#x201C;</div>
-          <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
-          <div class="reviewer">
-            <div class="ra">SI</div>
-            <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -391,6 +257,7 @@
     <button type="button" id="openReviewModal" class="btn-primary">{{ t.reviewCtaBtn }}</button>
   </div>
 </section>
+{% endif %}
 
 <!-- ══ REVIEW SUBMISSION MODAL ══ -->
 <div class="rev-modal-overlay" id="revModal" role="dialog" aria-modal="true" aria-labelledby="revModalTitle">
@@ -491,57 +358,28 @@
 
 
 <!-- ══ FAQ ══ -->
+{% if faq_hdr_visible %}
 <section class="faq" id="faq">
   <div class="center-hdr">
-    <span class="section-tag">{{ t.faqTag }}</span>
-    <h2 class="section-title"><span>{{ t.faqH2 }}</span> <span>{{ t.faqH2Span }}</span></h2>
+    <span class="section-tag">{{ faq_hdr.tag if faq_hdr.tag else t.faqTag }}</span>
+    <h2 class="section-title"><span>{{ faq_hdr.title if faq_hdr.title else t.faqH2 }}</span> <span>{{ faq_hdr.title_span if faq_hdr.title_span else t.faqH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
 
   <div class="faq-list">
 
-    <div class="faq-item open">
-      <div class="faq-q">{{ t.faq1Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq1A }}</div>
+    {% for fq in faqs %}
+    <div class="faq-item {% if loop.first %}open{% endif %}">
+      <div class="faq-q">{{ fq.question }}<span class="faq-icon">+</span></div>
+      <div class="faq-a">{{ fq.answer }}</div>
     </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq2Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq2A }}</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq3Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq3A }}</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq4Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq4A }}</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq5Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq5A }}</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq6Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq6A }}</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq7Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq7A }}</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">{{ t.faq8Q }}<span class="faq-icon">+</span></div>
-      <div class="faq-a">{{ t.faq8A }}</div>
-    </div>
+    {% else %}
+    <div style="text-align:center; color:#888;">No FAQs currently added.</div>
+    {% endfor %}
 
   </div>
 </section>
+{% endif %}
 
 
 <!-- ══ SOCIAL MEDIA ══ -->
