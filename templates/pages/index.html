@@ -590,32 +590,6 @@
     });
   }, 6000);
 })();
-
-/* Contact form → WhatsApp redirect */
-(function () {
-  var form = document.getElementById('contactForm');
-  if (!form) return;
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var name    = (form.elements['name']    || {}).value || '';
-    var phone   = (form.elements['phone']   || {}).value || '';
-    var email   = (form.elements['email']   || {}).value || '';
-    var course  = (form.elements['course']  || {}).value || '';
-    var age     = (form.elements['age']     || {}).value || '';
-    var address = (form.elements['address'] || {}).value || '';
-    var message = (form.elements['message'] || {}).value || '';
-    var lines = [];
-    lines.push('*New Enquiry \u2014 Al-Qur\u2019an Global Institute*');
-    if (name)    lines.push('\uD83D\uDC64 *Name:* ' + name);
-    if (phone)   lines.push('\uD83D\uDCDE *Phone:* ' + phone);
-    if (email)   lines.push('\u2709 *Email:* ' + email);
-    if (course)  lines.push('\uD83D\uDCDA *Course:* ' + course);
-    if (age)     lines.push('\uD83C\uDF82 *Age:* ' + age);
-    if (address) lines.push('\uD83D\uDCCD *Address:* ' + address);
-    if (message) lines.push('\uD83D\uDCAC *Message:* ' + message);
-    var text = encodeURIComponent(lines.join('\n'));
-    window.open('https://wa.me/919045520249?text=' + text, '_blank');
-  });
-})();
 </script>
 {% endblock %}
+

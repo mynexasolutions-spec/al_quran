@@ -228,6 +228,22 @@ def init_db():
         )
     """)
 
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS contact_enquiries (
+            id            SERIAL PRIMARY KEY,
+            name          TEXT NOT NULL,
+            phone         TEXT NOT NULL,
+            email         TEXT,
+            course        TEXT,
+            age           TEXT,
+            address       TEXT,
+            message       TEXT,
+            status        TEXT NOT NULL DEFAULT 'new',
+            created_at    TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+
+
     conn.commit()
     cur.close()
     conn.close()
@@ -592,6 +608,10 @@ def get_all_homepage_cms_data(force_refresh=False):
     cur.execute("SELECT * FROM team_members ORDER BY is_director DESC, display_order ASC, id ASC")
     team_members = [dict(r) for r in cur.fetchall()]
 
+    # 9. Contact Enquiries
+    cur.execute("SELECT * FROM contact_enquiries ORDER BY created_at DESC, id DESC")
+    enquiries = [dict(r) for r in cur.fetchall()]
+
     cur.close(); conn.close()
 
     cms_data = {
@@ -602,11 +622,13 @@ def get_all_homepage_cms_data(force_refresh=False):
         'features': features,
         'faqs': faqs,
         'all_reviews': all_reviews,
-        'team_members': team_members
+        'team_members': team_members,
+        'enquiries': enquiries
     }
     _CMS_CACHE = cms_data
     _CMS_CACHE_TIME = now
     return cms_data
+
 
 
 
@@ -964,8 +986,49 @@ def delete_team_member(tid):
     clear_cms_cache()
 
 
+# ── Contact Enquiries CRUD ──
+def create_contact_enquiry(data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute(
+        """INSERT INTO contact_enquiries (name, phone, email, course, age, address, message, status)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+        (data['name'], data['phone'], data.get('email', ''), data.get('course', ''),
+         data.get('age', ''), data.get('address', ''), data.get('message', ''), 'new')
+    )
+    new_id = cur.fetchone()['id']
+    conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
+    return new_id
+
+
+def get_all_contact_enquiries():
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM contact_enquiries ORDER BY created_at DESC, id DESC")
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
+def update_enquiry_status(eid, status):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("UPDATE contact_enquiries SET status = %s WHERE id = %s", (status, eid))
+    conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
+
+
+def delete_enquiry(eid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM contact_enquiries WHERE id = %s", (eid,))
+    conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
+
+
 def update_item_order(table_name, item_id, display_order):
-    valid_tables = {'courses', 'academic_subjects', 'homepage_statistics', 'homepage_features', 'homepage_faqs', 'reviews', 'team_members'}
+    valid_tables = {'courses', 'academic_subjects', 'homepage_statistics', 'homepage_features', 'homepage_faqs', 'reviews', 'team_members', 'contact_enquiries'}
     if table_name not in valid_tables:
         return
     conn = get_conn()
@@ -973,6 +1036,7 @@ def update_item_order(table_name, item_id, display_order):
     cur.execute(f"UPDATE {table_name} SET display_order = %s WHERE id = %s", (display_order, item_id))
     conn.commit(); cur.close(); conn.close()
     clear_cms_cache()
+
 
 
 

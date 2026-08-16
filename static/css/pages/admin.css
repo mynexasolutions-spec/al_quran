@@ -148,11 +148,13 @@
 /* ────────────────── PAGE HEADER ────────────────── */
 .adm-page-hdr {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.8rem;
   flex-wrap: wrap;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .adm-page-hdr h2 {
   font-family: 'Playfair Display', serif;
@@ -161,6 +163,26 @@
   margin-bottom: .25rem;
 }
 .adm-page-hdr p { font-size: .9rem; color: var(--text-mid); }
+
+.adm-page-hdr-controls {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+}
+
+@media (max-width: 900px) {
+  .adm-page-hdr {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .adm-page-hdr-controls {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
 
 /* ────────────────── STAT CARDS ────────────────── */
 .adm-stat-row {
@@ -632,25 +654,140 @@
 }
 .reg-success-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-/* ────────────────── RESPONSIVE ────────────────── */
-@media (max-width: 900px) {
-  .adm-sidebar {
-    transform: translateX(-100%);
-    z-index: 500;
-  }
-  .adm-sidebar.open { transform: translateX(0); }
-  .adm-main { margin-left: 0; }
-  .adm-menu-btn { display: block; }
-  .adm-form-row { flex-direction: column; }
-  .reg-form-wrap { grid-template-columns: 1fr; gap: 2rem; }
+/* ────────────────── RESPONSIVE ADMIN LAYOUT ────────────────── */
+.admin-body {
+  overflow-x: hidden;
 }
 
-@media (max-width: 620px) {
-  .adm-content { padding: 1rem; }
-  .adm-stat-row { grid-template-columns: 1fr 1fr; }
-  .adm-form-card { padding: 1.3rem; }
-  .reg-form { padding: 1.4rem 1.2rem; }
+.adm-main {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: calc(100% - 240px);
+  max-width: calc(100vw - 240px);
+  box-sizing: border-box;
 }
+
+.adm-page-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.adm-page-hdr-controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+}
+
+.adm-reg-strip {
+  background: #e8f4f0;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  margin-bottom: 1.2rem;
+  color: var(--teal-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.adm-table-wrap {
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 3px 14px rgba(10,61,51,0.06);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  border: 1px solid #e0eae6;
+}
+
+.adm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .88rem;
+  min-width: 850px;
+}
+
+@media (max-width: 992px) {
+  .adm-sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+    box-shadow: 4px 0 25px rgba(0,0,0,0.3);
+  }
+  .adm-sidebar.open {
+    transform: translateX(0);
+  }
+  .adm-main {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100vw;
+  }
+  .adm-menu-btn {
+    display: block;
+  }
+  .adm-page-hdr {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .adm-page-hdr-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .adm-page-hdr-controls select,
+  .adm-page-hdr-controls form {
+    flex: 1;
+    min-width: 160px;
+  }
+  .adm-inline-sel {
+    width: 100%;
+  }
+  .reg-form-wrap {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .adm-content {
+    padding: 1rem 0.8rem;
+  }
+  .adm-page-hdr h2 {
+    font-size: 1.3rem;
+  }
+  .adm-page-hdr-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .adm-page-hdr-controls a,
+  .adm-page-hdr-controls button {
+    width: 100%;
+    justify-content: center;
+  }
+  .adm-stat-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .adm-form-card {
+    padding: 1.3rem;
+  }
+  .reg-form {
+    padding: 1.4rem 1.2rem;
+  }
+}
+
 
 /* ─────────────────── SIDEBAR PENDING BADGE ─────────────────── */
 .adm-badge {

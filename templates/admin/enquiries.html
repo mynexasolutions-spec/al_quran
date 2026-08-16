@@ -1,0 +1,178 @@
+{% extends "admin/base.html" %}
+{% block title %}Enquiries & Form Submissions | Admin{% endblock %}
+{% block topbar_title %}Enquiries{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h1 class="adm-title">Enquiries & Form Submissions</h1>
+    <p class="adm-subtitle">Manage all student enquiries, enrollment questions, and contact requests submitted from the website homepage.</p>
+  </div>
+  <div class="adm-page-hdr-controls">
+    <!-- Filter by status -->
+    <form method="get" action="{{ url_for('admin_enquiries') }}" style="display:flex; gap:.5rem; align-items:center;">
+      <select name="status" class="adm-inline-sel" onchange="this.form.submit()">
+        <option value="all" {% if selected_status == 'all' %}selected{% endif %}>All Enquiries ({{ total_count }})</option>
+        <option value="new" {% if selected_status == 'new' %}selected{% endif %}>New / Unread ({{ new_count }})</option>
+        <option value="contacted" {% if selected_status == 'contacted' %}selected{% endif %}>Contacted ({{ contacted_count }})</option>
+      </select>
+    </form>
+    <!-- Export Excel -->
+    <a href="{{ url_for('admin_enquiries_export') }}" class="adm-btn-primary" style="white-space:nowrap;">
+      <svg class="cms-tab-svg" viewBox="0 0 24 24" style="stroke:currentColor;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span>Export Excel</span>
+    </a>
+  </div>
+</div>
+
+<!-- Count strip -->
+<div class="adm-reg-strip" style="display:flex; justify-content:space-between; align-items:center;">
+  <span>
+    <strong>{{ enquiries|length }}</strong> {{ selected_status.title() if selected_status != 'all' else 'Total' }} Enquiry{{ 's' if enquiries|length != 1 else '' }}
+  </span>
+  {% if new_count > 0 %}
+    <span class="adm-badge" style="background:#ffecb3; color:#7a5a10; font-weight:700;">{{ new_count }} New Unread Request{{ 's' if new_count != 1 else '' }}</span>
+  {% endif %}
+</div>
+
+<!-- Table -->
+<div class="adm-table-wrap">
+  <table class="adm-table adm-table--reg">
+    <thead>
+      <tr>
+        <th style="width: 40px;">#</th>
+        <th style="width: 130px;">Submitted</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Course</th>
+        <th>Age</th>
+        <th>Message Preview</th>
+        <th style="width: 100px;">Status</th>
+        <th style="width: 180px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for enq in enquiries %}
+      <tr class="{% if enq.status == 'new' %}row-highlight{% endif %}">
+        <td><strong>{{ loop.index }}</strong></td>
+        <td><small style="color:var(--text-mid);">{{ (enq.created_at|string)[:16] if enq.created_at else '—' }}</small></td>
+        <td>
+          <strong>{{ enq.name }}</strong>
+          {% if enq.email %}<br/><small style="color:var(--text-mid);">{{ enq.email }}</small>{% endif %}
+        </td>
+        <td>
+          <a href="https://wa.me/{{ enq.phone|replace('+', '')|replace(' ', '')|replace('-', '') }}" target="_blank" style="color:var(--teal-dark); text-decoration:underline; font-weight:600;">
+            {{ enq.phone }}
+          </a>
+        </td>
+        <td><span class="adm-badge" style="background:#e8f4f0; color:#0A3D33; font-weight:600;">{{ enq.course or 'General' }}</span></td>
+        <td>{{ enq.age or '—' }}</td>
+        <td style="max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark);">
+          {{ enq.message or 'No message text provided.' }}
+        </td>
+        <td>
+          {% if enq.status == 'new' %}
+            <span class="adm-status adm-status--upcoming" style="background:#fff3cd; color:#856404; font-weight:700;">New</span>
+          {% elif enq.status == 'contacted' %}
+            <span class="adm-status adm-status--upcoming">Contacted</span>
+          {% else %}
+            <span class="adm-status adm-status--completed">{{ enq.status|title }}</span>
+          {% endif %}
+        </td>
+        <td>
+          <div style="display:flex; gap:0.35rem; align-items:center;">
+            <button type="button" onclick='viewEnquiry({{ enq|tojson }})' class="adm-btn-sm adm-btn-edit">View</button>
+            {% if enq.status == 'new' %}
+            <form method="post" action="{{ url_for('admin_enquiry_status', eid=enq.id) }}" style="display:inline;">
+              <input type="hidden" name="status" value="contacted"/>
+              <button type="submit" class="adm-btn-sm" style="background:var(--teal-dark); color:#fff; border:none; padding:0.25rem 0.5rem; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Mark Contacted</button>
+            </form>
+            {% endif %}
+            <form method="post" action="{{ url_for('admin_enquiry_delete', eid=enq.id) }}" style="display:inline;" onsubmit="return confirm('Delete enquiry from {{ enq.name }}?');">
+              <button type="submit" class="adm-btn-sm adm-btn-del">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9" style="text-align:center; color:#888; padding:3rem;">No contact enquiries found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ENQUIRY DETAILS MODAL -->
+<div class="adm-modal-overlay" id="enquiryModal">
+  <div class="adm-modal" style="max-width: 620px;">
+    <button class="adm-modal-close" onclick="closeEnquiryModal()">&times;</button>
+    <h2 class="adm-modal-title" style="margin-bottom:1rem;">Student Enquiry Details</h2>
+
+    <div style="background:#f4f8f6; border-radius:8px; padding:1.2rem; margin-bottom:1.2rem; border-left:4px solid var(--gold);">
+      <div class="cms-grid-2" style="margin-bottom:0.6rem;">
+        <div><strong>Full Name:</strong> <span id="enqName"></span></div>
+        <div><strong>Phone:</strong> <a id="enqPhoneLink" href="" target="_blank" style="color:var(--teal-dark); font-weight:700;"></a></div>
+      </div>
+      <div class="cms-grid-2" style="margin-bottom:0.6rem;">
+        <div><strong>Email:</strong> <span id="enqEmail"></span></div>
+        <div><strong>Requested Course:</strong> <span id="enqCourse" class="adm-badge" style="background:#e8f4f0; color:#0A3D33;"></span></div>
+      </div>
+      <div class="cms-grid-2">
+        <div><strong>Student Age:</strong> <span id="enqAge"></span></div>
+        <div><strong>Submitted At:</strong> <span id="enqDate" style="color:var(--text-mid);"></span></div>
+      </div>
+    </div>
+
+    <div class="adm-form-group" style="margin-bottom:1rem;">
+      <label style="font-weight:700;">Full Address</label>
+      <div id="enqAddress" style="background:#fff; border:1px solid #cde0d8; padding:0.75rem; border-radius:6px; font-size:0.9rem;"></div>
+    </div>
+
+    <div class="adm-form-group" style="margin-bottom:1.4rem;">
+      <label style="font-weight:700;">Message / Question</label>
+      <div id="enqMessage" style="background:#fff; border:1px solid #cde0d8; padding:0.85rem; border-radius:6px; font-size:0.92rem; white-space:pre-wrap; min-height:80px; color:var(--text-dark);"></div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <a id="enqWaBtn" href="" target="_blank" class="adm-btn-primary" style="background:#25D366; color:#fff; border:none; padding:0.65rem 1.2rem; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.4rem;">
+        💬 Reply via WhatsApp
+      </a>
+      <form id="enqStatusForm" method="post" action="" style="display:inline;">
+        <input type="hidden" name="status" value="contacted"/>
+        <button type="submit" class="adm-btn-primary" style="padding:0.65rem 1.2rem;">Mark as Contacted</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function viewEnquiry(e) {
+  document.getElementById('enqName').innerText = e.name || 'N/A';
+  document.getElementById('enqEmail').innerText = e.email || 'N/A';
+  var cleanPhone = (e.phone || '').replace(/[^0-9]/g, '');
+  var phoneEl = document.getElementById('enqPhoneLink');
+  phoneEl.innerText = e.phone || 'N/A';
+  phoneEl.href = 'https://wa.me/' + cleanPhone;
+
+  document.getElementById('enqCourse').innerText = e.course || 'General Enquiry';
+  document.getElementById('enqAge').innerText = e.age || 'N/A';
+  document.getElementById('enqDate').innerText = str(e.created_at || '').slice(0, 16);
+  document.getElementById('enqAddress').innerText = e.address || 'No address provided.';
+  document.getElementById('enqMessage').innerText = e.message || 'No message text.';
+
+  var waMsg = encodeURIComponent('Assalamu Alaikum ' + (e.name || '') + ',\nThank you for reaching out to Al-Qur’an Global Institute regarding ' + (e.course || 'our courses') + '.');
+  document.getElementById('enqWaBtn').href = 'https://wa.me/' + cleanPhone + '?text=' + waMsg;
+
+  document.getElementById('enqStatusForm').action = '/admin/enquiries/' + e.id + '/status';
+
+  document.getElementById('enquiryModal').classList.add('open');
+}
+
+function closeEnquiryModal() {
+  document.getElementById('enquiryModal').classList.remove('open');
+}
+
+function str(val) { return val ? String(val) : ''; }
+</script>
+{% endblock %}

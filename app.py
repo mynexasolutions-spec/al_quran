@@ -1,6 +1,7 @@
 import os
 import io
 import functools
+import time
 import cloudinary
 from translations import TRANSLATIONS
 import cloudinary.uploader
@@ -73,16 +74,19 @@ def admin_required(f):
 
 @app.context_processor
 def inject_pending_reviews():
-    """Inject pending review count into all templates (for admin sidebar badge)."""
+    """Inject pending review count & new enquiries count into all templates (for admin sidebar badges)."""
     try:
         if session.get('admin_logged_in'):
             cms_data = DB.get_all_homepage_cms_data()
             all_reviews = cms_data.get('all_reviews', [])
-            count = sum(1 for r in all_reviews if r.get('status') == 'pending')
-            return {'pending_reviews_count': count}
+            all_enquiries = cms_data.get('enquiries', [])
+            rev_cnt = sum(1 for r in all_reviews if r.get('status') == 'pending')
+            enq_cnt = sum(1 for e in all_enquiries if e.get('status') == 'new')
+            return {'pending_reviews_count': rev_cnt, 'new_enquiries_count': enq_cnt}
     except Exception:
         pass
-    return {'pending_reviews_count': 0}
+    return {'pending_reviews_count': 0, 'new_enquiries_count': 0}
+
 
 
 
@@ -369,11 +373,45 @@ def register_success(cid):
 # ═══════════════════════════════════════════════════════════════
 #  Contact Form (existing)
 # ═══════════════════════════════════════════════════════════════
+_RECENT_ENQUIRY_SUBMISSIONS = {}
+
 @app.route('/contact', methods=['POST'])
 def contact():
-    data = request.get_json()
+    if request.is_json:
+        data = request.get_json() or {}
+    else:
+        data = request.form.to_dict()
+
+    name = data.get('name', '').strip()
+    phone = data.get('phone', '').strip()
+
+    if name and phone:
+        # Deduplication safeguard (ignore duplicate requests within 10 seconds)
+        sub_key = f"{phone.lower()}:{name.lower()}"
+        now = time.time()
+        last_time = _RECENT_ENQUIRY_SUBMISSIONS.get(sub_key, 0)
+        if now - last_time < 10:
+            return jsonify({'status': 'ok',
+                            'message': "JazakAllah Khair! We will contact you within 24 hours, insha'Allah."})
+        _RECENT_ENQUIRY_SUBMISSIONS[sub_key] = now
+
+        try:
+            DB.create_contact_enquiry({
+                'name': name,
+                'phone': phone,
+                'email': data.get('email', '').strip(),
+                'course': data.get('course', '').strip(),
+                'age': str(data.get('age', '')).strip(),
+                'address': data.get('address', '').strip(),
+                'message': data.get('message', '').strip()
+            })
+        except Exception as e:
+            print("Error storing contact enquiry:", e)
+
     return jsonify({'status': 'ok',
                     'message': "JazakAllah Khair! We will contact you within 24 hours, insha'Allah."})
+
+
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -995,6 +1033,104 @@ def admin_review_delete(rid):
     return redirect(url_for('admin_reviews'))
 
 
+# ═══════════════════════════════════════════════════════════════
+#  Admin — Contact Enquiries Management
+# ═══════════════════════════════════════════════════════════════
+def _build_enquiries_excel(enquiries):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Enquiries"
+    headers = ["#", "Date & Time", "Name", "Phone", "Email", "Requested Course", "Age", "Address", "Message", "Status"]
+    ws.append(headers)
+
+    header_fill = openpyxl.styles.PatternFill(start_color="0A3D33", end_color="0A3D33", fill_type="solid")
+    header_font = openpyxl.styles.Font(color="FFFFFF", bold=True)
+    for col in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
+
+    for i, e in enumerate(enquiries, 1):
+        dt_str = str(e.get('created_at', ''))[:19]
+        ws.append([
+            i,
+            dt_str,
+            e.get('name', ''),
+            e.get('phone', ''),
+            e.get('email', ''),
+            e.get('course', ''),
+            e.get('age', ''),
+            e.get('address', ''),
+            e.get('message', ''),
+            e.get('status', 'new').title()
+        ])
+
+    for col in ws.columns:
+        max_len = max(len(str(cell.value or '')) for cell in col)
+        col_letter = openpyxl.utils.get_column_letter(col[0].column)
+        ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
+
+    return wb
+
+
+@app.route('/admin/enquiries')
+@admin_required
+def admin_enquiries():
+    all_enquiries = DB.get_all_contact_enquiries()
+    status_filter = request.args.get('status', 'all')
+    if status_filter != 'all':
+        enquiries = [e for e in all_enquiries if e.get('status') == status_filter]
+    else:
+        enquiries = all_enquiries
+
+    new_count = sum(1 for e in all_enquiries if e.get('status') == 'new')
+    contacted_count = sum(1 for e in all_enquiries if e.get('status') == 'contacted')
+
+    return render_template('admin/enquiries.html',
+                           enquiries=enquiries,
+                           total_count=len(all_enquiries),
+                           new_count=new_count,
+                           contacted_count=contacted_count,
+                           selected_status=status_filter)
+
+
+@app.route('/admin/enquiries/<int:eid>/status', methods=['POST'])
+@admin_required
+def admin_enquiry_status(eid):
+    status = request.form.get('status', 'contacted')
+    if status not in ('new', 'contacted', 'archived'):
+        return jsonify({'error': 'invalid status'}), 400
+    DB.update_enquiry_status(eid, status)
+    flash(f'Enquiry #{eid} status updated to {status}.', 'success')
+    return redirect(request.referrer or url_for('admin_enquiries'))
+
+
+@app.route('/admin/enquiries/<int:eid>/delete', methods=['POST'])
+@admin_required
+def admin_enquiry_delete(eid):
+    DB.delete_enquiry(eid)
+    flash('Enquiry deleted successfully.', 'info')
+    return redirect(url_for('admin_enquiries'))
+
+
+@app.route('/admin/enquiries/export')
+@admin_required
+def admin_enquiries_export():
+    enquiries = DB.get_all_contact_enquiries()
+    wb = _build_enquiries_excel(enquiries)
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return send_file(
+        buf,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name='contact_enquiries.xlsx'
+    )
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
