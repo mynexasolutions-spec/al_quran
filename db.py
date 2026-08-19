@@ -162,6 +162,7 @@ def init_db():
     # Non-destructive migrations for existing courses table
     cur.execute("ALTER TABLE courses ADD COLUMN IF NOT EXISTS seo_title TEXT;")
     cur.execute("ALTER TABLE courses ADD COLUMN IF NOT EXISTS seo_description TEXT;")
+    cur.execute("ALTER TABLE courses ADD COLUMN IF NOT EXISTS course_details JSONB;")
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS team_members (
@@ -243,6 +244,95 @@ def init_db():
         )
     """)
 
+
+    # Migration: Set default course details for existing courses if null
+    cur.execute("SELECT id, slug FROM courses WHERE course_details IS NULL")
+    null_courses = cur.fetchall()
+    if null_courses:
+        try:
+            from translations import TRANSLATIONS
+            t = TRANSLATIONS.get('en', {})
+            for row in null_courses:
+                cid = row['id']
+                slug = row['slug']
+                prefix = slug
+                if prefix == 'quran-recitation':
+                    prefix = 'recitation'
+                
+                # Construct default details
+                details = {
+                    "course_arabic": t.get(f"{prefix}Arabic", ""),
+                    "course_tagline": t.get(f"{prefix}Tagline", ""),
+                    "course_duration": t.get(f"{prefix}Duration", "Flexible"),
+                    "course_schedule": t.get(f"{prefix}Schedule", "Flexible Timing"),
+                    "course_eligibility": t.get(f"{prefix}Eligibility", "All Levels"),
+                    "course_certificate": t.get(f"{prefix}CertVal", "Yes — On Completion"),
+                    "course_mode": "Online (Live)",
+                    "course_fee": "Contact Us",
+                    "quote_text": t.get(f"{prefix}Quote", ""),
+                    "quote_cite": t.get(f"{prefix}QuoteCite", ""),
+                    "intro_text": t.get(f"{prefix}Intro", ""),
+                    "why_items_header": t.get(f"{prefix}WhyH", "") if t.get(f"{prefix}Why1") else "",
+                    "why_items": [t.get(f"{prefix}Why{i}") for i in range(1, 10) if t.get(f"{prefix}Why{i}")],
+                    "learn_header": t.get(f"{prefix}LearnH") or t.get(f"{prefix}CoverH") or "What You Will Learn",
+                    "learn_items": [t.get(f"{prefix}Learn{i}") or t.get(f"{prefix}Cover{i}") for i in range(1, 12) if t.get(f"{prefix}Learn{i}") or t.get(f"{prefix}Cover{i}")],
+                    "highlights_header": t.get(f"{prefix}HighH", "Course Highlights"),
+                    "highlights": [
+                        {
+                            "icon": "hl_instructor.svg",
+                            "title": t.get(f"{prefix}Hl1H", "Expert Instructors"),
+                            "desc": t.get(f"{prefix}Hl1P", "")
+                        },
+                        {
+                            "icon": "hl_feedback.svg" if prefix not in ('hifz', 'arabic', 'urdu') else ("hl_curriculum.svg" if prefix != 'arabic' else "hl_interactive.svg"),
+                            "title": t.get(f"{prefix}Hl2H", "Live Feedback"),
+                            "desc": t.get(f"{prefix}Hl2P", "")
+                        },
+                        {
+                            "icon": "hl_global.svg" if prefix not in ('hifz', 'arabic') else ("hl_feedback.svg" if prefix == 'hifz' else "hl_curriculum.svg"),
+                            "title": t.get(f"{prefix}Hl3H", "Global Community"),
+                            "desc": t.get(f"{prefix}Hl3P", "")
+                        },
+                        {
+                            "icon": "hl_certificate.svg",
+                            "title": t.get(f"{prefix}Hl4H", "Certification"),
+                            "desc": t.get(f"{prefix}Hl4P", "")
+                        }
+                    ],
+                    "why_header": t.get(f"{prefix}WhyH", "Why This Course?") if not t.get(f"{prefix}Why1") else "",
+                    "why_p1": t.get(f"{prefix}WhyP1", ""),
+                    "why_p2": t.get(f"{prefix}WhyP2", ""),
+                    "cert_header": t.get(f"{prefix}CertH", "Certification Requirements"),
+                    "cert_items": [t.get(f"{prefix}Cert{i}") for i in range(1, 10) if t.get(f"{prefix}Cert{i}")]
+                }
+                cur.execute("UPDATE courses SET course_details = %s WHERE id = %s", (json.dumps(details), cid))
+        except Exception as ex:
+            print(f"[MIGRATION WARNING] Failed to seed course details: {ex}")
+
+    # Migration: Auto-generate slugs and link_urls for courses with empty slugs
+    try:
+        cur.execute("SELECT id, title, slug, link_url FROM courses")
+        all_courses = cur.fetchall()
+        for row in all_courses:
+            cid = row['id']
+            title = row['title']
+            slug = row['slug']
+            link_url = row['link_url']
+            
+            updated = False
+            if not slug or not slug.strip():
+                import re
+                slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+                updated = True
+                
+            if not link_url or not link_url.strip():
+                link_url = f"/course/{slug}"
+                updated = True
+                
+            if updated:
+                cur.execute("UPDATE courses SET slug = %s, link_url = %s WHERE id = %s", (slug, link_url, cid))
+    except Exception as ex:
+        print(f"[MIGRATION WARNING] Failed to fix empty course slugs/links: {ex}")
 
     conn.commit()
     cur.close()
@@ -679,13 +769,16 @@ def get_course(cid):
 def create_course(data):
     conn = get_conn()
     cur  = conn.cursor()
+    course_details = data.get('course_details')
+    if isinstance(course_details, dict) or isinstance(course_details, list):
+        course_details = json.dumps(course_details)
     cur.execute(
-        """INSERT INTO courses (title, slug, category, description, image_url, badges, link_url, seo_title, seo_description, display_order, is_visible)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+        """INSERT INTO courses (title, slug, category, description, image_url, badges, link_url, seo_title, seo_description, display_order, is_visible, course_details)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
         (data['title'], data.get('slug', ''), data.get('category', 'Quranic Studies'),
          data.get('description'), data.get('image_url'), data.get('badges', []),
          data.get('link_url', ''), data.get('seo_title'), data.get('seo_description'),
-         int(data.get('display_order', 0)), data.get('is_visible', True))
+         int(data.get('display_order', 0)), data.get('is_visible', True), course_details)
     )
     new_id = cur.fetchone()['id']
     conn.commit(); cur.close(); conn.close()
@@ -696,16 +789,34 @@ def create_course(data):
 def update_course(cid, data):
     conn = get_conn()
     cur  = conn.cursor()
-    cur.execute(
-        """UPDATE courses SET
-           title=%s, slug=%s, category=%s, description=%s, image_url=%s,
-           badges=%s, link_url=%s, seo_title=%s, seo_description=%s, display_order=%s, is_visible=%s, updated_at=NOW()
-           WHERE id=%s""",
-        (data['title'], data.get('slug', ''), data.get('category', 'Quranic Studies'),
-         data.get('description'), data.get('image_url'), data.get('badges', []),
-         data.get('link_url', ''), data.get('seo_title'), data.get('seo_description'),
-         int(data.get('display_order', 0)), data.get('is_visible', True), cid)
-    )
+    if 'course_details' in data:
+        course_details = data.get('course_details')
+        if isinstance(course_details, dict) or isinstance(course_details, list):
+            course_details = json.dumps(course_details)
+        cur.execute(
+            """UPDATE courses SET
+               title=%s, slug=%s, category=%s, description=%s, image_url=%s,
+               badges=%s, link_url=%s, seo_title=%s, seo_description=%s, display_order=%s, is_visible=%s,
+               course_details=%s, updated_at=NOW()
+               WHERE id=%s""",
+            (data['title'], data.get('slug', ''), data.get('category', 'Quranic Studies'),
+             data.get('description'), data.get('image_url'), data.get('badges', []),
+             data.get('link_url', ''), data.get('seo_title'), data.get('seo_description'),
+             int(data.get('display_order', 0)), data.get('is_visible', True),
+             course_details, cid)
+        )
+    else:
+        cur.execute(
+            """UPDATE courses SET
+               title=%s, slug=%s, category=%s, description=%s, image_url=%s,
+               badges=%s, link_url=%s, seo_title=%s, seo_description=%s, display_order=%s, is_visible=%s,
+               updated_at=NOW()
+               WHERE id=%s""",
+            (data['title'], data.get('slug', ''), data.get('category', 'Quranic Studies'),
+             data.get('description'), data.get('image_url'), data.get('badges', []),
+             data.get('link_url', ''), data.get('seo_title'), data.get('seo_description'),
+             int(data.get('display_order', 0)), data.get('is_visible', True), cid)
+        )
     conn.commit(); cur.close(); conn.close()
     clear_cms_cache()
 
@@ -755,6 +866,7 @@ def create_academic_subject(data):
     )
     new_id = cur.fetchone()['id']
     conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
     return new_id
 
 
@@ -771,6 +883,7 @@ def update_academic_subject(aid, data):
          int(data.get('display_order', 0)), data.get('is_visible', True), aid)
     )
     conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
 
 
 def delete_academic_subject(aid):
@@ -778,6 +891,7 @@ def delete_academic_subject(aid):
     cur  = conn.cursor()
     cur.execute("DELETE FROM academic_subjects WHERE id=%s", (aid,))
     conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
 
 
 # ── Statistics CRUD ──

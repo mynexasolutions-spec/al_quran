@@ -1,0 +1,201 @@
+{% extends "layouts/course_base.html" %}
+{% block title %}{{ course.title }} | Al-Qur'an Global Institute{% endblock %}
+
+{# ── Sidebar variables (used by components/course_sidebar.html) ── #}
+{% set cd = course.course_details or {} %}
+{% set prefix = 'recitation' if course.slug == 'quran-recitation' else course.slug %}
+{% set course_duration    = cd.course_duration | default(t[prefix ~ 'Duration'], true) | default('Flexible', true) %}
+{% set course_schedule    = cd.course_schedule | default(t[prefix ~ 'Schedule'], true) | default('Flexible Timing', true) %}
+{% set course_eligibility = cd.course_eligibility | default(t[prefix ~ 'Eligibility'], true) | default('All Levels', true) %}
+{% set course_certificate = cd.course_certificate | default(t[prefix ~ 'CertVal'], true) | default('Yes — On Completion', true) %}
+{% set course_mode        = cd.course_mode | default('Online (Live)', true) %}
+{% set course_fee         = cd.course_fee | default('Contact Us', true) %}
+
+{# ── Hero content ── #}
+{% block course_category %}{{ course.category }}{% endblock %}
+{% block course_icon %}{% endblock %}
+{% block course_title %}{{ course.title }}{% endblock %}
+{% block course_arabic %}{{ cd.course_arabic | default(t[prefix ~ 'Arabic'], true) }}{% endblock %}
+{% block course_tagline %}{{ cd.course_tagline | default(t[prefix ~ 'Tagline'], true) | default(course.description, true) }}{% endblock %}
+{% block course_badges %}
+  {% if course.badges %}
+    {% for b in course.badges %}
+      <span class="ch-badge">{{ b }}</span>
+    {% endfor %}
+  {% else %}
+    <span class="ch-badge">All Levels</span>
+    <span class="ch-badge">Online</span>
+    <span class="ch-badge">Certificate</span>
+  {% endif %}
+{% endblock %}
+
+{# ── Main course body ── #}
+{% block course_body %}
+
+{# Quote Section #}
+{% set quote_text = cd.quote_text | default(t[prefix ~ 'Quote'], true) %}
+{% if quote_text %}
+<div class="cb-quote">
+  <p>{{ quote_text }}</p>
+  {% set quote_cite = cd.quote_cite | default(t[prefix ~ 'QuoteCite'], true) %}
+  {% if quote_cite %}<cite>{{ quote_cite }}</cite>{% endif %}
+</div>
+{% endif %}
+
+{# Intro Text #}
+{% set intro_text = cd.intro_text | default(t[prefix ~ 'Intro'], true) %}
+{% if intro_text %}
+<p class="cb-intro">{{ intro_text }}</p>
+{% endif %}
+
+{# List 1: learn_items #}
+{% set learn_items = cd.learn_items %}
+{% if not learn_items %}
+  {% set ns_learn = namespace(items=[]) %}
+  {% for i in range(1, 12) %}
+    {% set item = t[prefix ~ 'Learn' ~ i] or t[prefix ~ 'Cover' ~ i] %}
+    {% if item %}
+      {% set ns_learn.items = ns_learn.items + [item] %}
+    {% endif %}
+  {% endfor %}
+  {% set learn_items = ns_learn.items %}
+{% endif %}
+
+{% if learn_items %}
+<div class="content-block">
+  <h3>{{ cd.learn_header | default(t[prefix ~ 'LearnH'] or t[prefix ~ 'CoverH'] or 'What You Will Learn', true) }}</h3>
+  <ul class="learn-list">
+    {% for item in learn_items %}
+      {% if item.strip() %}
+        <li>{{ item }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{# List 2: why_items (e.g. for Hifz, Urdu) #}
+{% set why_items = cd.why_items %}
+{% if not why_items %}
+  {% set ns_why = namespace(items=[]) %}
+  {% for i in range(1, 10) %}
+    {% set item = t[prefix ~ 'Why' ~ i] %}
+    {% if item %}
+      {% set ns_why.items = ns_why.items + [item] %}
+    {% endif %}
+  {% endfor %}
+  {% set why_items = ns_why.items %}
+{% endif %}
+
+{% if why_items %}
+<div class="content-block">
+  <h3>{{ cd.why_items_header | default(t[prefix ~ 'WhyH'] or 'Why Enroll', true) }}</h3>
+  <ul class="learn-list">
+    {% for item in why_items %}
+      {% if item.strip() %}
+        <li>{{ item }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{# Highlights Grid #}
+{% set highlights = cd.highlights %}
+{% if not highlights %}
+  {% set ns_hl = namespace(items=[]) %}
+  {% for i in range(1, 5) %}
+    {% set hl_title = t[prefix ~ 'Hl' ~ i ~ 'H'] %}
+    {% set hl_desc = t[prefix ~ 'Hl' ~ i ~ 'P'] %}
+    {% if hl_title %}
+      {% set icon_name = 'hl_instructor.svg' %}
+      {% if i == 2 %}
+        {% set icon_name = 'hl_curriculum.svg' if prefix == 'hifz' else ('hl_interactive.svg' if prefix == 'arabic' else 'hl_feedback.svg') %}
+      {% elif i == 3 %}
+        {% set icon_name = 'hl_feedback.svg' if prefix == 'hifz' else ('hl_curriculum.svg' if prefix == 'arabic' else 'hl_global.svg') %}
+      {% elif i == 4 %}
+        {% set icon_name = 'hl_certificate.svg' %}
+      {% endif %}
+      {% set ns_hl.items = ns_hl.items + [{'icon': icon_name, 'title': hl_title, 'desc': hl_desc}] %}
+    {% endif %}
+  {% endfor %}
+  {% set highlights = ns_hl.items %}
+{% endif %}
+
+{% if highlights %}
+<div class="content-block">
+  <h3>{{ cd.highlights_header | default(t[prefix ~ 'HighH'] or 'Course Highlights', true) }}</h3>
+  <div class="highlights-grid">
+    {% for hl in highlights %}
+      {% if hl.title %}
+        <div class="hl-card">
+          {% if hl.icon %}
+            <img src="{{ url_for('static', filename='images/' ~ hl.icon) if not hl.icon.startswith('http') and not hl.icon.startswith('/') else hl.icon }}" alt="{{ hl.title }}" class="hl-icon"/>
+          {% endif %}
+          <h4>{{ hl.title }}</h4>
+          <p>{{ hl.desc }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{# Why Study Text Paragraphs #}
+{% set why_header = cd.why_header | default(t[prefix ~ 'WhyH'] if not t[prefix ~ 'Why1'] else '', true) %}
+{% set why_p1 = cd.why_p1 | default(t[prefix ~ 'WhyP1'], true) %}
+{% set why_p2 = cd.why_p2 | default(t[prefix ~ 'WhyP2'], true) %}
+
+{% if why_header or why_p1 or why_p2 %}
+<div class="content-block">
+  <h3>{{ why_header | default('Why This Course?', true) }}</h3>
+  {% if why_p1 %}<p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;margin-bottom:1rem;">{{ why_p1 }}</p>{% endif %}
+  {% if why_p2 %}<p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;">{{ why_p2 }}</p>{% endif %}
+</div>
+{% endif %}
+
+{# Certification requirements #}
+{% set cert_items = cd.cert_items %}
+{% if not cert_items %}
+  {% set ns_cert = namespace(items=[]) %}
+  {% for i in range(1, 10) %}
+    {% set item = t[prefix ~ 'Cert' ~ i] %}
+    {% if item %}
+      {% set ns_cert.items = ns_cert.items + [item] %}
+    {% endif %}
+  {% endfor %}
+  {% set cert_items = ns_cert.items %}
+{% endif %}
+
+{% if cert_items %}
+<div class="content-block">
+  <h3>{{ cd.cert_header | default(t[prefix ~ 'CertH'] or 'Certification Requirements', true) }}</h3>
+  <ul class="detail-list">
+    {% for item in cert_items %}
+      {% if item.strip() %}
+        <li>{{ item }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}
+
+{# ── Other Courses ── #}
+{% block other_courses %}
+  {% for oc in other_courses_list %}
+    <a href="{{ url_for('course_detail', slug=oc.slug) }}" class="oc-card">
+      <div class="oc-img-wrap">
+        {% if oc.image_url %}
+          <img src="{{ oc.image_url }}" alt="{{ oc.title }}" class="oc-img"/>
+        {% else %}
+          <div class="oc-img" style="background:#0a3d33; display:flex; align-items:center; justify-content:center; color:#fff; font-size:2rem; height:100%;">📖</div>
+        {% endif %}
+      </div>
+      <div class="oc-body">
+        <h4>{{ oc.title }}</h4>
+        <p>{{ oc.description[:90] ~ '...' if oc.description and oc.description|length > 90 else oc.description }}</p>
+      </div>
+    </a>
+  {% endfor %}
+{% endblock %}

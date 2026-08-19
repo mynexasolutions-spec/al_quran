@@ -34,41 +34,650 @@
 </section>
 {% endif %}
 
+<!-- ══ PRAYER TIMES & ISLAMIC DATE WIDGET ══ -->
+<style>
+  .pt-widget-section {
+    padding: 3.5rem 8% 1rem;
+    background: #fafbfb;
+  }
+  .pt-widget-grid {
+    display: grid;
+    grid-template-columns: 7.2fr 2.8fr;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .pt-card-left {
+    background: #fcfbfa;
+    border: 1.5px solid #edf1ef;
+    border-radius: 16px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .pt-card-right {
+    background: linear-gradient(135deg, #fdf8ef 0%, #f6e8cc 100%);
+    border: 1.5px solid #eae2d1;
+    border-radius: 16px;
+    padding: 1.6rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .pt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.35rem;
+  }
+  .pt-header h3 {
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pt-view-all {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4b5563;
+    text-decoration: none;
+    border: 1.5px solid #ddd;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    background: #fff;
+    transition: all 0.25s;
+  }
+  .pt-view-all:hover {
+    background: #f9fafb;
+    border-color: #bbb;
+  }
+  .pt-times-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .pt-time-block {
+    background: #fff;
+    border: 1px solid #eef2f0;
+    border-radius: 10px;
+    padding: 0.95rem 0.5rem;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .pt-icon-wrap {
+    font-size: 1.5rem;
+    color: var(--teal-main);
+  }
+  .pt-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+  .pt-arrow {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    line-height: 1;
+  }
+  .pt-time-val {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+  .pt-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 0.85rem;
+    font-size: 0.85rem;
+    color: #4b5563;
+  }
+  .pt-location {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+  }
+  .pt-notify {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pt-switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 20px;
+  }
+  .pt-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .pt-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+  }
+  .pt-slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .pt-slider {
+    background-color: #064E3B;
+  }
+  input:checked + .pt-slider:before {
+    transform: translateX(18px);
+  }
+  .pt-date-body {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    z-index: 2;
+  }
+  .pt-moon-icon {
+    font-size: 2.3rem;
+    color: #b45309;
+    line-height: 1;
+  }
+  .pt-date-text-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .pt-hijri {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+  .pt-gregorian {
+    font-size: 0.8rem;
+    color: #4b5563;
+    font-weight: 500;
+  }
+  .pt-bg-minarets {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    opacity: 0.08;
+    width: 140px;
+    pointer-events: none;
+  }
+  
+  @media (max-width: 900px) {
+    .pt-widget-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .pt-times-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .pt-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+  }
+</style>
+
+<div class="pt-widget-section">
+  <div class="pt-widget-grid">
+    <div class="pt-card-left">
+      <div class="pt-header">
+        <h3>📅 Today's Prayer Times</h3>
+      </div>
+      
+      <div class="pt-times-row">
+        <div class="pt-time-block">
+          <div class="pt-icon-wrap">🌅</div>
+          <div class="pt-name">Fajr</div>
+          <div class="pt-arrow">&darr;</div>
+          <div class="pt-time-val" id="time-fajr">04:45 AM</div>
+        </div>
+        <div class="pt-time-block">
+          <div class="pt-icon-wrap">☀️</div>
+          <div class="pt-name">Dhuhr</div>
+          <div class="pt-arrow">&darr;</div>
+          <div class="pt-time-val" id="time-dhuhr">12:30 PM</div>
+        </div>
+        <div class="pt-time-block">
+          <div class="pt-icon-wrap">🌤️</div>
+          <div class="pt-name">Asr</div>
+          <div class="pt-arrow">&darr;</div>
+          <div class="pt-time-val" id="time-asr">04:15 PM</div>
+        </div>
+        <div class="pt-time-block">
+          <div class="pt-icon-wrap">🕌</div>
+          <div class="pt-name">Maghrib</div>
+          <div class="pt-arrow">&uarr;</div>
+          <div class="pt-time-val" id="time-maghrib">06:45 PM</div>
+        </div>
+        <div class="pt-time-block">
+          <div class="pt-icon-wrap">🌙</div>
+          <div class="pt-name">Isha</div>
+          <div class="pt-arrow">&darr;</div>
+          <div class="pt-time-val" id="time-isha">08:15 PM</div>
+        </div>
+      </div>
+      
+      <div class="pt-footer">
+        <div class="pt-location">
+          <span>📍</span> <span id="pt-location-text">New York, USA</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pt-card-right">
+      <div class="pt-header">
+        <h3>📅 Islamic Date</h3>
+      </div>
+      
+      <div class="pt-date-body">
+        <div class="pt-moon-icon">🌙</div>
+        <div class="pt-date-text-wrap">
+          <div class="pt-hijri" id="islamic-date-text">16 Dhu Al-Qa'dah 1445</div>
+          <div class="pt-gregorian" id="gregorian-date-text">Wednesday, 14 May 2025</div>
+        </div>
+      </div>
+      
+      <svg class="pt-bg-minarets" viewBox="0 0 100 100" fill="currentColor">
+        <path d="M10,90 L20,90 L20,40 L15,35 L15,10 L25,10 L25,35 L20,40 L20,90 L90,90 M35,90 L45,90 L45,20 L40,15 L40,5 L50,5 L50,15 L45,20 L45,90 M60,90 L70,90 L70,30 L65,25 L65,8 L75,8 L75,25 L70,30 L70,90" opacity="0.4"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var defaultLat = "51.5194682";
+    var defaultLng = "-0.1360365";
+    var defaultTz = "UTC";
+    var defaultCity = "London";
+    var defaultCountry = "UK";
+
+    // Attempt to geolocate via ipapi.co (no prompt required, reliable, fast)
+    fetch('https://ipapi.co/json/')
+      .then(function(res) { return res.json(); })
+      .then(function(loc) {
+        if (loc && loc.latitude && loc.longitude) {
+          fetchTimes(loc.latitude, loc.longitude, loc.timezone || defaultTz, loc.city || defaultCity, loc.country_name || defaultCountry);
+        } else {
+          useFallback();
+        }
+      })
+      .catch(function() {
+        useFallback();
+      });
+
+    function useFallback() {
+      // If ipapi fails, try Intl timezone to guess city/country
+      var city = defaultCity;
+      var country = defaultCountry;
+      var lat = defaultLat;
+      var lng = defaultLng;
+      var tz = defaultTz;
+
+      try {
+        var resolvedTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (resolvedTz) {
+          tz = resolvedTz;
+          if (tz.indexOf('/') > -1) {
+            city = tz.split('/')[1].replace('_', ' ');
+            var continent = tz.split('/')[0];
+            if (continent === 'Asia') {
+              country = 'India';
+              lat = '22.5726'; // Calcutta coordinates as default for Asia
+              lng = '88.3639';
+            } else if (continent === 'Europe') {
+              country = 'UK';
+            } else if (continent === 'America') {
+              country = 'USA';
+              lat = '40.7128';
+              lng = '-74.0060';
+            }
+          }
+        }
+      } catch(e) {}
+      fetchTimes(lat, lng, tz, city, country);
+    }
+
+    function fetchTimes(lat, lng, tz, city, country) {
+      var cityDisp = document.getElementById('pt-location-text');
+      if (cityDisp) cityDisp.innerText = city + ", " + country;
+
+      var url = '/api/prayer-times?latitude=' + lat + '&longitude=' + lng + '&timezone=' + encodeURIComponent(tz);
+      
+      fetch(url)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.code === 200) {
+            var timings = data.data.timings;
+            document.getElementById('time-fajr').innerText = formatTime(timings.Fajr);
+            document.getElementById('time-dhuhr').innerText = formatTime(timings.Dhuhr);
+            document.getElementById('time-asr').innerText = formatTime(timings.Asr);
+            document.getElementById('time-maghrib').innerText = formatTime(timings.Maghrib);
+            document.getElementById('time-isha').innerText = formatTime(timings.Isha);
+
+            var hijri = data.data.date.hijri;
+            var hijriStr = hijri.day + ' ' + hijri.month.en + ' ' + hijri.year;
+            document.getElementById('islamic-date-text').innerText = hijriStr;
+
+            var gregorian = data.data.date.gregorian;
+            document.getElementById('gregorian-date-text').innerText = gregorian.weekday.en + ', ' + gregorian.day + ' ' + gregorian.month.en + ' ' + gregorian.year;
+          }
+        })
+        .catch(function(err) {
+          console.error("Prayer times fetch failed:", err);
+        });
+    }
+
+    function formatTime(t24) {
+      if (!t24) return '';
+      // Strip any extra text/timezones if present
+      var parts = t24.split(' ')[0].split(':');
+      var hrs = parseInt(parts[0]);
+      var mins = parts[1];
+      var ampm = hrs >= 12 ? 'PM' : 'AM';
+      hrs = hrs % 12;
+      if (hrs === 0) hrs = 12;
+      var hrsStr = hrs < 10 ? '0' + hrs : hrs;
+      return hrsStr + ':' + mins + ' ' + ampm;
+    }
+  })();
+</script>
 
 <!-- ══ COURSES OVERVIEW ══ -->
 {% if courses_hdr_visible %}
-<section class="courses" id="courses">
-  <div class="center-hdr">
-    <span class="section-tag">{{ courses_hdr.tag if courses_hdr.tag else t.coursesSectionTag }}</span>
-    <h2 class="section-title"><span>{{ courses_hdr.title if courses_hdr.title else t.coursesH2 }}</span> <span>{{ courses_hdr.title_span if courses_hdr.title_span else t.coursesH2Span }}</span></h2>
-    <div class="divider"></div>
-    <p class="section-sub">{{ courses_hdr.description if courses_hdr.description else t.coursesSub }}</p>
-  </div>
+<style>
+  .courses-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.2rem;
+    border-bottom: 1.5px solid #eaeaea;
+    padding-bottom: 1rem;
+  }
+  .courses-header-row h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+  .view-all-link {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--teal-main);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.25s;
+  }
+  .view-all-link:hover {
+    color: var(--teal-dark) !important;
+  }
+  .courses-carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .courses-track-outer {
+    flex: 1;
+    overflow: hidden;
+  }
+  .courses-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .new-course-card-wrap {
+    flex: 0 0 calc((100% - 72px) / 4);
+    min-width: 250px;
+    box-sizing: border-box;
+  }
+  .new-course-card {
+    display: block;
+    background: #fff;
+    border: 1.5px solid #eef2f0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    height: 100%;
+  }
 
-  <div class="courses-grid">
+  .ncc-img-wrap {
+    height: 170px;
+    overflow: hidden;
+    background: #eaeaea;
+    position: relative;
+  }
+  .ncc-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s;
+  }
+  .ncc-body {
+    padding: 1.25rem 1.4rem 1.4rem;
+  }
+  .ncc-body h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.82rem;
+    line-height: 1.35;
+    height: 2.7rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ncc-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: #4b5563;
+    align-items: center;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 0.8rem;
+  }
+  .ncc-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .ncc-icon {
+    width: 15px;
+    height: 15px;
+    stroke: #4b5563;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .course-arrow {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid #ddd;
+    color: #333;
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    z-index: 10;
+  }
+  .course-arrow:hover:not(:disabled) {
+    background: var(--teal-main) !important;
+    color: #fff !important;
+    border-color: var(--teal-main) !important;
+  }
+  .course-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .course-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1.8rem;
+    width: 100%;
+  }
+  .course-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(5,150,105,0.2);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+    display: block;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .course-dot.active {
+    background: var(--teal-main);
+    transform: scale(1.3);
+  }
+  @media (max-width: 1100px) {
+    .new-course-card-wrap {
+      flex: 0 0 calc((100% - 24px) / 2) !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .courses-carousel-container {
+      display: block !important;
+      position: relative;
+    }
+    .course-arrow {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+    .course-prev {
+      left: -15px !important;
+    }
+    .course-next {
+      right: -15px !important;
+    }
+    .courses-track-outer {
+      width: 100% !important;
+    }
+    .new-course-card-wrap {
+      flex: 0 0 100% !important;
+    }
+    .courses-header-row {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 0.5rem;
+    }
+  }
+  @media (max-width: 480px) {
+    .ncc-meta {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.5rem !important;
+    }
+    .course-dots {
+      gap: 0.35rem !important;
+    }
+    .course-dot {
+      width: 7px !important;
+      height: 7px !important;
+    }
+  }
+</style>
 
-    {% for course in courses %}
-    <a href="{{ course.link_url or url_for('index') + '#contact' }}" class="course-card">
-      <img src="{{ course.image_url if course.image_url else url_for('static', filename='images/courses/tajweed.webp') }}" alt="{{ course.title }}" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ course.category }}</span>
-        <h3>{{ course.title }}</h3>
-        <p>{{ course.description }}</p>
-        <div class="course-meta">
-          {% for b in course.badges or [] %}
-          <span class="badge">{{ b }}</span>
-          {% endfor %}
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
+<section class="courses" id="courses" style="background: var(--white); padding: 4.5rem 8%;">
+  <div class="courses-header-row">
+    <h2>Our Popular Online Courses</h2>
+    <a href="{{ url_for('all_courses') }}" class="view-all-link">
+      View All Courses <span>&rarr;</span>
     </a>
-    {% else %}
-    <div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 2rem;">
-      No courses currently listed.
-    </div>
-    {% endfor %}
-
   </div>
+
+  <div class="courses-carousel-container">
+    <button type="button" class="course-arrow course-prev" id="course-prev" aria-label="Previous courses">&#8249;</button>
+    
+    <div class="courses-track-outer" id="course-track-outer">
+      <div class="courses-track" id="course-track">
+        {% for course in courses %}
+        {% set cd = course.course_details or {} %}
+        {% set prefix = 'recitation' if course.slug == 'quran-recitation' else course.slug %}
+        {% set duration = cd.course_duration | default(t[prefix ~ 'Duration'], true) | default('Flexible', true) %}
+        {% set level = cd.course_eligibility | default(t[prefix ~ 'Eligibility'], true) | default('All Levels', true) %}
+        
+        <div class="new-course-card-wrap">
+          <a href="{{ url_for('course_detail', slug=course.slug) if course.slug else (course.link_url or url_for('index') + '#contact') }}" class="new-course-card">
+            <div class="ncc-img-wrap">
+              {% if course.image_url %}
+                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="ncc-img" />
+              {% else %}
+                <div style="width:100%; height:100%; background:var(--teal-dark); display:flex; align-items:center; justify-content:center; color:#fff; font-size:3rem;">📖</div>
+              {% endif %}
+            </div>
+            <div class="ncc-body">
+              <h3>{{ course.title }}</h3>
+              <div class="ncc-meta">
+                <span class="ncc-meta-item">
+                  <svg class="ncc-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {{ duration }}
+                </span>
+                <span class="ncc-meta-item">
+                  <svg class="ncc-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                  {{ level }}
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+    <button type="button" class="course-arrow course-next" id="course-next" aria-label="Next courses">&#8250;</button>
+  </div>
+  <div class="course-dots" id="course-dots"></div>
 </section>
 {% endif %}
 
@@ -86,12 +695,10 @@
   <div class="courses-grid">
     {% for sub in academic_subjects %}
     <div class="course-card course-card--no-link">
-      {% if sub.icon_or_image and sub.icon_or_image.startswith('http') %}
-        <img src="{{ sub.icon_or_image }}" alt="{{ sub.title }}" class="course-img"/>
+      {% if sub.icon_or_image and (sub.icon_or_image.startswith('http') or sub.icon_or_image.startswith('/') or '.' in sub.icon_or_image or '/' in sub.icon_or_image) %}
+        <img src="{{ sub.icon_or_image }}" alt="{{ sub.title }}" class="course-img" style="width: 100%; height: 180px; object-fit: cover; display: block;"/>
       {% else %}
-        <div style="height:180px; display:flex; align-items:center; justify-content:center; font-size:4rem; background:var(--teal-dark); color:var(--gold);">
-          {{ sub.icon_or_image or '📚' }}
-        </div>
+        <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="{{ sub.title }}" class="course-img" style="width: 100%; height: 180px; object-fit: cover; display: block;"/>
       {% endif %}
       <div class="course-card-body">
         <span class="course-cat">Academic Subject</span>
@@ -210,8 +817,48 @@
 
 <!-- ══ REVIEWS ══ -->
 {% if reviews_hdr_visible %}
-<section class="reviews" id="reviews">
-  <div class="center-hdr">
+<style>
+
+  @media (max-width: 990px) {
+    .new-review-card {
+      flex: 0 0 calc((100% - 28px) / 2) !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .reviews-carousel {
+      display: block !important;
+      position: relative;
+    }
+    .rev-arrow {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+    .rev-prev {
+      left: -15px !important;
+    }
+    .rev-next {
+      right: -15px !important;
+    }
+    .reviews-track-outer {
+      width: 100% !important;
+    }
+    .new-review-card {
+      flex: 0 0 100% !important;
+    }
+  }
+  @media (max-width: 480px) {
+    .rev-dots {
+      gap: 0.35rem !important;
+    }
+    .rev-dot {
+      width: 7px !important;
+      height: 7px !important;
+    }
+  }
+</style>
+<section class="reviews" id="reviews" style="background: var(--white); padding: 4.5rem 8%;">
+  <div class="center-hdr" style="margin-bottom: 3rem;">
     <span class="section-tag">{{ reviews_hdr.tag if reviews_hdr.tag else t.reviewsTag }}</span>
     <h2 class="section-title"><span>{{ reviews_hdr.title if reviews_hdr.title else t.reviewsH2 }}</span> <span>{{ reviews_hdr.title_span if reviews_hdr.title_span else t.reviewsH2Span }}</span></h2>
     <div class="divider"></div>
@@ -224,35 +871,68 @@
     {% endfor %}{% endif %}
   {% endwith %}
 
-  <div class="reviews-carousel">
-    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews">&#8249;</button>
-    <div class="reviews-track-outer" id="rev-track-outer">
-      <div class="reviews-track" id="rev-track">
-
+  <div class="reviews-carousel" style="position: relative; display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews" style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1.5px solid #ddd; color: #333; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); z-index: 10;">&#8249;</button>
+    
+    <div class="reviews-track-outer" id="rev-track-outer" style="flex: 1; overflow: hidden;">
+      <div class="reviews-track" id="rev-track" style="display: flex; gap: 28px; transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform;">
         {% for rev in reviews %}
-          <div class="review-card">
-            <div class="rq">&#x201C;</div>
-            <div class="rs">{% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}</div>
-            <p class="rt">{{ rev.review_text }}</p>
-            <div class="reviewer">
-              <div class="ra">{{ rev.name[:2].upper() }}</div>
-              <div>
-                <div class="rn">{{ rev.name }}</div>
-                <div class="rl">{{ rev.location }}{% if rev.location and rev.course %} &middot; {% endif %}{{ rev.course }}</div>
+          <div class="new-review-card" style="flex: 0 0 calc((100% - 56px) / 3); min-width: 280px; background: #fff; border: 1.5px solid #eef2f0; border-radius: 16px; padding: 1.8rem; box-shadow: 0 4px 16px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; transition: transform 0.3s, box-shadow 0.3s;">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #1f2937; margin: 0 0 0.8rem; line-height: 1.35; height: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ rev.course or 'Excellent Guidance' }}
+              </h3>
+              
+              <div class="rev-text-wrap" style="margin-bottom: 1rem;">
+                {% if rev.review_text | length > 120 %}
+                  <p class="rt-short" style="font-size: 0.93rem; color: #4b5563; line-height: 1.7; margin: 0;">
+                    {{ rev.review_text[:110] }}...
+                    <button type="button" class="read-more-btn" onclick="expandReview(this)" style="background: none; border: none; color: var(--teal-main); font-weight: 700; font-size: 0.88rem; cursor: pointer; padding: 0; margin-left: 4px;">Read More</button>
+                  </p>
+                  <p class="rt-full" style="font-size: 0.93rem; color: #4b5563; line-height: 1.7; margin: 0; display: none;">
+                    {{ rev.review_text }}
+                    <button type="button" class="read-less-btn" onclick="collapseReview(this)" style="background: none; border: none; color: var(--teal-main); font-weight: 700; font-size: 0.88rem; cursor: pointer; padding: 0; margin-left: 4px;">Read Less</button>
+                  </p>
+                {% else %}
+                  <p style="font-size: 0.93rem; color: #4b5563; line-height: 1.7; margin: 0;">{{ rev.review_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div>
+              <!-- Stars -->
+              <div class="rs" style="color: #f59e0b; font-size: 1rem; margin-bottom: 0.65rem; letter-spacing: 2px;">
+                {% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}
+              </div>
+              
+              <!-- Verified Badge -->
+              <div style="margin-bottom: 1.25rem;">
+                <span style="font-size: 0.76rem; font-weight: 600; color: #5f7a70; background: #f0f7f4; padding: 0.25rem 0.7rem; border-radius: 20px; letter-spacing: 0.3px;">Verified Student</span>
+              </div>
+              
+              <!-- Reviewer Metadata -->
+              <div style="display: flex; align-items: center; gap: 0.8rem; border-top: 1px solid #f3f4f6; padding-top: 0.85rem;">
+                <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--teal-light), var(--teal-main)); display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 700; font-size: 0.88rem; flex-shrink: 0;">
+                  {{ rev.name[:2].upper() }}
+                </div>
+                <div>
+                  <h4 style="font-size: 0.92rem; font-weight: 700; color: #1f2937; margin: 0;">{{ rev.name }}</h4>
+                  <p style="font-size: 0.76rem; color: #6b7280; margin: 0;">{{ rev.location or 'Global' }} &bull; Student</p>
+                </div>
               </div>
             </div>
           </div>
         {% endfor %}
-
       </div>
     </div>
-    <button class="rev-arrow rev-next" id="rev-next" aria-label="Next reviews">&#8250;</button>
+    
+    <button class="rev-arrow rev-next" id="rev-next" aria-label="Next reviews" style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1.5px solid #ddd; color: #333; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); z-index: 10;">&#8250;</button>
   </div>
 
   <div class="rev-dots" id="rev-dots"></div>
 
   <!-- Share your review CTA -->
-  <div class="rev-submit-cta">
+  <div class="rev-submit-cta" style="margin-top: 3.5rem;">
     <p>{{ t.reviewCta }}</p>
     <button type="button" id="openReviewModal" class="btn-primary">{{ t.reviewCtaBtn }}</button>
   </div>
@@ -505,14 +1185,10 @@
             <label>{{ t.formCourseLabel }} <span class="req">*</span></label>
             <select name="course" required>
               <option value="">{{ t.formCourseOpt }}</option>
-              <option>Tajweed Course</option>
-              <option>Quran Recitation</option>
-              <option>Quran Hifz</option>
-              <option>Qirat Course</option>
-              <option>Basic Arabic Speaking</option>
-              <option>Urdu Language Course</option>
-              <option>Basic English Course</option>
-              <option>Academic Subjects (Maths / Science)</option>
+              {% for course in active_courses %}
+                <option value="{{ course.title }}">{{ course.title }}</option>
+              {% endfor %}
+              <option value="Academic Subjects (Maths / Science)">Academic Subjects (Maths / Science)</option>
             </select>
           </div>
           <div class="fg">
@@ -590,6 +1266,123 @@
     });
   }, 6000);
 })();
+
+/* Courses Carousel Slider */
+(function() {
+  var track = document.getElementById('course-track');
+  var prevBtn = document.getElementById('course-prev');
+  var nextBtn = document.getElementById('course-next');
+  var dotsContainer = document.getElementById('course-dots');
+  if (!track || !prevBtn || !nextBtn || !dotsContainer) return;
+
+  var cards = track.querySelectorAll('.new-course-card-wrap');
+  var cardCount = cards.length;
+  if (cardCount === 0) return;
+
+  var currentIndex = 0;
+  var cardsPerView = getCardsPerView();
+
+  function getCardsPerView() {
+    var width = window.innerWidth;
+    if (width > 1100) return 4;
+    if (width > 768) return 2;
+    return 1;
+  }
+
+  function createDots() {
+    dotsContainer.innerHTML = '';
+    var totalSlides = Math.max(1, cardCount - getCardsPerView() + 1);
+    for (var i = 0; i < totalSlides; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'course-dot' + (i === currentIndex ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      (function(idx) {
+        dot.addEventListener('click', function() {
+          currentIndex = idx;
+          updateSlider();
+        });
+      })(i);
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  function updateSlider() {
+    cardsPerView = getCardsPerView();
+    var totalSlides = Math.max(1, cardCount - cardsPerView + 1);
+    if (currentIndex >= totalSlides) currentIndex = totalSlides - 1;
+    if (currentIndex < 0) currentIndex = 0;
+
+    if (cardCount <= cardsPerView) {
+      track.style.transform = 'translateX(0px)';
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+      dotsContainer.style.display = 'none';
+      return;
+    } else {
+      prevBtn.style.display = 'flex';
+      nextBtn.style.display = 'flex';
+      dotsContainer.style.display = 'flex';
+    }
+
+    var cardWidth = cards[0].offsetWidth;
+    var gap = 24; // gap size in pixels
+    var offset = currentIndex * (cardWidth + gap);
+    track.style.transform = 'translateX(-' + offset + 'px)';
+
+    // Update dots active class
+    var dots = dotsContainer.querySelectorAll('.course-dot');
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].classList.toggle('active', i === currentIndex);
+    }
+
+    // Enable/disable arrows
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= totalSlides - 1;
+  }
+
+  prevBtn.addEventListener('click', function() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateSlider();
+    }
+  });
+
+  nextBtn.addEventListener('click', function() {
+    var totalSlides = Math.max(1, cardCount - getCardsPerView() + 1);
+    if (currentIndex < totalSlides - 1) {
+      currentIndex++;
+      updateSlider();
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    createDots();
+    updateSlider();
+  });
+
+  createDots();
+  updateSlider();
+})();
+
+/* Global helpers for review read-more/less toggle */
+window.expandReview = function(btn) {
+  var parent = btn.closest('.rev-text-wrap');
+  if (parent) {
+    var shortEl = parent.querySelector('.rt-short');
+    var fullEl = parent.querySelector('.rt-full');
+    if (shortEl) shortEl.style.display = 'none';
+    if (fullEl) fullEl.style.display = 'block';
+  }
+};
+window.collapseReview = function(btn) {
+  var parent = btn.closest('.rev-text-wrap');
+  if (parent) {
+    var shortEl = parent.querySelector('.rt-short');
+    var fullEl = parent.querySelector('.rt-full');
+    if (shortEl) shortEl.style.display = 'block';
+    if (fullEl) fullEl.style.display = 'none';
+  }
+};
 </script>
 {% endblock %}
 

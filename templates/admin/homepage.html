@@ -313,7 +313,7 @@
           <th>Category</th>
           <th>Badges / Features</th>
           <th>Status</th>
-          <th style="width: 140px;">Actions</th>
+          <th style="width: 220px;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -347,6 +347,7 @@
             {% endif %}
           </td>
           <td>
+            <a href="{{ url_for('admin_course_details', cid=crs.id) }}" class="adm-btn-sm" style="text-decoration:none; display:inline-block; background:var(--teal-main); color:#fff; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.78rem; font-weight: 600; border: 1px solid var(--teal-main); margin-right: 2px;">Details</a>
             <button type="button" onclick='editCourse({{ crs|tojson }})' class="adm-btn-sm adm-btn-edit">Edit</button>
             <form method="post" action="{{ url_for('admin_courses_delete', cid=crs.id) }}" style="display:inline;"
               onsubmit="return confirm('Delete course {{ crs.title }}?');">
@@ -499,11 +500,11 @@
         {% for sub in academic_subjects %}
         <tr>
           <td><strong>{{ sub.display_order }}</strong></td>
-          <td style="font-size:1.4rem;">
-            {% if sub.icon_or_image and sub.icon_or_image.startswith('http') %}
-            <img src="{{ sub.icon_or_image }}" style="width:30px; height:30px; object-fit:contain;" />
+          <td>
+            {% if sub.icon_or_image and (sub.icon_or_image.startswith('http') or sub.icon_or_image.startswith('/') or '.' in sub.icon_or_image or '/' in sub.icon_or_image) %}
+            <img src="{{ sub.icon_or_image }}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; display:block;" />
             {% else %}
-            {{ sub.icon_or_image or '📚' }}
+            <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; display:block;" />
             {% endif %}
           </td>
           <td><strong>{{ sub.title }}</strong></td>
@@ -545,15 +546,14 @@
     <h2 id="academicModalTitle" class="adm-modal-title">Add Academic Subject</h2>
     <form method="post" action="{{ url_for('admin_academic_save') }}" enctype="multipart/form-data">
       <input type="hidden" name="id" id="acadId" />
-      <div class="cms-grid-2">
-        <div class="adm-form-group">
-          <label>Subject Title <span class="req">*</span></label>
-          <input type="text" name="title" id="acadTitle" class="adm-input" required />
-        </div>
-        <div class="adm-form-group">
-          <label>Emoji / Icon</label>
-          <input type="text" name="icon_or_image" id="acadIcon" class="adm-input" placeholder="📐" />
-        </div>
+      <div class="adm-form-group">
+        <label>Subject Title <span class="req">*</span></label>
+        <input type="text" name="title" id="acadTitle" class="adm-input" required />
+      </div>
+      <div class="adm-form-group" style="margin-bottom: 1rem;">
+        <label>Subject Image (Upload new image to Cloudinary)</label>
+        <input type="file" name="image" class="adm-input" accept="image/*" />
+        <input type="hidden" name="icon_or_image" id="acadIcon" />
       </div>
       <div class="adm-form-group">
         <label>Description</label>

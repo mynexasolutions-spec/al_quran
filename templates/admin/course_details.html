@@ -1,0 +1,190 @@
+{% extends "admin/base.html" %}
+{% block title %}Course Details Editor | Admin{% endblock %}
+{% block topbar_title %}Edit Details: {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Edit Course Details & Description</h2>
+    <p>Manage the full content structure for <strong>{{ course.title }}</strong> (Quotes, Highlights, Outlines, etc.).</p>
+  </div>
+  <a href="{{ url_for('admin_homepage', tab='courses') }}" class="adm-btn adm-btn--secondary">&#8592; Back</a>
+</div>
+
+{% set d = course.course_details or {} %}
+
+<form method="post" class="adm-form-card">
+
+  <!-- Section 1: Hero & Sidebar Metadata -->
+  <fieldset class="adm-fieldset" style="border: 1px solid #cde0d8; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; background: #fafdfc;">
+    <legend style="padding: 0 0.5rem; font-weight: bold; color: var(--teal-dark); font-family: 'Playfair Display', serif;">1. Hero & Sidebar Configuration</legend>
+    
+    <div class="adm-fg" style="margin-bottom: 1rem;">
+      <label>Arabic Calligraphy Heading (Optional)</label>
+      <input type="text" name="course_arabic" placeholder="e.g. وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا" value="{{ d.get('course_arabic', '') }}" dir="rtl" class="adm-input" />
+      <small class="adm-hint">Arabic calligraphy script displayed below the main title.</small>
+    </div>
+
+    <div class="adm-fg" style="margin-bottom: 1rem;">
+      <label>Course Hero Tagline</label>
+      <textarea name="course_tagline" rows="2" placeholder="Brief tagline shown on the course hero banner..." class="adm-input">{{ d.get('course_tagline', '') }}</textarea>
+    </div>
+
+    <div class="adm-form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+      <div class="adm-fg">
+        <label>Duration</label>
+        <input type="text" name="course_duration" value="{{ d.get('course_duration', '') }}" placeholder="e.g. 1 Year / Flexible" class="adm-input" />
+      </div>
+      <div class="adm-fg">
+        <label>Schedule</label>
+        <input type="text" name="course_schedule" value="{{ d.get('course_schedule', '') }}" placeholder="e.g. Flexible Timing" class="adm-input" />
+      </div>
+      <div class="adm-fg">
+        <label>Mode</label>
+        <input type="text" name="course_mode" value="{{ d.get('course_mode', 'Online (Live)') }}" placeholder="Online (Live)" class="adm-input" />
+      </div>
+    </div>
+
+    <div class="adm-form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div class="adm-fg">
+        <label>Eligibility</label>
+        <input type="text" name="course_eligibility" value="{{ d.get('course_eligibility', '') }}" placeholder="e.g. All Ages & Levels" class="adm-input" />
+      </div>
+      <div class="adm-fg">
+        <label>Certificate Value</label>
+        <input type="text" name="course_certificate" value="{{ d.get('course_certificate', '') }}" placeholder="e.g. Yes — On Completion" class="adm-input" />
+      </div>
+      <div class="adm-fg">
+        <label>Course Fee</label>
+        <input type="text" name="course_fee" value="{{ d.get('course_fee', 'Contact Us') }}" placeholder="Contact Us" class="adm-input" />
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Section 2: Quote & Intro -->
+  <fieldset class="adm-fieldset" style="border: 1px solid #cde0d8; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; background: #fafdfc;">
+    <legend style="padding: 0 0.5rem; font-weight: bold; color: var(--teal-dark); font-family: 'Playfair Display', serif;">2. Quotes & Introduction</legend>
+    
+    <div class="adm-form-row" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="adm-fg">
+        <label>Spiritual Quote / Hadith</label>
+        <input type="text" name="quote_text" placeholder='e.g. "Read the Quran, for it will intercede..."' value="{{ d.get('quote_text', '') }}" class="adm-input" />
+      </div>
+      <div class="adm-fg">
+        <label>Citation Source</label>
+        <input type="text" name="quote_cite" placeholder="— Sahih Muslim" value="{{ d.get('quote_cite', '') }}" class="adm-input" />
+      </div>
+    </div>
+
+    <div class="adm-fg">
+      <label>Course Introduction Paragraph</label>
+      <textarea name="intro_text" rows="4" placeholder="Detailed introductory paragraph shown under the quote..." class="adm-input">{{ d.get('intro_text', '') }}</textarea>
+    </div>
+  </fieldset>
+
+  <!-- Section 3: Lists (Curriculum & Why Enroll) -->
+  <fieldset class="adm-fieldset" style="border: 1px solid #cde0d8; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; background: #fafdfc;">
+    <legend style="padding: 0 0.5rem; font-weight: bold; color: var(--teal-dark); font-family: 'Playfair Display', serif;">3. Course Content & Curriculum lists</legend>
+
+    <div class="adm-form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem;">
+      <div class="adm-fg">
+        <label>List 1: Section Header</label>
+        <input type="text" name="learn_header" value="{{ d.get('learn_header', 'What You Will Learn') }}" class="adm-input" />
+        <label style="margin-top:0.6rem;">List Items (One item per line)</label>
+        <textarea name="learn_items" rows="6" placeholder="Makharij - points of articulation&#10;Rules of Noon Saakin & Tanween&#10;Madd rules..." class="adm-input">{{ d.get('learn_items', []) | join('\n') }}</textarea>
+      </div>
+
+      <div class="adm-fg">
+        <label>List 2: Section Header (Optional)</label>
+        <input type="text" name="why_items_header" placeholder="e.g. Why Enroll / Why Study this?" value="{{ d.get('why_items_header', '') }}" class="adm-input" />
+        <label style="margin-top:0.6rem;">List Items (One item per line)</label>
+        <textarea name="why_items" rows="6" placeholder="Master rules for beautiful recitation&#10;Gain confidence to lead prayers&#10;Earn official certificate..." class="adm-input">{{ d.get('why_items', []) | join('\n') }}</textarea>
+        <small class="adm-hint">Leave items empty to hide this section.</small>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Section 4: Highlights Cards -->
+  <fieldset class="adm-fieldset" style="border: 1px solid #cde0d8; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; background: #fafdfc;">
+    <legend style="padding: 0 0.5rem; font-weight: bold; color: var(--teal-dark); font-family: 'Playfair Display', serif;">4. Course Highlights (4 Cards Grid)</legend>
+
+    <div class="adm-fg" style="margin-bottom: 1rem;">
+      <label>Section Header</label>
+      <input type="text" name="highlights_header" value="{{ d.get('highlights_header', 'Course Highlights') }}" class="adm-input" />
+    </div>
+
+    {% set hl_list = d.get('highlights', [{}, {}, {}, {}]) %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+      {% for i in range(1, 5) %}
+        {% set hl = hl_list[i-1] or {} %}
+        <div style="background: #fff; border: 1px solid #e0eae6; border-radius: 6px; padding: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+          <h4 style="margin: 0 0 0.5rem; color: var(--teal-main);">Card {{ i }}</h4>
+          <div class="adm-fg" style="margin-bottom: 0.4rem;">
+            <label style="font-size:0.8rem;">Icon SVG Path/Emoji</label>
+            <select name="hl{{ i }}_icon" class="adm-input" style="font-size:0.85rem;">
+              <option value="hl_instructor.svg" {% if hl.get('icon') == 'hl_instructor.svg' %}selected{% endif %}>Expert Instructors (Instructor icon)</option>
+              <option value="hl_feedback.svg" {% if hl.get('icon') == 'hl_feedback.svg' %}selected{% endif %}>Weekly Feedback (Feedback icon)</option>
+              <option value="hl_global.svg" {% if hl.get('icon') == 'hl_global.svg' %}selected{% endif %}>Global Access (Global icon)</option>
+              <option value="hl_certificate.svg" {% if hl.get('icon') == 'hl_certificate.svg' %}selected{% endif %}>Certification (Certificate icon)</option>
+              <option value="hl_curriculum.svg" {% if hl.get('icon') == 'hl_curriculum.svg' %}selected{% endif %}>Structured (Curriculum icon)</option>
+              <option value="hl_interactive.svg" {% if hl.get('icon') == 'hl_interactive.svg' %}selected{% endif %}>Interactive (Interactive icon)</option>
+            </select>
+          </div>
+          <div class="adm-fg" style="margin-bottom: 0.4rem;">
+            <label style="font-size:0.8rem;">Title</label>
+            <input type="text" name="hl{{ i }}_title" value="{{ hl.get('title', '') }}" placeholder="e.g. Expert Tutors" class="adm-input" style="font-size:0.85rem; padding: 0.4rem;" />
+          </div>
+          <div class="adm-fg">
+            <label style="font-size:0.8rem;">Description</label>
+            <textarea name="hl{{ i }}_desc" rows="2" placeholder="Card description..." class="adm-input" style="font-size:0.85rem; padding: 0.4rem;">{{ hl.get('desc', '') }}</textarea>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <!-- Section 5: Why Study Text block -->
+  <fieldset class="adm-fieldset" style="border: 1px solid #cde0d8; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; background: #fafdfc;">
+    <legend style="padding: 0 0.5rem; font-weight: bold; color: var(--teal-dark); font-family: 'Playfair Display', serif;">5. Explanatory Section (Optional)</legend>
+
+    <div class="adm-fg" style="margin-bottom: 0.8rem;">
+      <label>Section Header</label>
+      <input type="text" name="why_header" placeholder="e.g. Why This Course?" value="{{ d.get('why_header', '') }}" class="adm-input" />
+    </div>
+    
+    <div class="adm-form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="adm-fg">
+        <label>Paragraph 1</label>
+        <textarea name="why_p1" rows="3" placeholder="First paragraph..." class="adm-input">{{ d.get('why_p1', '') }}</textarea>
+      </div>
+      <div class="adm-fg">
+        <label>Paragraph 2</label>
+        <textarea name="why_p2" rows="3" placeholder="Second paragraph..." class="adm-input">{{ d.get('why_p2', '') }}</textarea>
+      </div>
+    </div>
+    <small class="adm-hint">Leave header empty to hide this section.</small>
+  </fieldset>
+
+  <!-- Section 6: Certification Requirements -->
+  <fieldset class="adm-fieldset" style="border: 1px solid #cde0d8; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; background: #fafdfc;">
+    <legend style="padding: 0 0.5rem; font-weight: bold; color: var(--teal-dark); font-family: 'Playfair Display', serif;">6. Certification Requirements</legend>
+
+    <div class="adm-fg" style="margin-bottom: 0.8rem;">
+      <label>Section Header</label>
+      <input type="text" name="cert_header" value="{{ d.get('cert_header', 'Certification Requirements') }}" class="adm-input" />
+    </div>
+
+    <div class="adm-fg">
+      <label>Requirements list (One item per line)</label>
+      <textarea name="cert_items" rows="4" placeholder="Maintain at least 70% attendance&#10;Pass final exam&#10;Demonstrate proficiency..." class="adm-input">{{ d.get('cert_items', []) | join('\n') }}</textarea>
+    </div>
+  </fieldset>
+
+  <!-- Form Actions -->
+  <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+    <button type="submit" class="adm-btn-primary" style="flex: 1; padding: 1rem; font-size: 1rem; font-weight: 600;">Save Course Details</button>
+    <a href="{{ url_for('admin_homepage', tab='courses') }}" class="adm-btn adm-btn--secondary" style="padding: 1rem; font-weight: 600; text-decoration: none; text-align: center;">Cancel</a>
+  </div>
+
+</form>
+{% endblock %}

@@ -37,6 +37,68 @@ with app.app_context():
         print(f"[DB INIT WARNING] {e}")
 
 
+@app.route('/api/prayer-times')
+def get_prayer_times():
+    import http.client
+    import urllib.parse
+    import json
+    from flask import jsonify
+    from datetime import datetime
+
+    lat = request.args.get('latitude', '51.5194682')
+    lng = request.args.get('longitude', '-0.1360365')
+    tz = request.args.get('timezone', 'UTC')
+
+    now = datetime.now()
+    today_str = now.strftime('%d-%m-%Y')
+    current_month = now.month
+    current_year = now.year
+    current_day = now.day
+
+    try:
+        # 1. Fetch Prayer Timings
+        conn = http.client.HTTPSConnection("api.aladhan.com")
+        path = (
+            f"/v1/timings/{today_str}"
+            f"?latitude={lat}&longitude={lng}"
+            f"&method=3&shafaq=general"
+            f"&tune=5,3,5,7,9,-1,0,8,-6"
+            f"&school=0&midnightMode=0"
+            f"&timezonestring={urllib.parse.quote(tz)}"
+            f"&latitudeAdjustmentMethod=1&calendarMethod=UAQ&iso8601=false"
+        )
+
+        headers = {
+            "Accept-Encoding": ""
+        }
+        conn.request("GET", path, headers=headers)
+        response = conn.getresponse()
+        data = response.read().decode('utf-8')
+        conn.close()
+
+        timings_data = json.loads(data)
+
+        # 2. Fetch Islamic Calendar using UAQ calendarMethod
+        conn_cal = http.client.HTTPSConnection("api.aladhan.com")
+        cal_path = f"/v1/gToHCalendar/{current_month}/{current_year}?calendarMethod=UAQ"
+        conn_cal.request("GET", cal_path, headers=headers)
+        res_cal = conn_cal.getresponse()
+        cal_data_raw = res_cal.read().decode('utf-8')
+        conn_cal.close()
+
+        calendar_data = json.loads(cal_data_raw)
+
+        # Merge UAQ Hijri date into timings_data
+        if calendar_data.get('code') == 200 and len(calendar_data.get('data', [])) >= current_day:
+            today_hijri = calendar_data['data'][current_day - 1].get('hijri')
+            if today_hijri and 'data' in timings_data and 'date' in timings_data['data']:
+                timings_data['data']['date']['hijri'] = today_hijri
+
+        return jsonify(timings_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # ═══════════════════════════════════════════════════════════════
 #  Helpers
 # ═══════════════════════════════════════════════════════════════
@@ -103,6 +165,15 @@ def inject_translations():
             except KeyError:
                 return ''
     return {'t': _T(t_obj), 'lang': lang}
+
+
+@app.context_processor
+def inject_active_courses():
+    try:
+        courses = DB.get_all_courses(visible_only=True)
+    except Exception:
+        courses = []
+    return {'active_courses': courses}
 
 
 @app.route('/set-lang/<lang>')
@@ -263,39 +334,46 @@ def _get_course_by_keyword(key):
     return None
 
 
-@app.route('/course/tajweed')
-def course_tajweed():
-    return render_template('pages/course_tajweed.html', course=_get_course_by_keyword('tajweed'))
+@app.route('/courses')
+def all_courses():
+    try:
+        courses = DB.get_all_courses(visible_only=True)
+    except Exception:
+        courses = []
+    
+    page = request.args.get('page', 1, type=int)
+    per_page = 6
+    total = len(courses)
+    total_pages = (total + per_page - 1) // per_page
+    
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_courses = courses[start:end]
+    
+    return render_template('pages/all_courses.html', 
+                           courses=paginated_courses, 
+                           page=page, 
+                           total_pages=total_pages)
 
 
-@app.route('/course/quran-recitation')
-def course_quran_recitation():
-    return render_template('pages/course_quran_recitation.html', course=_get_course_by_keyword('recitation'))
-
-
-@app.route('/course/hifz')
-def course_hifz():
-    return render_template('pages/course_hifz.html', course=_get_course_by_keyword('hifz'))
-
-
-@app.route('/course/qirat')
-def course_qirat():
-    return render_template('pages/course_qirat.html', course=_get_course_by_keyword('qirat'))
-
-
-@app.route('/course/arabic')
-def course_arabic():
-    return render_template('pages/course_arabic.html', course=_get_course_by_keyword('arabic'))
-
-
-@app.route('/course/urdu')
-def course_urdu():
-    return render_template('pages/course_urdu.html', course=_get_course_by_keyword('urdu'))
-
-
-@app.route('/course/english')
-def course_english():
-    return render_template('pages/course_english.html', course=_get_course_by_keyword('english'))
+@app.route('/course/<slug>')
+def course_detail(slug):
+    key = slug
+    if key == 'quran-recitation':
+        key = 'recitation'
+        
+    course = _get_course_by_keyword(key)
+    if not course:
+        abort(404)
+        
+    try:
+        all_courses = DB.get_all_courses(visible_only=True)
+    except Exception:
+        all_courses = []
+        
+    other_courses_list = [c for c in all_courses if c['slug'] != course['slug']][:6]
+    
+    return render_template('pages/course_detail_dynamic.html', course=course, other_courses_list=other_courses_list)
 
 
 @app.route('/team')
@@ -601,14 +679,24 @@ def admin_courses_save():
     raw_badges = request.form.get('badges', '')
     badges = [b.strip() for b in raw_badges.split(',') if b.strip()]
 
+    title = request.form['title'].strip()
+    slug = request.form.get('slug', '').strip()
+    if not slug:
+        import re
+        slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+
+    link_url = request.form.get('link_url', '').strip()
+    if not link_url:
+        link_url = f"/course/{slug}"
+
     data = {
-        'title': request.form['title'].strip(),
-        'slug': request.form.get('slug', '').strip(),
+        'title': title,
+        'slug': slug,
         'category': request.form.get('category', 'Quranic Studies').strip(),
         'description': request.form.get('description', '').strip(),
         'image_url': image_url,
         'badges': badges,
-        'link_url': request.form.get('link_url', '').strip(),
+        'link_url': link_url,
         'seo_title': request.form.get('seo_title', '').strip(),
         'seo_description': request.form.get('seo_description', '').strip(),
         'display_order': request.form.get('display_order', 0, type=int),
@@ -682,6 +770,81 @@ def admin_courses_delete(cid):
     DB.delete_course(cid)
     flash('Course deleted.', 'info')
     return redirect(url_for('admin_homepage', tab='courses'))
+
+
+@app.route('/admin/courses/<int:cid>/details', methods=['GET', 'POST'])
+@admin_required
+def admin_course_details(cid):
+    course = DB.get_course(cid)
+    if not course:
+        abort(404)
+        
+    details = course.get('course_details') or {}
+    if isinstance(details, str):
+        import json
+        try:
+            details = json.loads(details)
+        except Exception:
+            details = {}
+    course['course_details'] = details
+
+    if request.method == 'POST':
+        why_items = [x.strip() for x in request.form.get('why_items', '').split('\n') if x.strip()]
+        learn_items = [x.strip() for x in request.form.get('learn_items', '').split('\n') if x.strip()]
+        cert_items = [x.strip() for x in request.form.get('cert_items', '').split('\n') if x.strip()]
+
+        new_details = {
+            "course_arabic": request.form.get('course_arabic', '').strip(),
+            "course_tagline": request.form.get('course_tagline', '').strip(),
+            "course_duration": request.form.get('course_duration', '').strip(),
+            "course_schedule": request.form.get('course_schedule', '').strip(),
+            "course_eligibility": request.form.get('course_eligibility', '').strip(),
+            "course_certificate": request.form.get('course_certificate', '').strip(),
+            "course_mode": request.form.get('course_mode', 'Online (Live)').strip(),
+            "course_fee": request.form.get('course_fee', 'Contact Us').strip(),
+            "quote_text": request.form.get('quote_text', '').strip(),
+            "quote_cite": request.form.get('quote_cite', '').strip(),
+            "intro_text": request.form.get('intro_text', '').strip(),
+            "why_items_header": request.form.get('why_items_header', '').strip(),
+            "why_items": why_items,
+            "learn_header": request.form.get('learn_header', 'What You Will Learn').strip(),
+            "learn_items": learn_items,
+            "highlights_header": request.form.get('highlights_header', 'Course Highlights').strip(),
+            "highlights": [
+                {
+                    "icon": request.form.get('hl1_icon', 'hl_instructor.svg').strip(),
+                    "title": request.form.get('hl1_title', '').strip(),
+                    "desc": request.form.get('hl1_desc', '').strip()
+                },
+                {
+                    "icon": request.form.get('hl2_icon', 'hl_feedback.svg').strip(),
+                    "title": request.form.get('hl2_title', '').strip(),
+                    "desc": request.form.get('hl2_desc', '').strip()
+                },
+                {
+                    "icon": request.form.get('hl3_icon', 'hl_global.svg').strip(),
+                    "title": request.form.get('hl3_title', '').strip(),
+                    "desc": request.form.get('hl3_desc', '').strip()
+                },
+                {
+                    "icon": request.form.get('hl4_icon', 'hl_certificate.svg').strip(),
+                    "title": request.form.get('hl4_title', '').strip(),
+                    "desc": request.form.get('hl4_desc', '').strip()
+                }
+            ],
+            "why_header": request.form.get('why_header', '').strip(),
+            "why_p1": request.form.get('why_p1', '').strip(),
+            "why_p2": request.form.get('why_p2', '').strip(),
+            "cert_header": request.form.get('cert_header', 'Certification Requirements').strip(),
+            "cert_items": cert_items
+        }
+
+        course['course_details'] = new_details
+        DB.update_course(cid, course)
+        flash(f'Course details for "{course["title"]}" updated successfully!', 'success')
+        return redirect(url_for('admin_homepage', tab='courses'))
+
+    return render_template('admin/course_details.html', course=course)
 
 
 # ── Academic Subjects Management ──

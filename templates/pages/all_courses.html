@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+{% block title %}All Courses | Al-Qur'an Global Institute{% endblock %}
+
+{% block content %}
+<!-- ══ HERO BANNER ══ -->
+<section class="course-hero" style="padding: 140px 8% 60px;">
+  <div class="ch-inner">
+    <span class="ch-cat">Al-Qur'an Global Institute</span>
+    <h1>{{ t.navCourses }}</h1>
+    <p class="ch-tagline">Structured online courses designed for students of all ages — guided by certified native scholars.</p>
+  </div>
+</section>
+
+<!-- ══ COURSES GRID ══ -->
+<section class="courses" id="courses" style="background: var(--white); padding: 4rem 8%;">
+  <div class="center-hdr" style="margin-bottom: 3rem;">
+    <span class="section-tag">Explore Programs</span>
+    <h2 class="section-title">Our <span>Courses</span></h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="courses-grid">
+    {% for course in courses %}
+    <a href="{{ url_for('course_detail', slug=course.slug) }}" class="course-card">
+      <img src="{{ course.image_url if course.image_url else url_for('static', filename='images/courses/tajweed.webp') }}" alt="{{ course.title }}" class="course-img"/>
+      <div class="course-card-body">
+        <span class="course-cat">{{ course.category }}</span>
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+        <div class="course-meta">
+          {% for b in course.badges or [] %}
+          <span class="badge">{{ b }}</span>
+          {% endfor %}
+        </div>
+        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
+      </div>
+    </a>
+    {% else %}
+    <div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 2rem;">
+      No courses currently listed.
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if total_pages > 1 %}
+  <div class="pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 3.5rem; align-items: center;">
+    {% if page > 1 %}
+      <a href="{{ url_for('all_courses', page=page-1) }}" class="pag-btn" style="padding: 0.55rem 1.15rem; border: 1.5px solid #ddd; border-radius: 6px; text-decoration: none; color: #333; font-weight: 600; background: #fff; transition: all 0.25s; font-size: 0.9rem;">&laquo; Previous</a>
+    {% endif %}
+    
+    {% for p in range(1, total_pages + 1) %}
+      {% if p == page %}
+        <span class="pag-btn active" style="padding: 0.55rem 1.15rem; border: 1.5px solid var(--teal-main); border-radius: 6px; color: #fff; font-weight: 700; background: var(--teal-main); font-size: 0.9rem;">{{ p }}</span>
+      {% else %}
+        <a href="{{ url_for('all_courses', page=p) }}" class="pag-btn" style="padding: 0.55rem 1.15rem; border: 1.5px solid #ddd; border-radius: 6px; text-decoration: none; color: #333; font-weight: 600; background: #fff; transition: all 0.25s; font-size: 0.9rem;">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+    
+    {% if page < total_pages %}
+      <a href="{{ url_for('all_courses', page=page+1) }}" class="pag-btn" style="padding: 0.55rem 1.15rem; border: 1.5px solid #ddd; border-radius: 6px; text-decoration: none; color: #333; font-weight: 600; background: #fff; transition: all 0.25s; font-size: 0.9rem;">Next &raquo;</a>
+    {% endif %}
+  </div>
+  <style>
+    .pag-btn:hover {
+      background: #f9fafb !important;
+      border-color: #bbb !important;
+      color: var(--teal-main) !important;
+    }
+  </style>
+  {% endif %}
+</section>
+{% endblock %}
