@@ -486,6 +486,25 @@ def get_all_competitions(force_refresh=False):
     return _COMPETITIONS_CACHE
 
 
+def get_competitions_with_reg_counts():
+    """Single-query LEFT JOIN to get all competitions along with registration counts, avoiding N+1 queries."""
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("""
+        SELECT c.*, COALESCE(r.cnt, 0) AS reg_count
+        FROM competitions c
+        LEFT JOIN (
+            SELECT competition_id, COUNT(*) AS cnt
+            FROM registrations
+            GROUP BY competition_id
+        ) r ON c.id = r.competition_id
+        ORDER BY c.created_at DESC
+    """)
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
 def get_competition(cid):
     conn = get_conn()
     cur  = conn.cursor()
@@ -628,12 +647,9 @@ def get_approved_reviews():
 
 
 def get_all_reviews():
-    conn = get_conn()
-    cur  = conn.cursor()
-    cur.execute("SELECT * FROM reviews ORDER BY created_at DESC")
-    rows = cur.fetchall()
-    cur.close(); conn.close()
-    return [dict(r) for r in rows]
+    """Uses 60-second in-memory CMS cache instead of making a direct DB roundtrip."""
+    cms_data = get_all_homepage_cms_data()
+    return cms_data.get('all_reviews', [])
 
 
 def update_review_status(review_id, status):
@@ -641,6 +657,7 @@ def update_review_status(review_id, status):
     cur  = conn.cursor()
     cur.execute("UPDATE reviews SET status=%s WHERE id=%s", (status, review_id))
     conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
 
 
 def delete_review(review_id):
@@ -648,6 +665,7 @@ def delete_review(review_id):
     cur  = conn.cursor()
     cur.execute("DELETE FROM reviews WHERE id=%s", (review_id,))
     conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
 
 
 def update_review(rid, data):
@@ -664,6 +682,7 @@ def update_review(rid, data):
          data.get('is_visible', True), int(data.get('display_order', 0)), rid)
     )
     conn.commit(); cur.close(); conn.close()
+    clear_cms_cache()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -675,11 +694,45 @@ _CMS_CACHE = {}
 _CMS_CACHE_TIME = 0
 _CACHE_TTL_SECONDS = 60
 
+_ADMIN_BADGES_CACHE = None
+_ADMIN_BADGES_CACHE_TIME = 0
+
+
+def clear_admin_badges_cache():
+    global _ADMIN_BADGES_CACHE, _ADMIN_BADGES_CACHE_TIME
+    _ADMIN_BADGES_CACHE = None
+    _ADMIN_BADGES_CACHE_TIME = 0
+
+
+def get_admin_badge_counts(force_refresh=False):
+    """Fast, targeted 30-second cached count for pending reviews & new enquiries (used by admin sidebar)."""
+    global _ADMIN_BADGES_CACHE, _ADMIN_BADGES_CACHE_TIME
+    now = time.time()
+    if not force_refresh and _ADMIN_BADGES_CACHE is not None and (now - _ADMIN_BADGES_CACHE_TIME < 30):
+        return _ADMIN_BADGES_CACHE
+
+    try:
+        conn = get_conn()
+        cur  = conn.cursor()
+        cur.execute("SELECT COUNT(*) AS cnt FROM reviews WHERE status = 'pending'")
+        rev_cnt = cur.fetchone()['cnt']
+        cur.execute("SELECT COUNT(*) AS cnt FROM contact_enquiries WHERE status = 'new'")
+        enq_cnt = cur.fetchone()['cnt']
+        cur.close(); conn.close()
+        res = {'pending_reviews_count': rev_cnt, 'new_enquiries_count': enq_cnt}
+    except Exception:
+        res = {'pending_reviews_count': 0, 'new_enquiries_count': 0}
+
+    _ADMIN_BADGES_CACHE = res
+    _ADMIN_BADGES_CACHE_TIME = now
+    return _ADMIN_BADGES_CACHE
+
 
 def clear_cms_cache():
     global _CMS_CACHE, _CMS_CACHE_TIME
     _CMS_CACHE = {}
     _CMS_CACHE_TIME = 0
+    clear_admin_badges_cache()
 
 
 def get_all_homepage_cms_data(force_refresh=False):
@@ -1147,12 +1200,9 @@ def create_contact_enquiry(data):
 
 
 def get_all_contact_enquiries():
-    conn = get_conn()
-    cur  = conn.cursor()
-    cur.execute("SELECT * FROM contact_enquiries ORDER BY created_at DESC, id DESC")
-    rows = cur.fetchall()
-    cur.close(); conn.close()
-    return [dict(r) for r in rows]
+    """Uses 60-second in-memory CMS cache instead of making a direct DB roundtrip."""
+    cms_data = get_all_homepage_cms_data()
+    return cms_data.get('enquiries', [])
 
 
 def update_enquiry_status(eid, status):

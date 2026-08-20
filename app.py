@@ -138,15 +138,10 @@ def admin_required(f):
 
 @app.context_processor
 def inject_pending_reviews():
-    """Inject pending review count & new enquiries count into all templates (for admin sidebar badges)."""
+    """Inject pending review count & new enquiries count into templates using fast, cached count queries."""
     try:
         if session.get('admin_logged_in'):
-            cms_data = DB.get_all_homepage_cms_data()
-            all_reviews = cms_data.get('all_reviews', [])
-            all_enquiries = cms_data.get('enquiries', [])
-            rev_cnt = sum(1 for r in all_reviews if r.get('status') == 'pending')
-            enq_cnt = sum(1 for e in all_enquiries if e.get('status') == 'new')
-            return {'pending_reviews_count': rev_cnt, 'new_enquiries_count': enq_cnt}
+            return DB.get_admin_badge_counts()
     except Exception:
         pass
     return {'pending_reviews_count': 0, 'new_enquiries_count': 0}
@@ -1007,11 +1002,8 @@ def admin_faqs_delete(fid):
 @app.route('/admin/competitions')
 @admin_required
 def admin_competitions():
-    comps = DB.get_all_competitions()
-    # attach registration counts
-    for c in comps:
-        c['reg_count'] = DB.get_registration_count(c['id'])
-    total_regs = sum(c['reg_count'] for c in comps)
+    comps = DB.get_competitions_with_reg_counts()
+    total_regs = sum(c.get('reg_count', 0) for c in comps)
     return render_template('admin/competitions_list.html',
                            competitions=comps,
                            total_regs=total_regs,
