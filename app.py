@@ -28,13 +28,15 @@ cloudinary.config(
 )
 
 # ── Initialise DB on startup ──────────────────────────────────
-with app.app_context():
-    try:
-        DB.init_db()
-        DB.seed_competitions()
-        DB.seed_cms_data()
-    except Exception as e:
-        print(f"[DB INIT WARNING] {e}")
+# In production, table creation & seeding run only when ENABLE_DB_INIT=true
+if os.environ.get('ENABLE_DB_INIT', 'false').lower() == 'true' or os.environ.get('FLASK_ENV') == 'development':
+    with app.app_context():
+        try:
+            DB.init_db()
+            DB.seed_competitions()
+            DB.seed_cms_data()
+        except Exception as e:
+            print(f"[DB INIT WARNING] {e}")
 
 
 @app.route('/api/prayer-times')
@@ -174,6 +176,14 @@ def inject_active_courses():
     except Exception:
         courses = []
     return {'active_courses': courses}
+
+
+@app.after_request
+def add_performance_and_cache_headers(response):
+    """Instruct browsers & CDN to cache static assets (CSS, JS, images, fonts) for 1 year."""
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+    return response
 
 
 @app.route('/set-lang/<lang>')

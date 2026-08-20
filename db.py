@@ -334,6 +334,17 @@ def init_db():
     except Exception as ex:
         print(f"[MIGRATION WARNING] Failed to fix empty course slugs/links: {ex}")
 
+    # ── Create B-Tree Indexes for High-Performance Queries ──
+    try:
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_courses_visible_order ON courses (is_visible, display_order);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_courses_slug ON courses (slug);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_competitions_status ON competitions (status);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_reviews_status_visible ON reviews (status, is_visible, display_order);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_team_director_order ON team_members (is_director, display_order);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_registrations_comp_id ON registrations (competition_id);")
+    except Exception as ex:
+        print(f"[MIGRATION WARNING] Failed to create database indexes: {ex}")
+
     conn.commit()
     cur.close()
     conn.close()
@@ -445,15 +456,34 @@ def seed_competitions():
 
 
 # ─────────────────────────────────────────────────────────────
-#  Competitions CRUD
+#  Competitions CRUD & In-Memory Caching
 # ─────────────────────────────────────────────────────────────
-def get_all_competitions():
+_COMPETITIONS_CACHE = []
+_COMPETITIONS_CACHE_TIME = 0
+_COMP_TTL_SECONDS = 60
+
+
+def clear_competitions_cache():
+    global _COMPETITIONS_CACHE, _COMPETITIONS_CACHE_TIME
+    _COMPETITIONS_CACHE = []
+    _COMPETITIONS_CACHE_TIME = 0
+
+
+def get_all_competitions(force_refresh=False):
+    global _COMPETITIONS_CACHE, _COMPETITIONS_CACHE_TIME
+    now = time.time()
+    if not force_refresh and _COMPETITIONS_CACHE and (now - _COMPETITIONS_CACHE_TIME < _COMP_TTL_SECONDS):
+        return _COMPETITIONS_CACHE
+
     conn = get_conn()
     cur  = conn.cursor()
     cur.execute("SELECT * FROM competitions ORDER BY created_at DESC")
     rows = cur.fetchall()
     cur.close(); conn.close()
-    return [dict(r) for r in rows]
+
+    _COMPETITIONS_CACHE = [dict(r) for r in rows]
+    _COMPETITIONS_CACHE_TIME = now
+    return _COMPETITIONS_CACHE
 
 
 def get_competition(cid):
@@ -480,6 +510,7 @@ def create_competition(data):
     )
     new_id = cur.fetchone()['id']
     conn.commit(); cur.close(); conn.close()
+    clear_competitions_cache()
     return new_id
 
 
@@ -500,6 +531,7 @@ def update_competition(cid, data):
          data.get('color_theme','teal'), data.get('image_url'), cid)
     )
     conn.commit(); cur.close(); conn.close()
+    clear_competitions_cache()
 
 
 def update_competition_status(cid, status):
@@ -507,6 +539,7 @@ def update_competition_status(cid, status):
     cur  = conn.cursor()
     cur.execute("UPDATE competitions SET status=%s, updated_at=NOW() WHERE id=%s", (status, cid))
     conn.commit(); cur.close(); conn.close()
+    clear_competitions_cache()
 
 
 def delete_competition(cid):
@@ -514,6 +547,7 @@ def delete_competition(cid):
     cur  = conn.cursor()
     cur.execute("DELETE FROM competitions WHERE id=%s", (cid,))
     conn.commit(); cur.close(); conn.close()
+    clear_competitions_cache()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -745,16 +779,12 @@ def save_homepage_setting(key, data, is_visible=True):
 
 # ── Courses CRUD ──
 def get_all_courses(visible_only=False):
-    conn = get_conn()
-    cur  = conn.cursor()
-    sql = "SELECT * FROM courses"
+    """Uses 60-second in-memory CMS cache to eliminate DB connection latency on template rendering."""
+    cms_data = get_all_homepage_cms_data()
+    courses = cms_data.get('courses', [])
     if visible_only:
-        sql += " WHERE is_visible = TRUE"
-    sql += " ORDER BY display_order ASC, created_at ASC"
-    cur.execute(sql)
-    rows = cur.fetchall()
-    cur.close(); conn.close()
-    return [dict(r) for r in rows]
+        return [c for c in courses if c.get('is_visible', True)]
+    return courses
 
 
 def get_course(cid):
