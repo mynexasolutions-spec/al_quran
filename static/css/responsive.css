@@ -1,13 +1,46 @@
 /* ══════════════════════════════════════════════════════════
-   Al-Qur'an Global Institute — Responsive / Media Queries
+   Al-Qur'an Global Institute — Responsive Media Queries
    ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .hero {
+    padding: 160px 6% 60px;
+    min-height: auto;
+  }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .hero-text-col {
+    align-items: center;
+    text-align: center;
+  }
+  .hero-desc {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-trust-bar {
+    justify-content: center;
+  }
+  .hero-btns {
+    justify-content: center;
+  }
+  .hvc-text {
+    text-align: center;
+  }
+  .courses-popular-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
 
 @media (max-width: 960px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
   .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-img-wrap { order: -1; }
-  .about-full-img { max-width: 100%; border-radius: 8px; }
+  .about-full-img { max-width: 100%; border-radius: 12px; }
   .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .cb-grid { grid-template-columns: 1fr; }
   .cb-sidebar { order: -1; }
@@ -16,49 +49,65 @@
   .cta-text h2 { font-size: 1.5rem; }
   .features-grid { grid-template-columns: 1fr 1fr; }
   .social-grid { grid-template-columns: repeat(2, 1fr); }
-  .social-card { min-height: unset; }
+  .social-card { min-height: 280px; }
+  .pt-widget-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 660px) {
-  section { padding: 60px 5%; }
-  .about-strip { padding: 60px 5%; }
-  .hero { padding: 146px 5% 55px; }
-  .course-hero { padding: 146px 5% 55px; }
-  .hero-wm { display: none; }
+  section { padding: 50px 5%; }
+  .courses { padding: 50px 5%; }
+  .about-strip { padding: 50px 5%; }
+  .hero { padding: 145px 5% 45px; min-height: auto; }
+  .hero h1 { font-size: 2.1rem; line-height: 1.25; }
+  .hero-arabic-sub { font-size: 1.4rem; }
+  .hero-desc { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem; }
+  .hero-trust-bar { flex-direction: column; gap: 0.6rem; align-items: center; }
+  .hvc-floating-badge {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    margin-top: 12px;
+    box-sizing: border-box;
+  }
+  .course-hero { padding: 100px 5% 45px; }
   .stats-numbers { flex-direction: column; }
   .stats-strip { padding: 0; }
   .stat { border-right: none; border-bottom: 1px solid #E5E7EB; padding: 1.6rem 2rem; }
   .stat:last-child { border-bottom: 2px solid #E5E7EB; }
-  .stat-num { font-size: 2rem; }
+  .stat-num { font-size: 2.2rem; }
   .stats-trust-bar { gap: 1.1rem; padding: 1.2rem 5%; flex-direction: column; align-items: flex-start; }
-  .hero-logo-row { flex-direction: column; align-items: center; gap: .65rem; }
   .form-row { grid-template-columns: 1fr; }
-  .highlights-grid { grid-template-columns: 1fr 1fr; }
-  .oc-grid { grid-template-columns: 1fr 1fr; }
+  .courses-popular-grid { grid-template-columns: 1fr; }
+  .highlights-grid { grid-template-columns: 1fr; }
+  .oc-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
-  /* carousel: hide arrows, 1 card, swipe */
+  .pt-times-row { grid-template-columns: repeat(3, 1fr); }
+  .social-grid { grid-template-columns: 1fr; }
+  
   .rev-arrow { display: none; }
   .reviews-carousel { gap: 0; }
   .reviews-track { gap: 0; }
-  .review-card { flex: 0 0 100%; }
-  .social-grid { grid-template-columns: 1fr; }
+  .new-review-card { flex: 0 0 100%; }
+}
+
+@media (max-width: 480px) {
+  .pt-times-row { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 430px) {
-  .hero h1, .course-hero h1 { font-size: 2.1rem; }
+  .hero h1, .course-hero h1 { font-size: 2rem; }
   .hero-btns, .ch-btns { flex-direction: column; }
   .btn-primary, .btn-outline { width: 100%; text-align: center; }
   .courses-grid { grid-template-columns: 1fr; }
   .highlights-grid, .oc-grid { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: 1fr; }
-  .social-grid { grid-template-columns: 1fr; }
   .cta-text h2 { font-size: 1.3rem; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   Urdu / Arabic script — global line-height & spacing fixes
-   Urdu glyphs with diacritics need more vertical room than
-   Latin; without this lines visually overlap on all screens.
+   Urdu / Arabic script line-height & typography tuning
    ══════════════════════════════════════════════════════════ */
 body.lang-ur {
   line-height: 1.85;
@@ -91,11 +140,6 @@ body.lang-ur .course-card p,
 body.lang-ur label {
   line-height: 2;
 }
-body.lang-ur .ch-badge {
-  line-height: 1.6;
-  padding-top: .35rem;
-  padding-bottom: .35rem;
-}
 body.lang-ur .hero-badge {
   font-size: 1.08rem;
   letter-spacing: 0;
@@ -103,63 +147,4 @@ body.lang-ur .hero-badge {
   line-height: 2;
   padding: .65rem 2rem;
   text-align: center;
-  word-spacing: .35rem;
-}
-body.lang-ur .hero h1 em {
-  font-style: normal;
-  font-size: 1.15em;
-}
-body.lang-ur .course-cat {
-  font-size: .82rem;
-  letter-spacing: 0;
-  text-transform: none;
-  line-height: 1.7;
-}
-body.lang-ur .hl-card p {
-  font-size: 1.02rem;
-  line-height: 2;
-}
-body.lang-ur .fg label {
-  font-size: 1.1rem;
-  letter-spacing: 0;
-  text-transform: none;
-  line-height: 1.8;
-}
-body.lang-ur .footer-logo-text small {
-  font-size: 1rem;
-  letter-spacing: 0;
-  text-transform: none;
-  opacity: .85;
-}
-body.lang-ur .ch-back {
-  font-family: 'Amiri', serif;
-  font-size: 1.54rem;   /* 2× the default .77rem */
-  letter-spacing: 0;
-  text-transform: none;
-  line-height: 2;
-}
-body.lang-ur .ch-cat {
-  font-family: 'Amiri', serif;
-  font-size: 1.36rem;   /* 2× the default .68rem */
-  letter-spacing: 0;
-  text-transform: none;
-  line-height: 1.8;
-  padding: .5rem 1.1rem;
-}
-
-/* ── Phone-only Urdu hero badge spacing ── */
-@media (max-width: 660px) {
-  body.lang-ur .hero-badge {
-    line-height: 2.4;
-    padding: .8rem 1.6rem;
-    margin-bottom: 2rem;
-  }
-  body.lang-ur .hero h1 em {
-    display: block;
-    margin-top: .75rem;
-  }
-  body.lang-ur .hero > .hero-content p {
-    line-height: 2.5;
-    font-size: 1.08rem;
-  }
 }
