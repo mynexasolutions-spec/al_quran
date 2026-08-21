@@ -6,699 +6,292 @@
 <!-- ══ HERO ══ -->
 {% if hero_visible %}
 <section class="hero" id="home">
-  <div class="hero-wm">&#x627;&#x644;&#x642;&#x631;&#x622;&#x646;</div>
-  <div class="hero-content">
+  <div class="hero-container">
+    <div class="hero-grid">
+      
+      <!-- Left Column: Value Prop & CTAs -->
+      <div class="hero-text-col">
+        {% if hero.badge %}
+        <div class="hero-badge-wrap">
+          <span class="hero-badge">
+            <svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            {{ hero.badge | safe }}
+          </span>
+        </div>
+        {% endif %}
 
-    <div class="hero-logo-row">
-      <img src="{{ hero.image_url if hero.image_url else url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
-      <div class="hero-inst">
-        <strong>Al-Qur'an Global Institute</strong>
-        <span>{{ hero.sub_title if hero.sub_title else 'Excellence in Islamic and Language Education' }}</span>
+        <h1><span>{{ hero.title if hero.title else t.heroH1Line1 }}</span></h1>
+
+        {% if hero.sub_title %}<span class="hero-subtitle-tag">{{ hero.sub_title }}</span>{% endif %}
+
+        {% if hero.arabic_heading %}<span class="hero-arabic-sub">{{ hero.arabic_heading }}</span>{% endif %}
+
+        <p class="hero-desc">{{ hero.description if hero.description else t.heroP | safe }}</p>
+
+        <div class="hero-btns">
+          {% if hero.primary_cta_text %}
+          <a href="{{ hero.primary_cta_url or '#contact' }}" class="btn-primary hero-btn-main">
+            <span>{{ hero.primary_cta_text }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          {% endif %}
+          {% if hero.secondary_cta_text %}
+          <a href="{{ hero.secondary_cta_url or 'https://wa.me/919045520249' }}" target="_blank" rel="noopener" class="btn-outline hero-btn-sec">
+            <span>{{ hero.secondary_cta_text }}</span>
+          </a>
+          {% endif %}
+        </div>
+
+        <div class="hero-trust-bar">
+          <div class="htb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Live 1-on-1 Classes</span>
+          </div>
+          <div class="htb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Certified Male & Female Tutors</span>
+          </div>
+          <div class="htb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Free Trial Class</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Right Column: Visual Showcase -->
+      <div class="hero-visual-col">
+        <div class="hero-visual-card">
+          <img src="{{ hero.image_url if hero.image_url else url_for('static', filename='images/Banner_image.webp') }}" alt="Al-Qur'an Global Institute Learning" class="hvc-img"/>
+          <div class="hvc-floating-badge">
+            <div class="hvc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div class="hvc-text">
+              <strong>1-on-1 Personal Live Class</strong>
+              <span>Flexible Scheduling Worldwide</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    {% if hero.badge %}<span class="hero-badge">{{ hero.badge | safe }}</span>{% endif %}
-
-    <h1><span>{{ hero.title if hero.title else t.heroH1Line1 }}</span></h1>
-
-    {% if hero.arabic_heading %}<span class="hero-arabic-sub">{{ hero.arabic_heading }}</span>{% endif %}
-
-    <p>{{ hero.description if hero.description else t.heroP | safe }}</p>
-
-    <div class="hero-btns">
-      {% if hero.primary_cta_text %}<a href="{{ hero.primary_cta_url or '#courses' }}" class="btn-primary">{{ hero.primary_cta_text }}</a>{% endif %}
-      {% if hero.secondary_cta_text %}<a href="{{ hero.secondary_cta_url or 'https://wa.me/919045520249' }}" target="_blank" rel="noopener" class="btn-outline">{{ hero.secondary_cta_text }}</a>{% endif %}
-    </div>
-
   </div>
 </section>
 {% endif %}
 
-<!-- ══ PRAYER TIMES & ISLAMIC DATE WIDGET ══ -->
-<style>
-  .pt-widget-section {
-    padding: 3.5rem 8% 1rem;
-    background: #fafbfb;
-  }
-  .pt-widget-grid {
-    display: grid;
-    grid-template-columns: 7.2fr 2.8fr;
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .pt-card-left {
-    background: #fcfbfa;
-    border: 1.5px solid #edf1ef;
-    border-radius: 16px;
-    padding: 1.6rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-  }
-  .pt-card-right {
-    background: linear-gradient(135deg, #fdf8ef 0%, #f6e8cc 100%);
-    border: 1.5px solid #eae2d1;
-    border-radius: 16px;
-    padding: 1.6rem;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-  }
-  .pt-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.35rem;
-  }
-  .pt-header h3 {
-    font-size: 1.22rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .pt-view-all {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #4b5563;
-    text-decoration: none;
-    border: 1.5px solid #ddd;
-    padding: 0.35rem 0.8rem;
-    border-radius: 6px;
-    background: #fff;
-    transition: all 0.25s;
-  }
-  .pt-view-all:hover {
-    background: #f9fafb;
-    border-color: #bbb;
-  }
-  .pt-times-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-  }
-  .pt-time-block {
-    background: #fff;
-    border: 1px solid #eef2f0;
-    border-radius: 10px;
-    padding: 0.95rem 0.5rem;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .pt-icon-wrap {
-    font-size: 1.5rem;
-    color: var(--teal-main);
-  }
-  .pt-name {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #4b5563;
-  }
-  .pt-arrow {
-    font-size: 0.8rem;
-    color: #9ca3af;
-    line-height: 1;
-  }
-  .pt-time-val {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: #1f2937;
-  }
-  .pt-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #f3f4f6;
-    padding-top: 0.85rem;
-    font-size: 0.85rem;
-    color: #4b5563;
-  }
-  .pt-location {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-weight: 600;
-  }
-  .pt-notify {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .pt-switch {
-    position: relative;
-    display: inline-block;
-    width: 38px;
-    height: 20px;
-  }
-  .pt-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .pt-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 20px;
-  }
-  .pt-slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  input:checked + .pt-slider {
-    background-color: #064E3B;
-  }
-  input:checked + .pt-slider:before {
-    transform: translateX(18px);
-  }
-  .pt-date-body {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    z-index: 2;
-  }
-  .pt-moon-icon {
-    font-size: 2.3rem;
-    color: #b45309;
-    line-height: 1;
-  }
-  .pt-date-text-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  .pt-hijri {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1f2937;
-  }
-  .pt-gregorian {
-    font-size: 0.8rem;
-    color: #4b5563;
-    font-weight: 500;
-  }
-  .pt-bg-minarets {
-    position: absolute;
-    bottom: -10px;
-    right: -10px;
-    opacity: 0.08;
-    width: 140px;
-    pointer-events: none;
-  }
-  
-  @media (max-width: 900px) {
-    .pt-widget-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  @media (max-width: 600px) {
-    .pt-times-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .pt-footer {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.6rem;
-    }
-  }
-</style>
 
-<div class="pt-widget-section">
+<!-- ══ PRAYER TIMES & ISLAMIC DATE WIDGET ══ -->
+<section class="pt-widget-section">
   <div class="pt-widget-grid">
+    
+    <!-- Prayer Times Card -->
     <div class="pt-card-left">
       <div class="pt-header">
-        <h3>📅 Today's Prayer Times</h3>
+        <h3>
+          <svg class="pt-hdr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Today's Prayer Times
+        </h3>
       </div>
       
       <div class="pt-times-row">
+        <!-- Fajr -->
         <div class="pt-time-block">
-          <div class="pt-icon-wrap">🌅</div>
+          <div class="pt-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v6"/><path d="M4.93 10.93l4.24 4.24"/><path d="M2 18h20"/><path d="M20 10l-4 4"/><path d="M16 4l-4 4"/>
+            </svg>
+          </div>
           <div class="pt-name">Fajr</div>
-          <div class="pt-arrow">&darr;</div>
           <div class="pt-time-val" id="time-fajr">04:45 AM</div>
         </div>
+
+        <!-- Dhuhr -->
         <div class="pt-time-block">
-          <div class="pt-icon-wrap">☀️</div>
+          <div class="pt-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            </svg>
+          </div>
           <div class="pt-name">Dhuhr</div>
-          <div class="pt-arrow">&darr;</div>
           <div class="pt-time-val" id="time-dhuhr">12:30 PM</div>
         </div>
+
+        <!-- Asr -->
         <div class="pt-time-block">
-          <div class="pt-icon-wrap">🌤️</div>
+          <div class="pt-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M1 12h4"/>
+              <path d="M17 12a5 5 0 0 0-9.9 1 3.5 3.5 0 0 0 .4 7h9.5a4.5 4.5 0 0 0 0-9z"/>
+            </svg>
+          </div>
           <div class="pt-name">Asr</div>
-          <div class="pt-arrow">&darr;</div>
           <div class="pt-time-val" id="time-asr">04:15 PM</div>
         </div>
+
+        <!-- Maghrib -->
         <div class="pt-time-block">
-          <div class="pt-icon-wrap">🕌</div>
+          <div class="pt-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 10V2"/><path d="m4.93 10.93 4.24-4.24"/><path d="M2 18h20"/><path d="M20 10l-4-4"/>
+            </svg>
+          </div>
           <div class="pt-name">Maghrib</div>
-          <div class="pt-arrow">&uarr;</div>
           <div class="pt-time-val" id="time-maghrib">06:45 PM</div>
         </div>
+
+        <!-- Isha -->
         <div class="pt-time-block">
-          <div class="pt-icon-wrap">🌙</div>
+          <div class="pt-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </div>
           <div class="pt-name">Isha</div>
-          <div class="pt-arrow">&darr;</div>
           <div class="pt-time-val" id="time-isha">08:15 PM</div>
         </div>
       </div>
       
       <div class="pt-footer">
         <div class="pt-location">
-          <span>📍</span> <span id="pt-location-text">New York, USA</span>
+          <svg class="pt-loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span id="pt-location-text">London, UK</span>
         </div>
       </div>
     </div>
     
+    <!-- Islamic Date Card -->
     <div class="pt-card-right">
       <div class="pt-header">
-        <h3>📅 Islamic Date</h3>
+        <h3>
+          <svg class="pt-hdr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Islamic Date
+        </h3>
       </div>
       
       <div class="pt-date-body">
-        <div class="pt-moon-icon">🌙</div>
+        <div class="pt-moon-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </div>
         <div class="pt-date-text-wrap">
           <div class="pt-hijri" id="islamic-date-text">16 Dhu Al-Qa'dah 1445</div>
           <div class="pt-gregorian" id="gregorian-date-text">Wednesday, 14 May 2025</div>
         </div>
       </div>
-      
-      <svg class="pt-bg-minarets" viewBox="0 0 100 100" fill="currentColor">
-        <path d="M10,90 L20,90 L20,40 L15,35 L15,10 L25,10 L25,35 L20,40 L20,90 L90,90 M35,90 L45,90 L45,20 L40,15 L40,5 L50,5 L50,15 L45,20 L45,90 M60,90 L70,90 L70,30 L65,25 L65,8 L75,8 L75,25 L70,30 L70,90" opacity="0.4"/>
-      </svg>
     </div>
+
   </div>
-</div>
+</section>
 
-<script>
-  (function() {
-    var defaultLat = "51.5194682";
-    var defaultLng = "-0.1360365";
-    var defaultTz = "UTC";
-    var defaultCity = "London";
-    var defaultCountry = "UK";
-
-    // Attempt to geolocate via ipapi.co (no prompt required, reliable, fast)
-    fetch('https://ipapi.co/json/')
-      .then(function(res) { return res.json(); })
-      .then(function(loc) {
-        if (loc && loc.latitude && loc.longitude) {
-          fetchTimes(loc.latitude, loc.longitude, loc.timezone || defaultTz, loc.city || defaultCity, loc.country_name || defaultCountry);
-        } else {
-          useFallback();
-        }
-      })
-      .catch(function() {
-        useFallback();
-      });
-
-    function useFallback() {
-      // If ipapi fails, try Intl timezone to guess city/country
-      var city = defaultCity;
-      var country = defaultCountry;
-      var lat = defaultLat;
-      var lng = defaultLng;
-      var tz = defaultTz;
-
-      try {
-        var resolvedTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        if (resolvedTz) {
-          tz = resolvedTz;
-          if (tz.indexOf('/') > -1) {
-            city = tz.split('/')[1].replace('_', ' ');
-            var continent = tz.split('/')[0];
-            if (continent === 'Asia') {
-              country = 'India';
-              lat = '22.5726'; // Calcutta coordinates as default for Asia
-              lng = '88.3639';
-            } else if (continent === 'Europe') {
-              country = 'UK';
-            } else if (continent === 'America') {
-              country = 'USA';
-              lat = '40.7128';
-              lng = '-74.0060';
-            }
-          }
-        }
-      } catch(e) {}
-      fetchTimes(lat, lng, tz, city, country);
-    }
-
-    function fetchTimes(lat, lng, tz, city, country) {
-      var cityDisp = document.getElementById('pt-location-text');
-      if (cityDisp) cityDisp.innerText = city + ", " + country;
-
-      var url = '/api/prayer-times?latitude=' + lat + '&longitude=' + lng + '&timezone=' + encodeURIComponent(tz);
-      
-      fetch(url)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (data && data.code === 200) {
-            var timings = data.data.timings;
-            document.getElementById('time-fajr').innerText = formatTime(timings.Fajr);
-            document.getElementById('time-dhuhr').innerText = formatTime(timings.Dhuhr);
-            document.getElementById('time-asr').innerText = formatTime(timings.Asr);
-            document.getElementById('time-maghrib').innerText = formatTime(timings.Maghrib);
-            document.getElementById('time-isha').innerText = formatTime(timings.Isha);
-
-            var hijri = data.data.date.hijri;
-            var hijriStr = hijri.day + ' ' + hijri.month.en + ' ' + hijri.year;
-            document.getElementById('islamic-date-text').innerText = hijriStr;
-
-            var gregorian = data.data.date.gregorian;
-            document.getElementById('gregorian-date-text').innerText = gregorian.weekday.en + ', ' + gregorian.day + ' ' + gregorian.month.en + ' ' + gregorian.year;
-          }
-        })
-        .catch(function(err) {
-          console.error("Prayer times fetch failed:", err);
-        });
-    }
-
-    function formatTime(t24) {
-      if (!t24) return '';
-      // Strip any extra text/timezones if present
-      var parts = t24.split(' ')[0].split(':');
-      var hrs = parseInt(parts[0]);
-      var mins = parts[1];
-      var ampm = hrs >= 12 ? 'PM' : 'AM';
-      hrs = hrs % 12;
-      if (hrs === 0) hrs = 12;
-      var hrsStr = hrs < 10 ? '0' + hrs : hrs;
-      return hrsStr + ':' + mins + ' ' + ampm;
-    }
-  })();
-</script>
-
-<!-- ══ COURSES OVERVIEW ══ -->
+<!-- ══ OUR POPULAR ONLINE COURSES (6-CARD GRID) ══ -->
 {% if courses_hdr_visible %}
-<style>
-  .courses-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2.2rem;
-    border-bottom: 1.5px solid #eaeaea;
-    padding-bottom: 1rem;
-  }
-  .courses-header-row h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
-    font-weight: 700;
-    color: #111;
-    margin: 0;
-  }
-  .view-all-link {
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--teal-main);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.25s;
-  }
-  .view-all-link:hover {
-    color: var(--teal-dark) !important;
-  }
-  .courses-carousel-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  .courses-track-outer {
-    flex: 1;
-    overflow: hidden;
-  }
-  .courses-track {
-    display: flex;
-    gap: 24px;
-    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-  }
-  .new-course-card-wrap {
-    flex: 0 0 calc((100% - 72px) / 4);
-    min-width: 250px;
-    box-sizing: border-box;
-  }
-  .new-course-card {
-    display: block;
-    background: #fff;
-    border: 1.5px solid #eef2f0;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    height: 100%;
-  }
+<section class="courses" id="courses">
+  <div class="center-hdr">
+    <span class="section-tag">{{ t.coursesTag if t.coursesTag else 'Structured Learning' }}</span>
+    <h2 class="section-title"><span>Our Popular</span> <span style="color:var(--gold)">Online Courses</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">Master Quranic recitation, Tajweed, Arabic language, and academic subjects with certified tutors in 1-on-1 personalized live classes.</p>
+  </div>
 
-  .ncc-img-wrap {
-    height: 170px;
-    overflow: hidden;
-    background: #eaeaea;
-    position: relative;
-  }
-  .ncc-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.35s;
-  }
-  .ncc-body {
-    padding: 1.25rem 1.4rem 1.4rem;
-  }
-  .ncc-body h3 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 0.82rem;
-    line-height: 1.35;
-    height: 2.7rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .ncc-meta {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.85rem;
-    color: #4b5563;
-    align-items: center;
-    border-top: 1px solid #f3f4f6;
-    padding-top: 0.8rem;
-  }
-  .ncc-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-  .ncc-icon {
-    width: 15px;
-    height: 15px;
-    stroke: #4b5563;
-    fill: none;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .course-arrow {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #fff;
-    border: 1.5px solid #ddd;
-    color: #333;
-    font-size: 1.8rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.25s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    z-index: 10;
-  }
-  .course-arrow:hover:not(:disabled) {
-    background: var(--teal-main) !important;
-    color: #fff !important;
-    border-color: var(--teal-main) !important;
-  }
-  .course-arrow:disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-  .course-dots {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.55rem;
-    margin-top: 1.8rem;
-    width: 100%;
-  }
-  .course-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: rgba(5,150,105,0.2);
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    flex-shrink: 0;
-    display: block;
-    transition: background 0.25s, transform 0.25s;
-  }
-  .course-dot.active {
-    background: var(--teal-main);
-    transform: scale(1.3);
-  }
-  @media (max-width: 1100px) {
-    .new-course-card-wrap {
-      flex: 0 0 calc((100% - 24px) / 2) !important;
-    }
-  }
-  @media (max-width: 768px) {
-    .courses-carousel-container {
-      display: block !important;
-      position: relative;
-    }
-    .course-arrow {
-      position: absolute !important;
-      top: 50% !important;
-      transform: translateY(-50%) !important;
-    }
-    .course-prev {
-      left: -15px !important;
-    }
-    .course-next {
-      right: -15px !important;
-    }
-    .courses-track-outer {
-      width: 100% !important;
-    }
-    .new-course-card-wrap {
-      flex: 0 0 100% !important;
-    }
-    .courses-header-row {
-      flex-direction: column;
-      align-items: flex-start !important;
-      gap: 0.5rem;
-    }
-  }
-  @media (max-width: 480px) {
-    .ncc-meta {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 0.5rem !important;
-    }
-    .course-dots {
-      gap: 0.35rem !important;
-    }
-    .course-dot {
-      width: 7px !important;
-      height: 7px !important;
-    }
-  }
-</style>
+  <div class="courses-popular-grid">
+    {% for course in courses[:6] %}
+    {% set cd = course.course_details or {} %}
+    {% set prefix = 'recitation' if course.slug == 'quran-recitation' else course.slug %}
+    {% set duration = cd.course_duration | default(t[prefix ~ 'Duration'], true) | default('Flexible', true) %}
+    {% set level = cd.course_eligibility | default(t[prefix ~ 'Eligibility'], true) | default('All Levels', true) %}
+    
+    <div class="ccp-card">
+      <a href="{{ url_for('course_detail', slug=course.slug) if course.slug else (course.link_url or url_for('index') + '#contact') }}" class="ccp-link">
+        <div class="ccp-img-wrap">
+          {% if course.image_url %}
+            <img src="{{ course.image_url }}" alt="{{ course.title }}" class="ccp-img" />
+          {% else %}
+            <div class="ccp-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+            </div>
+          {% endif %}
+          <span class="ccp-badge">Popular</span>
+        </div>
 
-<section class="courses" id="courses" style="background: var(--white); padding: 4.5rem 8%;">
-  <div class="courses-header-row">
-    <h2>Our Popular Online Courses</h2>
-    <a href="{{ url_for('all_courses') }}" class="view-all-link">
-      View All Courses <span>&rarr;</span>
+        <div class="ccp-body">
+          <h3>{{ course.title }}</h3>
+          
+          <div class="ccp-meta">
+            <span class="ccp-meta-item">
+              <svg class="ccp-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{ duration }}
+            </span>
+            <span class="ccp-meta-item">
+              <svg class="ccp-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              {{ level }}
+            </span>
+          </div>
+
+          <div class="ccp-cta-link">
+            <span>Course Overview</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="courses-all-cta">
+    <a href="{{ url_for('all_courses') }}" class="btn-primary">
+      <span>View All Courses</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
     </a>
   </div>
-
-  <div class="courses-carousel-container">
-    <button type="button" class="course-arrow course-prev" id="course-prev" aria-label="Previous courses">&#8249;</button>
-    
-    <div class="courses-track-outer" id="course-track-outer">
-      <div class="courses-track" id="course-track">
-        {% for course in courses %}
-        {% set cd = course.course_details or {} %}
-        {% set prefix = 'recitation' if course.slug == 'quran-recitation' else course.slug %}
-        {% set duration = cd.course_duration | default(t[prefix ~ 'Duration'], true) | default('Flexible', true) %}
-        {% set level = cd.course_eligibility | default(t[prefix ~ 'Eligibility'], true) | default('All Levels', true) %}
-        
-        <div class="new-course-card-wrap">
-          <a href="{{ url_for('course_detail', slug=course.slug) if course.slug else (course.link_url or url_for('index') + '#contact') }}" class="new-course-card">
-            <div class="ncc-img-wrap">
-              {% if course.image_url %}
-                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="ncc-img" />
-              {% else %}
-                <div style="width:100%; height:100%; background:var(--teal-dark); display:flex; align-items:center; justify-content:center; color:#fff; font-size:3rem;">📖</div>
-              {% endif %}
-            </div>
-            <div class="ncc-body">
-              <h3>{{ course.title }}</h3>
-              <div class="ncc-meta">
-                <span class="ncc-meta-item">
-                  <svg class="ncc-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  {{ duration }}
-                </span>
-                <span class="ncc-meta-item">
-                  <svg class="ncc-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                  {{ level }}
-                </span>
-              </div>
-            </div>
-          </a>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-    
-    <button type="button" class="course-arrow course-next" id="course-next" aria-label="Next courses">&#8250;</button>
-  </div>
-  <div class="course-dots" id="course-dots"></div>
 </section>
 {% endif %}
 
 
 <!-- ══ ACADEMIC SUBJECTS ══ -->
 {% if academic_hdr_visible and academic_subjects %}
-<section class="courses" id="academic-subjects" style="background: #f8faf9; padding-top: 2rem;">
+<section class="courses academic-section" id="academic-subjects">
   <div class="center-hdr">
-    <span class="section-tag">{{ academic_hdr.tag if academic_hdr.tag else 'School Curriculum Support' }}</span>
+    <span class="section-tag">{{ academic_hdr.tag if academic_hdr.tag else 'School Support' }}</span>
     <h2 class="section-title"><span>{{ academic_hdr.title if academic_hdr.title else 'Academic' }}</span> <span style="color:var(--gold)">{{ academic_hdr.title_span if academic_hdr.title_span else 'Subjects Tuition' }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub">{{ academic_hdr.description if academic_hdr.description else '' }}</p>
+    <p class="section-sub">{{ academic_hdr.description if academic_hdr.description else 'Comprehensive subject guidance designed to help school students excel in STEM and core academics.' }}</p>
   </div>
 
   <div class="courses-grid">
     {% for sub in academic_subjects %}
     <div class="course-card course-card--no-link">
       {% if sub.icon_or_image and (sub.icon_or_image.startswith('http') or sub.icon_or_image.startswith('/') or '.' in sub.icon_or_image or '/' in sub.icon_or_image) %}
-        <img src="{{ sub.icon_or_image }}" alt="{{ sub.title }}" class="course-img" style="width: 100%; height: 180px; object-fit: cover; display: block;"/>
+        <img src="{{ sub.icon_or_image }}" alt="{{ sub.title }}" class="course-img"/>
       {% else %}
-        <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="{{ sub.title }}" class="course-img" style="width: 100%; height: 180px; object-fit: cover; display: block;"/>
+        <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="{{ sub.title }}" class="course-img"/>
       {% endif %}
       <div class="course-card-body">
         <span class="course-cat">Academic Subject</span>
@@ -709,7 +302,7 @@
             <span class="badge">{{ b }}</span>
           {% endfor %}
         </div>
-        <a href="{{ sub.cta_url or '#contact' }}" class="course-link" style="text-decoration:none;">{{ sub.cta_text or 'Enroll via Contact' }} <span class="course-link-arrow">&#8594;</span></a>
+        <a href="{{ sub.cta_url or '#contact' }}" class="course-link">{{ sub.cta_text or 'Enroll via Contact' }} &rarr;</a>
       </div>
     </div>
     {% endfor %}
@@ -718,28 +311,48 @@
 {% endif %}
 
 
-<!-- ══ STATS ══ -->
+<!-- ══ STATS & TRUST BAR ══ -->
 {% if stats %}
 <section class="stats-strip">
   <div class="stats-numbers">
     {% for st in stats %}
     <div class="stat">
       <span class="stat-num">{{ st.value }}</span>
-      <span class="stat-label">{{ st.icon or '' }} {{ st.label }}</span>
+      <span class="stat-label">{{ st.label }}</span>
     </div>
     {% endfor %}
   </div>
   <div class="stats-trust-bar">
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Certified Native Scholars</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Flexible 1-on-1 Classes</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Separated Female Tutors</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>Free Trial Class</span></div>
+    <div class="trust-item">
+      <span class="trust-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Certified Native Scholars</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Flexible 1-on-1 Classes</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Separated Female Tutors</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Free Trial Class</span>
+    </div>
   </div>
 </section>
 {% endif %}
 
 
-<!-- ══ ABOUT ══ -->
+<!-- ══ ABOUT STRIP ══ -->
 {% if about_visible %}
 <section class="about-strip" id="about">
   <div class="about-inner">
@@ -753,14 +366,35 @@
       <p class="section-sub">{{ about.description if about.description else t.aboutSub }}</p>
       <ul class="mission-list">
         {% for point in about.mission_points or [] %}
-          <li>{{ point }}</li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ point }}</span>
+          </li>
         {% else %}
-          <li>{{ t.aboutLi1 }}</li>
-          <li>{{ t.aboutLi2 }}</li>
-          <li>{{ t.aboutLi3 }}</li>
-          <li>{{ t.aboutLi4 }}</li>
-          <li>{{ t.aboutLi5 }}</li>
-          <li>{{ t.aboutLi6 }}</li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ t.aboutLi1 }}</span>
+          </li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ t.aboutLi2 }}</span>
+          </li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ t.aboutLi3 }}</span>
+          </li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ t.aboutLi4 }}</span>
+          </li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ t.aboutLi5 }}</span>
+          </li>
+          <li>
+            <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{{ t.aboutLi6 }}</span>
+          </li>
         {% endfor %}
       </ul>
     </div>
@@ -771,7 +405,6 @@
 
 <!-- ══ CTA BANNER ══ -->
 <section class="cta-banner">
-  <div class="cta-pattern"></div>
   <div class="cta-banner-inner">
     <div class="cta-text">
       <p class="cta-arabic">&#x644;&#x627; &#x62A;&#x62F;&#x639; &#x627;&#x644;&#x634;&#x64A;&#x637;&#x627;&#x646; &#x64A;&#x624;&#x62E;&#x631;&#x643;</p>
@@ -790,15 +423,19 @@
     <h2 class="section-title">{{ why_hdr.title if why_hdr.title else t.whyH2 }} <span>{{ why_hdr.title_span if why_hdr.title_span else t.whyH2Span }}</span></h2>
     <div class="divider"></div>
   </div>
-  <div class="features-grid">
 
+  <div class="features-grid">
     {% for ft in features %}
     <div class="feat-card">
       <div class="feat-img-wrap feat-img-wrap--{{ (loop.index0 % 4) + 1 }}">
         {% if ft.image_url %}
           <img src="{{ ft.image_url }}" alt="{{ ft.title }}" class="feat-img" onerror="this.style.display='none'">
         {% else %}
-          <div style="font-size: 3rem; text-align: center; padding: 1.5rem; color: var(--teal-dark);">{{ ft.icon or '⭐' }}</div>
+          <div class="feat-icon-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
         {% endif %}
       </div>
       <div class="feat-body">
@@ -809,7 +446,6 @@
     {% else %}
     <div style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No features currently added.</div>
     {% endfor %}
-
   </div>
 </section>
 {% endif %}
@@ -817,47 +453,7 @@
 
 <!-- ══ REVIEWS ══ -->
 {% if reviews_hdr_visible %}
-<style>
-
-  @media (max-width: 990px) {
-    .new-review-card {
-      flex: 0 0 calc((100% - 28px) / 2) !important;
-    }
-  }
-  @media (max-width: 768px) {
-    .reviews-carousel {
-      display: block !important;
-      position: relative;
-    }
-    .rev-arrow {
-      position: absolute !important;
-      top: 50% !important;
-      transform: translateY(-50%) !important;
-    }
-    .rev-prev {
-      left: -15px !important;
-    }
-    .rev-next {
-      right: -15px !important;
-    }
-    .reviews-track-outer {
-      width: 100% !important;
-    }
-    .new-review-card {
-      flex: 0 0 100% !important;
-    }
-  }
-  @media (max-width: 480px) {
-    .rev-dots {
-      gap: 0.35rem !important;
-    }
-    .rev-dot {
-      width: 7px !important;
-      height: 7px !important;
-    }
-  }
-</style>
-<section class="reviews" id="reviews" style="background: var(--white); padding: 4.5rem 8%;">
+<section class="reviews" id="reviews">
   <div class="center-hdr" style="margin-bottom: 3rem;">
     <span class="section-tag">{{ reviews_hdr.tag if reviews_hdr.tag else t.reviewsTag }}</span>
     <h2 class="section-title"><span>{{ reviews_hdr.title if reviews_hdr.title else t.reviewsH2 }}</span> <span>{{ reviews_hdr.title_span if reviews_hdr.title_span else t.reviewsH2Span }}</span></h2>
@@ -871,53 +467,54 @@
     {% endfor %}{% endif %}
   {% endwith %}
 
-  <div class="reviews-carousel" style="position: relative; display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem;">
-    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews" style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1.5px solid #ddd; color: #333; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); z-index: 10;">&#8249;</button>
+  <div class="reviews-carousel">
+    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews">&#8249;</button>
     
-    <div class="reviews-track-outer" id="rev-track-outer" style="flex: 1; overflow: hidden;">
-      <div class="reviews-track" id="rev-track" style="display: flex; gap: 28px; transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform;">
+    <div class="reviews-track-outer" id="rev-track-outer">
+      <div class="reviews-track" id="rev-track">
         {% for rev in reviews %}
-          <div class="new-review-card" style="flex: 0 0 calc((100% - 56px) / 3); min-width: 280px; background: #fff; border: 1.5px solid #eef2f0; border-radius: 16px; padding: 1.8rem; box-shadow: 0 4px 16px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; transition: transform 0.3s, box-shadow 0.3s;">
+          <div class="new-review-card">
             <div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: #1f2937; margin: 0 0 0.8rem; line-height: 1.35; height: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                {{ rev.course or 'Excellent Guidance' }}
-              </h3>
+              <h3>{{ rev.course or 'Excellent Guidance' }}</h3>
               
-              <div class="rev-text-wrap" style="margin-bottom: 1rem;">
+              <div class="rev-text-wrap">
                 {% if rev.review_text | length > 120 %}
-                  <p class="rt-short" style="font-size: 0.93rem; color: #4b5563; line-height: 1.7; margin: 0;">
+                  <p class="rt-short">
                     {{ rev.review_text[:110] }}...
-                    <button type="button" class="read-more-btn" onclick="expandReview(this)" style="background: none; border: none; color: var(--teal-main); font-weight: 700; font-size: 0.88rem; cursor: pointer; padding: 0; margin-left: 4px;">Read More</button>
+                    <button type="button" class="read-more-btn" onclick="expandReview(this)">Read More</button>
                   </p>
-                  <p class="rt-full" style="font-size: 0.93rem; color: #4b5563; line-height: 1.7; margin: 0; display: none;">
+                  <p class="rt-full" style="display: none;">
                     {{ rev.review_text }}
-                    <button type="button" class="read-less-btn" onclick="collapseReview(this)" style="background: none; border: none; color: var(--teal-main); font-weight: 700; font-size: 0.88rem; cursor: pointer; padding: 0; margin-left: 4px;">Read Less</button>
+                    <button type="button" class="read-less-btn" onclick="collapseReview(this)">Read Less</button>
                   </p>
                 {% else %}
-                  <p style="font-size: 0.93rem; color: #4b5563; line-height: 1.7; margin: 0;">{{ rev.review_text }}</p>
+                  <p>{{ rev.review_text }}</p>
                 {% endif %}
               </div>
             </div>
             
             <div>
               <!-- Stars -->
-              <div class="rs" style="color: #f59e0b; font-size: 1rem; margin-bottom: 0.65rem; letter-spacing: 2px;">
+              <div class="rs">
                 {% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}
               </div>
               
               <!-- Verified Badge -->
-              <div style="margin-bottom: 1.25rem;">
-                <span style="font-size: 0.76rem; font-weight: 600; color: #5f7a70; background: #f0f7f4; padding: 0.25rem 0.7rem; border-radius: 20px; letter-spacing: 0.3px;">Verified Student</span>
+              <div class="rev-verified-wrap">
+                <span class="rev-verified-tag">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  Verified Student
+                </span>
               </div>
               
               <!-- Reviewer Metadata -->
-              <div style="display: flex; align-items: center; gap: 0.8rem; border-top: 1px solid #f3f4f6; padding-top: 0.85rem;">
-                <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--teal-light), var(--teal-main)); display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 700; font-size: 0.88rem; flex-shrink: 0;">
-                  {{ rev.name[:2].upper() }}
-                </div>
+              <div class="rev-user">
+                <div class="ra">{{ rev.name[:2].upper() }}</div>
                 <div>
-                  <h4 style="font-size: 0.92rem; font-weight: 700; color: #1f2937; margin: 0;">{{ rev.name }}</h4>
-                  <p style="font-size: 0.76rem; color: #6b7280; margin: 0;">{{ rev.location or 'Global' }} &bull; Student</p>
+                  <h4 class="rn">{{ rev.name }}</h4>
+                  <p class="rl">{{ rev.location or 'Global' }} &bull; Student</p>
                 </div>
               </div>
             </div>
@@ -926,13 +523,13 @@
       </div>
     </div>
     
-    <button class="rev-arrow rev-next" id="rev-next" aria-label="Next reviews" style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1.5px solid #ddd; color: #333; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); z-index: 10;">&#8250;</button>
+    <button class="rev-arrow rev-next" id="rev-next" aria-label="Next reviews">&#8250;</button>
   </div>
 
   <div class="rev-dots" id="rev-dots"></div>
 
   <!-- Share your review CTA -->
-  <div class="rev-submit-cta" style="margin-top: 3.5rem;">
+  <div class="rev-submit-cta">
     <p>{{ t.reviewCta }}</p>
     <button type="button" id="openReviewModal" class="btn-primary">{{ t.reviewCtaBtn }}</button>
   </div>
@@ -998,7 +595,6 @@
 
 <!-- ══ COMPETITIONS PREVIEW ══ -->
 <section class="comp-preview" id="competitions">
-
   <div class="center-hdr">
     <span class="section-tag">{{ t.compTag | safe }}</span>
     <h2 class="section-title"><span>{{ t.compH2 }}</span> <span>{{ t.compH2Span }}</span></h2>
@@ -1007,7 +603,6 @@
   </div>
 
   <div class="comp-preview-grid">
-
     {% for comp in featured_comps %}
     <div class="comp-prev-card">
       <div class="comp-prev-img-wrap comp-prev--{{ comp.color_theme or 'teal' }}">
@@ -1028,7 +623,6 @@
       {{ t.compComingSoon }}
     </div>
     {% endfor %}
-
   </div>
 
   <div class="comp-preview-cta">
@@ -1047,16 +641,19 @@
   </div>
 
   <div class="faq-list">
-
     {% for fq in faqs %}
     <div class="faq-item {% if loop.first %}open{% endif %}">
-      <div class="faq-q">{{ fq.question }}<span class="faq-icon">+</span></div>
+      <div class="faq-q">
+        <span>{{ fq.question }}</span>
+        <svg class="faq-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
       <div class="faq-a">{{ fq.answer }}</div>
     </div>
     {% else %}
     <div style="text-align:center; color:#888;">No FAQs currently added.</div>
     {% endfor %}
-
   </div>
 </section>
 {% endif %}
@@ -1072,7 +669,6 @@
   </div>
 
   <div class="social-grid">
-
     <!-- Instagram -->
     <a href="https://www.instagram.com/alquranglobalinstitute?igsh=MW02Zjdia20zNG1xbA==" target="_blank" rel="noopener" class="social-card social-card--instagram">
       <div class="social-card-bg"></div>
@@ -1140,12 +736,11 @@
         <div class="social-follow-btn">{{ t.waBtn }}</div>
       </div>
     </a>
-
   </div>
 </section>
 
 
-<!-- ══ CONTACT ══ -->
+<!-- ══ CONTACT & TRIAL FORM ══ -->
 <section class="contact" id="contact">
   <span class="section-tag">{{ t.contactTag }}</span>
   <h2 class="section-title"><span>{{ t.contactH2 }}</span> <span>{{ t.contactH2Span }}</span></h2>
@@ -1155,20 +750,44 @@
     <div class="ci">
       <h3>{{ t.contactCiH }}</h3>
       <p>{{ t.contactCiP }}</p>
+      
       <div class="cd">
-        <div class="cdi">&#x1F4DE;</div>
+        <div class="cdi">
+          <svg class="cd-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
         <div class="cdt"><strong>{{ t.contactPhone }}</strong>+91 90455 20249</div>
       </div>
+
       <div class="cd">
-        <div class="cdi">&#x2709;&#xFE0F;</div>
+        <div class="cdi">
+          <svg class="cd-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
         <div class="cdt"><strong>{{ t.contactEmail }}</strong>alquranglobalinstitute@gmail.com</div>
       </div>
+
       <div class="cd">
-        <div class="cdi">&#x1F4BB;</div>
+        <div class="cdi">
+          <svg class="cd-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
         <div class="cdt"><strong>{{ t.contactMode }}</strong><span>{{ t.contactModeVal }}</span></div>
       </div>
+
       <div class="cd">
-        <div class="cdi">&#x1F550;</div>
+        <div class="cdi">
+          <svg class="cd-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
         <div class="cdt"><strong>{{ t.contactAvail }}</strong><span>{{ t.contactAvailVal }}</span></div>
       </div>
     </div>
@@ -1226,10 +845,12 @@
   var ratingInp = document.getElementById('revRatingInput');
 
   function openModal() {
+    if (!overlay) return;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
   function closeModal() {
+    if (!overlay) return;
     overlay.classList.remove('open');
     document.body.style.overflow = '';
   }
@@ -1267,34 +888,34 @@
   }, 6000);
 })();
 
-/* Courses Carousel Slider */
+/* Reviews Slider */
 (function() {
-  var track = document.getElementById('course-track');
-  var prevBtn = document.getElementById('course-prev');
-  var nextBtn = document.getElementById('course-next');
-  var dotsContainer = document.getElementById('course-dots');
+  var track = document.getElementById('rev-track');
+  var prevBtn = document.getElementById('rev-prev');
+  var nextBtn = document.getElementById('rev-next');
+  var dotsContainer = document.getElementById('rev-dots');
   if (!track || !prevBtn || !nextBtn || !dotsContainer) return;
 
-  var cards = track.querySelectorAll('.new-course-card-wrap');
+  var cards = track.querySelectorAll('.new-review-card');
   var cardCount = cards.length;
   if (cardCount === 0) return;
 
   var currentIndex = 0;
-  var cardsPerView = getCardsPerView();
 
   function getCardsPerView() {
     var width = window.innerWidth;
-    if (width > 1100) return 4;
-    if (width > 768) return 2;
+    if (width > 990) return 3;
+    if (width > 600) return 2;
     return 1;
   }
 
   function createDots() {
     dotsContainer.innerHTML = '';
-    var totalSlides = Math.max(1, cardCount - getCardsPerView() + 1);
+    var perView = getCardsPerView();
+    var totalSlides = Math.max(1, cardCount - perView + 1);
     for (var i = 0; i < totalSlides; i++) {
       var dot = document.createElement('button');
-      dot.className = 'course-dot' + (i === currentIndex ? ' active' : '');
+      dot.className = 'rev-dot' + (i === currentIndex ? ' active' : '');
       dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
       (function(idx) {
         dot.addEventListener('click', function() {
@@ -1307,12 +928,12 @@
   }
 
   function updateSlider() {
-    cardsPerView = getCardsPerView();
-    var totalSlides = Math.max(1, cardCount - cardsPerView + 1);
+    var perView = getCardsPerView();
+    var totalSlides = Math.max(1, cardCount - perView + 1);
     if (currentIndex >= totalSlides) currentIndex = totalSlides - 1;
     if (currentIndex < 0) currentIndex = 0;
 
-    if (cardCount <= cardsPerView) {
+    if (cardCount <= perView) {
       track.style.transform = 'translateX(0px)';
       prevBtn.style.display = 'none';
       nextBtn.style.display = 'none';
@@ -1325,17 +946,15 @@
     }
 
     var cardWidth = cards[0].offsetWidth;
-    var gap = 24; // gap size in pixels
+    var gap = 28;
     var offset = currentIndex * (cardWidth + gap);
     track.style.transform = 'translateX(-' + offset + 'px)';
 
-    // Update dots active class
-    var dots = dotsContainer.querySelectorAll('.course-dot');
+    var dots = dotsContainer.querySelectorAll('.rev-dot');
     for (var i = 0; i < dots.length; i++) {
       dots[i].classList.toggle('active', i === currentIndex);
     }
 
-    // Enable/disable arrows
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= totalSlides - 1;
   }
@@ -1348,7 +967,8 @@
   });
 
   nextBtn.addEventListener('click', function() {
-    var totalSlides = Math.max(1, cardCount - getCardsPerView() + 1);
+    var perView = getCardsPerView();
+    var totalSlides = Math.max(1, cardCount - perView + 1);
     if (currentIndex < totalSlides - 1) {
       currentIndex++;
       updateSlider();
@@ -1362,6 +982,118 @@
 
   createDots();
   updateSlider();
+})();
+
+/* FAQ Accordion Toggle */
+(function() {
+  var faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(function(item) {
+    var header = item.querySelector('.faq-q');
+    if (header) {
+      header.addEventListener('click', function() {
+        var isOpen = item.classList.contains('open');
+        faqItems.forEach(function(el) { el.classList.remove('open'); });
+        if (!isOpen) {
+          item.classList.add('open');
+        }
+      });
+    }
+  });
+})();
+
+/* Prayer times geolocation & fetch */
+(function() {
+  var defaultLat = "51.5194682";
+  var defaultLng = "-0.1360365";
+  var defaultTz = "UTC";
+  var defaultCity = "London";
+  var defaultCountry = "UK";
+
+  fetch('https://ipapi.co/json/')
+    .then(function(res) { return res.json(); })
+    .then(function(loc) {
+      if (loc && loc.latitude && loc.longitude) {
+        fetchTimes(loc.latitude, loc.longitude, loc.timezone || defaultTz, loc.city || defaultCity, loc.country_name || defaultCountry);
+      } else {
+        useFallback();
+      }
+    })
+    .catch(function() {
+      useFallback();
+    });
+
+  function useFallback() {
+    var city = defaultCity;
+    var country = defaultCountry;
+    var lat = defaultLat;
+    var lng = defaultLng;
+    var tz = defaultTz;
+
+    try {
+      var resolvedTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (resolvedTz) {
+        tz = resolvedTz;
+        if (tz.indexOf('/') > -1) {
+          city = tz.split('/')[1].replace('_', ' ');
+          var continent = tz.split('/')[0];
+          if (continent === 'Asia') {
+            country = 'India';
+            lat = '22.5726';
+            lng = '88.3639';
+          } else if (continent === 'Europe') {
+            country = 'UK';
+          } else if (continent === 'America') {
+            country = 'USA';
+            lat = '40.7128';
+            lng = '-74.0060';
+          }
+        }
+      }
+    } catch(e) {}
+    fetchTimes(lat, lng, tz, city, country);
+  }
+
+  function fetchTimes(lat, lng, tz, city, country) {
+    var cityDisp = document.getElementById('pt-location-text');
+    if (cityDisp) cityDisp.innerText = city + ", " + country;
+
+    var url = '/api/prayer-times?latitude=' + lat + '&longitude=' + lng + '&timezone=' + encodeURIComponent(tz);
+    
+    fetch(url)
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.code === 200) {
+          var timings = data.data.timings;
+          if (document.getElementById('time-fajr')) document.getElementById('time-fajr').innerText = formatTime(timings.Fajr);
+          if (document.getElementById('time-dhuhr')) document.getElementById('time-dhuhr').innerText = formatTime(timings.Dhuhr);
+          if (document.getElementById('time-asr')) document.getElementById('time-asr').innerText = formatTime(timings.Asr);
+          if (document.getElementById('time-maghrib')) document.getElementById('time-maghrib').innerText = formatTime(timings.Maghrib);
+          if (document.getElementById('time-isha')) document.getElementById('time-isha').innerText = formatTime(timings.Isha);
+
+          var hijri = data.data.date.hijri;
+          var hijriStr = hijri.day + ' ' + hijri.month.en + ' ' + hijri.year;
+          if (document.getElementById('islamic-date-text')) document.getElementById('islamic-date-text').innerText = hijriStr;
+
+          var gregorian = data.data.date.gregorian;
+          if (document.getElementById('gregorian-date-text')) document.getElementById('gregorian-date-text').innerText = gregorian.weekday.en + ', ' + gregorian.day + ' ' + gregorian.month.en + ' ' + gregorian.year;
+        }
+      })
+      .catch(function(err) {
+        console.error("Prayer times fetch failed:", err);
+      });
+  }
+
+  function formatTime(t24) {
+    if (!t24) return '';
+    var parts = t24.split(' ')[0].split(':');
+    var hrs = parseInt(parts[0]);
+    var mins = parts[1];
+    var ampm = hrs >= 12 ? 'PM' : 'AM';
+    hrs = hrs % 12;
+    if (hrs === 0) hrs = 12;
+    var hrsStr = hrs < 10 ? '0' + hrs : hrs;
+    return hrsStr + ':' + mins + ' ' + ampm;
+  }
 })();
 
 /* Global helpers for review read-more/less toggle */
@@ -1385,4 +1117,3 @@ window.collapseReview = function(btn) {
 };
 </script>
 {% endblock %}
-
