@@ -1,0 +1,310 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'New Course' if action=='new' else 'Edit Course' }} | Admin{% endblock %}
+{% block topbar_title %}{{ 'New Course' if action=='new' else 'Edit: ' ~ course.title[:30] }}{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>{{ 'Create New Course' if action=='new' else 'Edit Course' }}</h2>
+    <p>{{ 'Fill in the details below to publish a new course.' if action=='new' else 'Update the details and save.' }}</p>
+  </div>
+  <a href="{{ url_for('admin_courses') }}" class="adm-btn adm-btn--secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="adm-form-card adm-form-card--wide">
+
+  <h3 class="adm-form-section-h">Homepage Grid Card</h3>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Title <span class="adm-req">*</span></label>
+      <input type="text" name="title" required placeholder="e.g. Tajweed Course"
+             value="{{ course.title if course else '' }}"/>
+      <small class="adm-hint">Shown as the heading on both the homepage card and the course hero.</small>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="title_ur" dir="rtl" value="{{ course.title_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg">
+      <label>URL Slug <span class="adm-req">*</span></label>
+      <input type="text" name="slug" required placeholder="tajweed" pattern="[a-z0-9\-]+"
+             value="{{ course.slug if course else '' }}"/>
+      <small class="adm-hint">/course/&lt;slug&gt; — lowercase, hyphens only.</small>
+    </div>
+    <div class="adm-fg" style="max-width:110px;">
+      <label>Sort Order</label>
+      <input type="number" name="sort_order" value="{{ course.sort_order if course else 0 }}"/>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label class="adm-checkbox-label">
+      <input type="checkbox" name="has_detail_page" {% if course is none or course.has_detail_page %}checked{% endif %}/>
+      Has its own detail page (uncheck for a homepage-only teaser card with no link, e.g. "Academic Subjects")
+    </label>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Card Category</label>
+      <input type="text" name="card_category" placeholder="Quranic Studies"
+             value="{{ course.card_category if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="card_category_ur" dir="rtl" value="{{ course.card_category_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Card Badges</label>
+      <input type="text" name="card_badges" placeholder="All Levels, Online, Certificate"
+             value="{{ course.card_badges|join(', ') if course and course.card_badges else '' }}"/>
+      <small class="adm-hint">Comma-separated — shown as the 3 small pills on the homepage card.</small>
+      <div class="adm-fg-ur">
+        <label>Urdu (same order, comma-separated)</label>
+        <input type="text" name="card_badges_ur" dir="rtl"
+               value="{{ course.card_badges_ur|join(', ') if course and course.card_badges_ur else '' }}"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Card Description</label>
+    <textarea name="card_description" rows="4" placeholder="Short paragraph shown on the homepage card.">{{ course.card_description if course else '' }}</textarea>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <textarea name="card_description_ur" dir="rtl" rows="4">{{ course.card_description_ur if course else '' }}</textarea>
+    </div>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Card Image Upload (Cloudinary)</label>
+      <input type="file" name="card_image" accept="image/*" class="adm-file-input"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Card Image URL</label>
+      <input type="text" name="card_image_url" placeholder="https://... (leave blank if uploading above)"/>
+    </div>
+  </div>
+  {% if course and course.card_image_url %}
+  <div class="adm-current-img"><span>Current Card Image:</span><img src="{{ course.card_image_url }}" alt=""/></div>
+  {% endif %}
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>"Other Courses" Card Title</label>
+      <input type="text" name="oc_title" placeholder="e.g. Quran Hifz"
+             value="{{ course.oc_title if course else '' }}"/>
+      <small class="adm-hint">Short title used only on the small cross-link cards at the bottom of other courses' pages.</small>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="oc_title_ur" dir="rtl" value="{{ course.oc_title_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>"Other Courses" Card Description</label>
+      <input type="text" name="oc_description" placeholder="e.g. Memorize the entire Holy Quran"
+             value="{{ course.oc_description if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="oc_description_ur" dir="rtl" value="{{ course.oc_description_ur if course else '' }}"/>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="adm-form-section-h">Detail Page Hero</h3>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Hero Category</label>
+      <input type="text" name="category" placeholder="Quranic Studies"
+             value="{{ course.category if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="category_ur" dir="rtl" value="{{ course.category_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Arabic Title (calligraphy line)</label>
+      <input type="text" name="arabic_title" dir="rtl" placeholder="ورتل القرآن ترتيلا"
+             value="{{ course.arabic_title if course else '' }}"/>
+      <small class="adm-hint">Quranic Arabic calligraphy — same in every language, no Urdu field needed.</small>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Tagline</label>
+    <input type="text" name="tagline" placeholder="A short line shown under the Arabic title."
+           value="{{ course.tagline if course else '' }}"/>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <input type="text" name="tagline_ur" dir="rtl" value="{{ course.tagline_ur if course else '' }}"/>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Hero Badges</label>
+    <input type="text" name="hero_badges" placeholder="All Levels, Online, Certificate, Flexible Timing"
+           value="{{ course.hero_badges|join(', ') if course and course.hero_badges else '' }}"/>
+    <small class="adm-hint">Comma-separated — the pills shown in the hero (usually 3-4).</small>
+    <div class="adm-fg-ur">
+      <label>Urdu (same order, comma-separated)</label>
+      <input type="text" name="hero_badges_ur" dir="rtl"
+             value="{{ course.hero_badges_ur|join(', ') if course and course.hero_badges_ur else '' }}"/>
+    </div>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Icon Upload (Cloudinary)</label>
+      <input type="file" name="icon_image" accept="image/*" class="adm-file-input"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Icon URL / filename</label>
+      <input type="text" name="icon_image_url" placeholder="course_tajweed.svg or https://..."/>
+      <small class="adm-hint">A bare filename is looked up in static/images/.</small>
+    </div>
+  </div>
+  {% if course and course.icon_url %}
+  <div class="adm-current-img"><span>Current Icon:</span><img src="{{ course.icon_url }}" alt=""/></div>
+  {% endif %}
+
+  <h3 class="adm-form-section-h">Sidebar</h3>
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Duration</label>
+      <input type="text" name="duration" placeholder="Flexible" value="{{ course.duration if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="duration_ur" dir="rtl" value="{{ course.duration_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Schedule</label>
+      <input type="text" name="schedule" placeholder="Flexible Timing" value="{{ course.schedule if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="schedule_ur" dir="rtl" value="{{ course.schedule_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Eligibility</label>
+      <input type="text" name="eligibility" placeholder="All Levels" value="{{ course.eligibility if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="eligibility_ur" dir="rtl" value="{{ course.eligibility_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Certificate</label>
+      <input type="text" name="certificate_val" placeholder="Yes — On Completion" value="{{ course.certificate_val if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="certificate_val_ur" dir="rtl" value="{{ course.certificate_val_ur if course else '' }}"/>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="adm-form-section-h">Detail Page Body</h3>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Quote</label>
+      <input type="text" name="quote" placeholder='"And recite the Qur&#39;an distinctly..."' value="{{ course.quote if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="quote_ur" dir="rtl" value="{{ course.quote_ur if course else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg">
+      <label>Quote Citation</label>
+      <input type="text" name="quote_cite" placeholder="— Al-Muzzammil: 4" value="{{ course.quote_cite if course else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="quote_cite_ur" dir="rtl" value="{{ course.quote_cite_ur if course else '' }}"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Intro Paragraph</label>
+    <textarea name="intro" rows="5" placeholder="The main introduction paragraph shown under the quote.">{{ course.intro if course else '' }}</textarea>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <textarea name="intro_ur" dir="rtl" rows="5">{{ course.intro_ur if course else '' }}</textarea>
+    </div>
+  </div>
+
+  <!-- ── Content blocks ── -->
+  <div class="adm-fg">
+    <label>Content Blocks</label>
+    <small class="adm-hint" style="display:block;margin-bottom:.6rem;">
+      These appear in order below the intro. Each block is one heading + a list, a highlights grid, or paragraphs.
+    </small>
+    <div id="sectionsContainer">
+      {% for sec in sections %}
+      {% include 'admin/_course_section_block.html' with context %}
+      {% endfor %}
+    </div>
+    <button type="button" id="addSectionBtn" class="adm-btn adm-btn--secondary" style="width:auto;padding:.6rem 1.1rem;">
+      <i class="fa-solid fa-plus"></i>&nbsp; Add Content Block
+    </button>
+  </div>
+
+  <div class="adm-form-footer">
+    <a href="{{ url_for('admin_courses') }}" class="adm-btn adm-btn--secondary">Cancel</a>
+    <button type="submit" class="btn-primary">
+      {% if action == 'new' %}<i class="fa-solid fa-plus"></i>&nbsp; Create Course{% else %}<i class="fa-solid fa-pen"></i>&nbsp; Save Changes{% endif %}
+    </button>
+  </div>
+
+</form>
+
+<!-- Hidden template for a brand-new (empty) content block -->
+<template id="sectionTemplate">
+  {% set sec = {'block_type': 'bullets', 'list_style': 'learn-list', 'heading': '', 'items': []} %}
+  {% include 'admin/_course_section_block.html' with context %}
+</template>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  var container = document.getElementById('sectionsContainer');
+  var addBtn    = document.getElementById('addSectionBtn');
+  var tpl       = document.getElementById('sectionTemplate');
+
+  function wireBlock(block){
+    var typeSel = block.querySelector('.section-type-sel');
+    var styleFg = block.querySelector('.section-liststyle-fg');
+    var hint    = block.querySelector('.section-items-hint');
+    var removeBtn = block.querySelector('.remove-section-btn');
+
+    function syncType(){
+      var type = typeSel.value;
+      styleFg.hidden = (type !== 'bullets');
+      if (type === 'highlights') {
+        hint.textContent = 'One highlight per line: icon-filename.svg | Heading | Description text';
+      } else if (type === 'paragraphs') {
+        hint.textContent = 'One paragraph per line.';
+      } else {
+        hint.textContent = 'One list item per line.';
+      }
+    }
+    typeSel.addEventListener('change', syncType);
+    syncType();
+
+    removeBtn.addEventListener('click', function(){ block.remove(); });
+  }
+
+  container.querySelectorAll('.course-section-block').forEach(wireBlock);
+
+  addBtn.addEventListener('click', function(){
+    var clone = tpl.content.cloneNode(true);
+    container.appendChild(clone);
+    wireBlock(container.lastElementChild);
+  });
+})();
+</script>
+{% endblock %}

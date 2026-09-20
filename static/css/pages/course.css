@@ -6,7 +6,7 @@
 
 /* ────────────────── COURSE HERO ────────────────── */
 .course-hero {
-  padding: 166px 8% 74px;
+  padding: 166px 8% 56px;
   background:
     linear-gradient(150deg, rgba(4,25,18,0.92) 0%, rgba(6,50,35,0.86) 60%, rgba(5,85,50,0.78) 100%),
     url('../../images/Banner_image.webp') center/cover no-repeat;

@@ -16,6 +16,12 @@
     </p>
   </div>
   <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+    <!-- Quick search (client-side — filters the table below as you type) -->
+    <div class="adm-search-wrap">
+      <span class="adm-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+      <input type="search" id="regSearch" class="adm-inline-search"
+             placeholder="Search name, email, phone, country…">
+    </div>
     <!-- Filter by competition -->
     <form method="get" style="display:flex;gap:.5rem;align-items:center;">
       <select name="competition_id" class="adm-inline-sel" onchange="this.form.submit()">
@@ -30,14 +36,14 @@
     <!-- Export -->
     <a href="{{ url_for('admin_registrations_export') }}{% if selected_id %}?competition_id={{ selected_id }}{% endif %}"
        class="btn-primary" style="white-space:nowrap;">
-      &#128196;&nbsp; Export Excel
+      <i class="fa-solid fa-file-arrow-down"></i>&nbsp; Export Excel
     </a>
   </div>
 </div>
 
 <!-- Count strip -->
 <div class="adm-reg-strip">
-  <strong>{{ registrations|length }}</strong> registration{{ 's' if registrations|length != 1 else '' }} found
+  <strong id="regVisibleCount">{{ registrations|length }}</strong> registration{{ 's' if registrations|length != 1 else '' }} found
 </div>
 
 <!-- Table -->
@@ -53,12 +59,13 @@
         <th>Country</th>
         <th>Competition</th>
         <th>Registered</th>
-        <th style="width:40px"></th>
+        <th style="width:76px"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="regTableBody">
       {% for reg in registrations %}
-      <tr class="adm-reg-row" data-id="{{ reg.id }}">
+      <tr class="adm-reg-row" data-id="{{ reg.id }}"
+          data-search="{{ ((reg.name or '') ~ ' ' ~ (reg.email or '') ~ ' ' ~ (reg.phone or '') ~ ' ' ~ (reg.country or '') ~ ' ' ~ (reg.competition_title or '')) | lower }}">
         <td class="adm-td-muted">{{ loop.index }}</td>
         <td><strong>{{ reg.name }}</strong></td>
         <td><a href="mailto:{{ reg.email }}" class="adm-link">{{ reg.email }}</a></td>
@@ -72,8 +79,15 @@
         </td>
         <td class="adm-td-muted">{{ reg.created_at.strftime('%Y-%m-%d') if reg.created_at else '—' }}</td>
         <td>
-          <button class="adm-btn adm-btn--view adm-expand-btn"
-                  data-id="{{ reg.id }}" title="View details">&#9660;</button>
+          <div class="adm-actions">
+            <button class="adm-btn adm-btn--view adm-expand-btn"
+                    data-id="{{ reg.id }}" title="View details"><i class="fa-solid fa-chevron-down"></i></button>
+            <form method="post" action="{{ url_for('admin_registration_delete', rid=reg.id) }}"
+                  style="display:inline;" onsubmit="return confirm('Delete the registration for &quot;{{ reg.name }}&quot;? This cannot be undone.')">
+              <input type="hidden" name="competition_id" value="{{ selected_id or '' }}">
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete registration"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </div>
         </td>
       </tr>
       <!-- Expandable detail row -->
@@ -89,13 +103,6 @@
             {% if not reg.experience and not reg.notes %}
               <em class="adm-td-muted">No additional details provided.</em>
             {% endif %}
-            <div style="margin-top:.8rem;">
-              <form method="post" action="{{ url_for('admin_registration_delete', rid=reg.id) }}"
-                    style="display:inline;" onsubmit="return confirm('Delete this registration? This cannot be undone.')">
-                <input type="hidden" name="competition_id" value="{{ selected_id or '' }}">
-                <button type="submit" class="adm-btn adm-btn--del">&#128465;&nbsp; Delete Entry</button>
-              </form>
-            </div>
           </div>
         </td>
       </tr>
@@ -106,6 +113,11 @@
         </td>
       </tr>
       {% endfor %}
+      <tr id="regNoMatchRow" style="display:none;">
+        <td colspan="9" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No registrations match your search.
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -119,8 +131,37 @@ document.querySelectorAll('.adm-expand-btn').forEach(function(btn){
     var detailRow = document.getElementById('detail-' + id);
     var isOpen   = detailRow.style.display !== 'none';
     detailRow.style.display = isOpen ? 'none' : 'table-row';
-    btn.innerHTML = isOpen ? '&#9660;' : '&#9650;';
+    btn.innerHTML = isOpen ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>';
   });
 });
+
+// Quick client-side search — filters the already-loaded rows (and, if a
+// competition filter is also selected via the dropdown above, searches
+// within that already-narrowed set) without a page reload.
+(function(){
+  var input   = document.getElementById('regSearch');
+  var rows    = Array.from(document.querySelectorAll('.adm-reg-row'));
+  var noMatch = document.getElementById('regNoMatchRow');
+  var count   = document.getElementById('regVisibleCount');
+  if (!input || !rows.length) return;
+
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var visible = 0;
+    rows.forEach(function(row){
+      var match = !q || row.dataset.search.indexOf(q) !== -1;
+      row.style.display = match ? '' : 'none';
+      if (!match) {
+        var detail = document.getElementById('detail-' + row.dataset.id);
+        if (detail) detail.style.display = 'none';
+        var btn = row.querySelector('.adm-expand-btn');
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+      }
+      if (match) visible++;
+    });
+    if (noMatch) noMatch.style.display = visible === 0 ? 'table-row' : 'none';
+    if (count) count.textContent = visible;
+  });
+})();
 </script>
 {% endblock %}

@@ -2,7 +2,7 @@
    Al-Qur'an Global Institute — Section Base Styles
    ══════════════════════════════════════════════════════════ */
 
-section { padding: 84px 8%; }
+section { padding: 56px 8%; }
 
 .section-tag {
   display: inline-block;

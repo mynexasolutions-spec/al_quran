@@ -178,54 +178,24 @@
 
 
 <!-- ══ PRIZES & RECOGNITION ══ -->
-<section class="comp-prizes">
+<section class="comp-prizes" id="prizes">
   <div class="center-hdr">
-    <span class="section-tag">{{ t.compPrizesTag }}</span>
-    <h2 class="section-title">{{ t.compPrizesH2 }} <span>{{ t.compPrizesH2Span }}</span></h2>
+    <span class="section-tag">{{ prizes_section.tag }}</span>
+    <h2 class="section-title">{{ prizes_section.heading }} <span>{{ prizes_section.heading_span }}</span></h2>
     <div class="divider"></div>
-    <p class="section-sub">{{ t.compPrizesSub }}</p>
+    <p class="section-sub">{{ prizes_section.subtitle }}</p>
   </div>
 
   <div class="comp-prizes-grid">
-    <div class="prize-card prize-card--gold">
-      <div class="prize-medal">&#129351;</div>
-      <h4>{{ t.compPrize1H }}</h4>
+    {% for prize in prizes %}
+    <div class="prize-card prize-card--{{ prize.variant }}">
+      <div class="prize-medal">{{ prize.medal_icon }}</div>
+      <h4>{{ prize.heading }}</h4>
       <ul>
-        <li>{{ t.compPrize1Li1 }}</li>
-        <li>{{ t.compPrize1Li2 }}</li>
-        <li>{{ t.compPrize1Li3 }}</li>
-        <li>{{ t.compPrize1Li4 }}</li>
-        <li>{{ t.compPrize1Li5 }}</li>
+        {% for item in prize['items'] %}<li>{{ item }}</li>{% endfor %}
       </ul>
     </div>
-    <div class="prize-card prize-card--silver">
-      <div class="prize-medal">&#129352;</div>
-      <h4>{{ t.compPrize2H }}</h4>
-      <ul>
-        <li>{{ t.compPrize2Li1 }}</li>
-        <li>{{ t.compPrize2Li2 }}</li>
-        <li>{{ t.compPrize2Li3 }}</li>
-        <li>{{ t.compPrize2Li4 }}</li>
-      </ul>
-    </div>
-    <div class="prize-card prize-card--bronze">
-      <div class="prize-medal">&#129353;</div>
-      <h4>{{ t.compPrize3H }}</h4>
-      <ul>
-        <li>{{ t.compPrize3Li1 }}</li>
-        <li>{{ t.compPrize3Li2 }}</li>
-        <li>{{ t.compPrize3Li3 }}</li>
-      </ul>
-    </div>
-    <div class="prize-card prize-card--part">
-      <div class="prize-medal">&#127970;</div>
-      <h4>{{ t.compPrize4H }}</h4>
-      <ul>
-        <li>{{ t.compPrize4Li1 }}</li>
-        <li>{{ t.compPrize4Li2 }}</li>
-        <li>{{ t.compPrize4Li3 }}</li>
-      </ul>
-    </div>
+    {% endfor %}
   </div>
 </section>
 

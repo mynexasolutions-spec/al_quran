@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Login | Al-Qur'an Global Institute</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin.css') }}"/>
 </head>
@@ -30,11 +31,11 @@
         <input type="password" name="password" placeholder="••••••••" required/>
       </div>
       <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:.85rem;">
-        &#128274;&nbsp; Sign In
+        <i class="fa-solid fa-lock"></i>&nbsp; Sign In
       </button>
     </form>
 
-    <a href="{{ url_for('index') }}" class="adm-back-link">&#8592; Back to Website</a>
+    <a href="{{ url_for('index') }}" class="adm-back-link"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>
   </div>
 
 </body>

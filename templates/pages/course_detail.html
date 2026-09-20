@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{ course.title }} | Al-Qur'an Global Institute{% endblock %}
+
+{# ══════════════════════════════════════════════════════════
+   Generic course detail page — renders ANY course row from the
+   `courses` table (see db.py) with the exact same markup/CSS that
+   the old hand-authored course_<name>.html pages used, so admin-
+   created or admin-edited courses look identical to the originals.
+   ══════════════════════════════════════════════════════════ #}
+
+{% block content %}
+
+<!-- ══ COURSE HERO ══ -->
+<section class="course-hero">
+  <div class="ch-inner">
+    <a href="{{ url_for('index') }}" class="ch-back">{{ t.courseBackLink }}</a>
+    <span class="ch-cat">{{ course.category }}</span>
+    <span class="ch-icon"><img src="{{ course.icon_url }}" alt="{{ course.title }}" class="ch-icon"/></span>
+    <h1>{{ course.title }}</h1>
+    <span class="ch-arabic">{{ course.arabic_title }}</span>
+    <p class="ch-tagline">{{ course.tagline }}</p>
+    <div class="ch-meta">
+      {% for badge in course.hero_badges %}<span class="ch-badge">{{ badge }}</span>{% endfor %}
+    </div>
+    <div class="ch-btns">
+      <a href="{{ url_for('index') }}#contact" class="btn-primary">{{ t.courseEnrollBtn }}</a>
+      <a href="#details" class="btn-outline">{{ t.courseDetailsBtn }}</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COURSE BODY ══ -->
+<section class="course-body" id="details">
+  <div class="cb-grid">
+
+    <!-- Main Content -->
+    <div class="cb-main">
+      <div class="cb-quote">
+        <p>{{ course.quote }}</p>
+        <cite>{{ course.quote_cite }}</cite>
+      </div>
+
+      <p class="cb-intro">{{ course.intro }}</p>
+
+      {% for sec in course.sections %}
+      <div class="content-block">
+        <h3>{{ sec.heading }}</h3>
+
+        {% if sec.block_type == 'bullets' %}
+        <ul class="{{ sec.list_style or 'learn-list' }}">
+          {% for item in sec['items'] %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+
+        {% elif sec.block_type == 'highlights' %}
+        <div class="highlights-grid">
+          {% for hl in sec['items'] %}
+          <div class="hl-card">
+            <img src="{{ hl.icon_url }}" alt="{{ hl.heading }}" class="hl-icon"/>
+            <h4>{{ hl.heading }}</h4>
+            <p>{{ hl.text }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        {% elif sec.block_type == 'paragraphs' %}
+        {% for p in sec['items'] %}
+        <p style="color:var(--text-mid);font-size:.97rem;line-height:1.9;{% if not loop.last %}margin-bottom:1rem;{% endif %}">{{ p }}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="cb-sidebar">
+      {% include 'components/course_sidebar.html' %}
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ OTHER COURSES ══ -->
+<section class="other-courses">
+  <div class="center-hdr">
+    <span class="section-tag">{{ t.otherCoursesTag }}</span>
+    <h2 class="section-title">{{ t.otherCoursesH2 }} <span>{{ t.otherCoursesH2Span }}</span></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="oc-grid">
+    {% for oc in other_courses %}
+    <a href="{{ url_for('course_detail', slug=oc.slug) }}" class="oc-card">
+      <div class="oc-img-wrap"><img src="{{ oc.card_image_url }}" alt="{{ oc.oc_title or oc.title }}" class="oc-img"/></div>
+      <div class="oc-body"><h4>{{ oc.oc_title or oc.title }}</h4><p>{{ oc.oc_description }}</p></div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

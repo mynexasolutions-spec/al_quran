@@ -11,6 +11,8 @@
   <link rel="apple-touch-icon" sizes="180x180"     href="{{ url_for('static', filename='images/favicon/apple-touch-icon.png') }}"/>
   <link rel="manifest" href="{{ url_for('static', filename='images/favicon/site.webmanifest') }}"/>
   <meta name="theme-color" content="#0A3D33"/>
+  <!-- FontAwesome for Icons (replaces emoji throughout the admin dashboard) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Base styles only (no navbar/footer/page CSS) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base/variables.css') }}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base/reset.css') }}"/>
@@ -31,26 +33,38 @@
     </div>
 
     <nav class="adm-nav">
+      <a href="{{ url_for('admin_hero') }}"
+         class="adm-nav-item {% if request.endpoint == 'admin_hero' %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-house"></i></span> Homepage Banner
+      </a>
+      <a href="{{ url_for('admin_courses') }}"
+         class="adm-nav-item {% if request.endpoint in ('admin_courses','admin_course_new','admin_course_edit') %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-graduation-cap"></i></span> Courses
+      </a>
       <a href="{{ url_for('admin_competitions') }}"
          class="adm-nav-item {% if request.endpoint in ('admin_competitions','admin_dashboard','admin_competition_new','admin_competition_edit') %}active{% endif %}">
-        <span class="adm-nav-icon">&#127942;</span> Competitions
+        <span class="adm-nav-icon"><i class="fa-solid fa-trophy"></i></span> Competitions
+      </a>
+      <a href="{{ url_for('admin_prizes') }}"
+         class="adm-nav-item {% if request.endpoint == 'admin_prizes' %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-medal"></i></span> Prizes &amp; Recognition
       </a>
       <a href="{{ url_for('admin_registrations') }}"
          class="adm-nav-item {% if request.endpoint == 'admin_registrations' %}active{% endif %}">
-        <span class="adm-nav-icon">&#128203;</span> Registrations
+        <span class="adm-nav-icon"><i class="fa-solid fa-clipboard-list"></i></span> Registrations
       </a>
       <a href="{{ url_for('admin_reviews') }}"
          class="adm-nav-item {% if request.endpoint == 'admin_reviews' %}active{% endif %}">
-        <span class="adm-nav-icon">&#11088;</span> Reviews
+        <span class="adm-nav-icon"><i class="fa-solid fa-star"></i></span> Reviews
         {% set pending = pending_reviews_count|default(0) %}
         {% if pending > 0 %}<span class="adm-badge">{{ pending }}</span>{% endif %}
       </a>
       <div class="adm-nav-sep"></div>
       <a href="{{ url_for('competitions') }}" target="_blank" class="adm-nav-item">
-        <span class="adm-nav-icon">&#127760;</span> View Site
+        <span class="adm-nav-icon"><i class="fa-solid fa-globe"></i></span> View Site
       </a>
       <a href="{{ url_for('admin_logout') }}" class="adm-nav-item adm-logout">
-        <span class="adm-nav-icon">&#x2190;</span> Logout
+        <span class="adm-nav-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Logout
       </a>
     </nav>
   </aside>
@@ -59,9 +73,9 @@
   <div class="adm-main">
     <!-- Top bar -->
     <header class="adm-topbar">
-      <button class="adm-menu-btn" id="adm-menu-btn" aria-label="Toggle menu">&#9776;</button>
+      <button class="adm-menu-btn" id="adm-menu-btn" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
       <span class="adm-topbar-title">{% block topbar_title %}Admin{% endblock %}</span>
-      <span class="adm-topbar-user">&#128100; {{ session.get('admin_username', 'Admin') }}</span>
+      <span class="adm-topbar-user"><i class="fa-solid fa-circle-user"></i> {{ session.get('admin_username', 'Admin') }}</span>
     </header>
 
     <!-- Flash messages -->

@@ -10,13 +10,9 @@
     <li class="has-dropdown">
       <a href="#">{{ t.navCourses }} <span class="chevron">&#9660;</span></a>
       <ul class="dropdown-menu">
-        <li><a href="{{ url_for('course_tajweed') }}">{{ t.navCourseTajweed }}</a></li>
-        <li><a href="{{ url_for('course_quran_recitation') }}">{{ t.navCourseRecitation }}</a></li>
-        <li><a href="{{ url_for('course_hifz') }}">{{ t.navCourseHifz }}</a></li>
-        <li><a href="{{ url_for('course_qirat') }}">{{ t.navCourseQirat }}</a></li>
-        <li><a href="{{ url_for('course_arabic') }}">{{ t.navCourseArabic }}</a></li>
-        <li><a href="{{ url_for('course_urdu') }}">{{ t.navCourseUrdu }}</a></li>
-        <li><a href="{{ url_for('course_english') }}">{{ t.navCourseEnglish }}</a></li>
+        {% for c in nav_courses %}
+        <li><a href="{{ url_for('course_detail', slug=c.slug) }}"><i class="fa-solid fa-book-open fa-fw" style="margin-right: 6px;"></i> {{ c.title }}</a></li>
+        {% endfor %}
       </ul>
     </li>
     <li><a href="{{ url_for('competitions') }}">{{ t.navCompetitions }}</a></li>
@@ -26,6 +22,20 @@
     <li><a href="{{ url_for('index') }}#faq">{{ t.navFaq }}</a></li>
     <li><a href="{{ url_for('index') }}#contact" class="nav-cta">{{ t.navEnroll }}</a></li>
   </ul>
+
+  <!-- Compact language switcher — phone widths only (see responsive.css);
+       the full "SELECT LANGUAGE" bar above the navbar is used everywhere else. -->
+  <div class="nav-lang-mobile">
+    <button class="nav-lang-toggle" id="navLangToggle" aria-haspopup="true" aria-expanded="false">
+      <i class="fa-solid fa-globe"></i>
+      <span>{{ 'اردو' if lang == 'ur' else 'EN' }}</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="nav-lang-dropdown" id="navLangDropdown">
+      <a href="{{ url_for('set_lang', lang='en') }}"{% if lang == 'en' %} class="active"{% endif %}>English</a>
+      <a href="{{ url_for('set_lang', lang='ur') }}"{% if lang == 'ur' %} class="active"{% endif %}>اردو</a>
+    </div>
+  </div>
 
   <button class="hamburger" id="hbg" aria-label="Toggle menu">
     <span></span><span></span><span></span>
@@ -39,21 +49,17 @@
     <li>
       <a href="#" class="drawer-toggle" id="drawer-courses-btn">{{ t.navCourses }} <span class="drawer-chevron">&#9660;</span></a>
       <ul class="drawer-sub-list" id="drawer-courses-list">
-        <li><a href="{{ url_for('course_tajweed') }}" class="drawer-sub">{{ t.navCourseTajweed }}</a></li>
-        <li><a href="{{ url_for('course_quran_recitation') }}" class="drawer-sub">{{ t.navCourseRecitation }}</a></li>
-        <li><a href="{{ url_for('course_hifz') }}" class="drawer-sub">{{ t.navCourseHifz }}</a></li>
-        <li><a href="{{ url_for('course_qirat') }}" class="drawer-sub">{{ t.navCourseQirat }}</a></li>
-        <li><a href="{{ url_for('course_arabic') }}" class="drawer-sub">{{ t.navCourseArabic }}</a></li>
-        <li><a href="{{ url_for('course_urdu') }}" class="drawer-sub">{{ t.navCourseUrdu }}</a></li>
-        <li><a href="{{ url_for('course_english') }}" class="drawer-sub">{{ t.navCourseEnglish }}</a></li>
+        {% for c in nav_courses %}
+        <li><a href="{{ url_for('course_detail', slug=c.slug) }}" class="drawer-sub"><i class="fa-solid fa-book-open fa-fw" style="margin-right: 6px;"></i> {{ c.title }}</a></li>
+        {% endfor %}
       </ul>
     </li>
-    <li><a href="{{ url_for('competitions') }}">&#127942; {{ t.navCompetitions }}</a></li>
-    <li><a href="{{ url_for('team') }}">&#128104;&#8205;&#127979; {{ t.navTeam }}</a></li>
+    <li><a href="{{ url_for('competitions') }}"><i class="fa-solid fa-trophy" style="margin-right: 6px;"></i> {{ t.navCompetitions }}</a></li>
+    <li><a href="{{ url_for('team') }}"><i class="fa-solid fa-chalkboard-user" style="margin-right: 6px;"></i> {{ t.navTeam }}</a></li>
     <li><a href="{{ url_for('index') }}#about">{{ t.navAbout }}</a></li>
     <li><a href="{{ url_for('index') }}#reviews">{{ t.navReviews }}</a></li>
     <li><a href="{{ url_for('index') }}#faq">{{ t.navFaq }}</a></li>
-    <li><a href="{{ url_for('index') }}#contact">&#128197; {{ t.navEnroll }}</a></li>
+    <li><a href="{{ url_for('index') }}#contact"><i class="fa-regular fa-calendar" style="margin-right: 6px;"></i> {{ t.navEnroll }}</a></li>
   </ul>
 </div>
 
@@ -67,6 +73,21 @@
     hbg.addEventListener('click', function(){
       hbg.classList.toggle('open');
       drawer.classList.toggle('open');
+    });
+  }
+  var langBtn  = document.getElementById('navLangToggle');
+  var langMenu = document.getElementById('navLangDropdown');
+  if(langBtn && langMenu){
+    langBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = langMenu.classList.toggle('open');
+      langBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(e){
+      if(!langMenu.contains(e.target) && e.target !== langBtn){
+        langMenu.classList.remove('open');
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   }
   var cbtn = document.getElementById('drawer-courses-btn');

@@ -20,18 +20,179 @@
 }
 
 @media (max-width: 660px) {
-  section { padding: 60px 5%; }
-  .about-strip { padding: 60px 5%; }
-  .hero { padding: 146px 5% 55px; }
-  .course-hero { padding: 146px 5% 55px; }
+  section { padding: 44px 5%; }
+  .about-strip { padding: 44px 5%; }
+  .course-hero { padding: 146px 5% 40px; }
   .hero-wm { display: none; }
-  .stats-numbers { flex-direction: column; }
-  .stats-strip { padding: 0; }
-  .stat { border-right: none; border-bottom: 1px solid #E5E7EB; padding: 1.6rem 2rem; }
-  .stat:last-child { border-bottom: 2px solid #E5E7EB; }
-  .stat-num { font-size: 2rem; }
-  .stats-trust-bar { gap: 1.1rem; padding: 1.2rem 5%; flex-direction: column; align-items: flex-start; }
   .hero-logo-row { flex-direction: column; align-items: center; gap: .65rem; }
+
+  /* ── Compact single-row header: fold the "SELECT LANGUAGE" bar into
+     a small dropdown next to the hamburger, freeing up the vertical
+     space it used to reserve above the navbar. ── */
+  .lang-bar { display: none; }
+  .nav-lang-mobile { display: block; }
+  nav { top: 0; }
+  .nav-drawer { top: 90px; }
+
+  /* ── Hero: compact side-by-side card instead of the full-bleed photo.
+     .hero-img-col (hidden everywhere else) is revealed here; the
+     section's own background photo is switched off so it doesn't
+     duplicate behind it. ── */
+  .hero {
+    background: #ffffff;
+    padding: 70px 0 40px; /* Adjusted to remove gap after navbar */
+    min-height: unset;
+    overflow: visible;
+  }
+  .hero::before { content: none; } /* cancel the tablet scrim — nothing to darken here */
+  .hero-container {
+    flex-direction: column-reverse; /* Put image above text */
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    position: relative; /* For absolute positioning of social proof */
+  }
+  .hero-text-col {
+    margin: 0;
+    padding: 0 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  /* Matches the "All Courses" section-title size (clamp floor: 1.9rem). */
+  .hero-text-col h1 { color: #022C22; font-size: 1.9rem; margin-bottom: .8rem; }
+  .hero-text-col p { color: #475569; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.2rem; }
+  .hero-badge { font-size: .65rem; padding: .5rem 1rem; white-space: nowrap; margin-bottom: 1rem; } /* Forced to single line */
+  
+  .hero-btns { 
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center;
+    flex-wrap: nowrap; /* Forced to single row */
+    gap: 0.5rem; 
+    margin-bottom: 1.3rem; 
+    width: 100%;
+  }
+  .hero-btns .btn-primary, .hero-btns .btn-outline-dark { 
+    padding: .8rem .4rem; 
+    font-size: 0.8rem; 
+    flex: 1 1 50%; 
+    text-align: center;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  
+  .hero-social-proof { 
+    position: absolute;
+    top: 30vw; /* Positioned dynamically over the image */
+    left: 5%;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px 12px;
+    border-radius: 50px;
+    flex-wrap: nowrap; 
+    justify-content: flex-start; 
+    gap: .6rem; 
+  }
+  .avatars img { width: 26px; height: 26px; }
+  .social-text { font-size: .65rem; color: #475569; text-align: left; }
+  .social-text strong { font-size: .75rem; color: #0F172A; }
+
+  .hero-img-col { display: block; width: 100%; max-width: 100%; flex: none; margin-bottom: -1rem; }
+  .hero-main-img { border-radius: 0; box-shadow: none; width: 100%; height: auto; display: block; }
+
+  /* ══ Phone cards: stats bar, features bar, prayer times, Islamic date.
+     These are all dense, single-row layouts, so each one sets its own
+     line-height — otherwise every wrapped line inherits body's 1.7
+     (27px line boxes) and the small type ends up with huge gaps. ══ */
+
+  /* ── Stats bar: dark inset card, four stats in one row with dividers ── */
+  .hero-stats-bar { margin: 0; padding: 0 4%; }
+  .hero-stats-container {
+    flex-wrap: nowrap;
+    background: #022C22;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+    padding: .85rem .2rem;
+  }
+  .stat-box {
+    flex: 1 1 0;
+    justify-content: flex-start;
+    align-items: center;
+    min-width: 0;
+    gap: .35rem;
+    padding: 0 .25rem;
+    border-right: 1px solid rgba(255,255,255,0.13);
+  }
+  .stat-box:last-child { border-right: none; }
+  .stat-icon { font-size: 1rem; }
+  /* font-size on the block itself, not just the span — the line box is
+     sized by the block's own strut, so leaving it at the inherited 16px
+     keeps tall gaps between wrapped label lines. */
+  .stat-text { font-size: .5rem; line-height: 1.25; }
+  .stat-text strong { font-size: .92rem; margin-bottom: .1rem; }
+  .stat-text span { font-size: .5rem; }
+  .stat-stars { display: block; color: #D97706; font-size: .5rem; letter-spacing: .5px; }
+
+  /* ── Features bar: white inset card, 3 columns × 2 rows with dividers ── */
+  .hero-features-bar { margin: 0; background: none; box-shadow: none; padding: .85rem 4% 0; }
+  .hero-features-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+    padding: .85rem .15rem;
+    row-gap: .85rem;
+  }
+  .feature-item {
+    max-width: none;
+    min-width: 0;
+    align-items: center;
+    gap: .3rem;
+    font-size: .58rem;
+    line-height: 1.3;
+    padding: 0 .3rem;
+    border-right: 1px solid #EDF1F0;
+  }
+  .feature-item:nth-child(3n) { border-right: none; }
+  .feature-icon { font-size: .95rem; }
+
+  /* ── Prayer times: title + View All on one line, all five times on one
+     row, and the footer on a single line. ── */
+  .prayer-times-section { margin: 0; padding: 1.1rem 4%; }
+  .prayer-widget { padding: .8rem; }
+  .widget-header { flex-wrap: nowrap; gap: .5rem; margin-bottom: .8rem; }
+  .widget-header h3 { font-size: .82rem; line-height: 1.3; gap: .3rem; white-space: nowrap; }
+  .btn-view-all { padding: .3rem .6rem; font-size: .58rem; white-space: nowrap; }
+  .prayer-times-grid { flex-wrap: nowrap; gap: .3rem; margin-bottom: .8rem; }
+  .prayer-card { min-width: 0; padding: .55rem .25rem; gap: .35rem; }
+  .prayer-card .p-icon { font-size: 1rem; line-height: 1; }
+  .prayer-card .p-time { font-size: .6rem; line-height: 1.35; }
+  .prayer-card .p-name { font-size: .55rem; margin-bottom: 0; }
+  .prayer-card .p-value { font-size: .6rem; white-space: nowrap; }
+  .widget-footer { flex-wrap: nowrap; gap: .4rem; font-size: .56rem; line-height: 1.3; padding-top: .7rem; }
+  .location-info, .notification-toggle { white-space: nowrap; }
+  .notification-toggle { gap: .35rem; }
+  .switch { width: 32px; height: 18px; flex-shrink: 0; }
+  .slider:before { height: 12px; width: 12px; }
+  input:checked + .slider:before { transform: translateX(14px); }
+
+  /* ── Islamic date: moon sits beside the date, not above it ── */
+  .islamic-date-widget { padding: .9rem; }
+  .date-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: .5rem;
+    align-items: center;
+  }
+  .moon-icon { grid-area: 1 / 1; font-size: 1.25rem; margin-bottom: 0; line-height: 1; }
+  .islamic-date-widget h2 { grid-area: 1 / 2; font-size: 1rem; line-height: 1.3; margin-bottom: 0; }
+  .islamic-date-widget p { grid-area: 2 / 2; font-size: .6rem; line-height: 1.4; margin-top: .25rem; }
+  .mosque-silhouette { font-size: 5rem; }
+
   .form-row { grid-template-columns: 1fr; }
   .highlights-grid { grid-template-columns: 1fr 1fr; }
   .oc-grid { grid-template-columns: 1fr 1fr; }
@@ -45,9 +206,17 @@
 }
 
 @media (max-width: 430px) {
-  .hero h1, .course-hero h1 { font-size: 2.1rem; }
-  .hero-btns, .ch-btns { flex-direction: column; }
+  /* .hero h1 intentionally excluded — .hero-text-col h1 above already
+     sizes the homepage heading (and keeps it to 3 lines); this stale
+     duplicate selector was silently overriding it back to 2.1rem here. */
+  .course-hero h1 { font-size: 2.1rem; }
+  /* .hero-btns is intentionally excluded here — the ≤660px rule above
+     keeps Enroll Now / Book Free Trial on one row, and this used to
+     override it back to a stacked column on narrower phones. */
+  .ch-btns { flex-direction: column; }
   .btn-primary, .btn-outline { width: 100%; text-align: center; }
+  /* ...except inside the hero, where both buttons share one row. */
+  .hero-btns .btn-primary, .hero-btns .btn-outline-dark { width: auto; padding: .75rem .3rem; font-size: .72rem; }
   .courses-grid { grid-template-columns: 1fr; }
   .highlights-grid, .oc-grid { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: 1fr; }
@@ -153,6 +322,10 @@ body.lang-ur .ch-cat {
     line-height: 2.4;
     padding: .8rem 1.6rem;
     margin-bottom: 2rem;
+    /* The plain .hero-badge rule forces white-space:nowrap (fine for
+       short English badge text), but a longer Urdu translation can
+       overflow the viewport on narrow phones — let it wrap instead. */
+    white-space: normal;
   }
   body.lang-ur .hero h1 em {
     display: block;

@@ -1,0 +1,105 @@
+{% extends "admin/base.html" %}
+{% block title %}Prizes & Recognition | Admin{% endblock %}
+{% block topbar_title %}Prizes & Recognition{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Prizes &amp; Recognition</h2>
+    <p>Edit the intro text and the prize cards shown on the Competitions page.</p>
+  </div>
+  <a href="{{ url_for('competitions') }}#prizes" target="_blank" class="adm-btn adm-btn--secondary"><i class="fa-solid fa-globe"></i> View on Site</a>
+</div>
+
+<form method="post" class="adm-form-card adm-form-card--wide">
+
+  <h3 class="adm-form-section-h">Section Intro</h3>
+
+  <div class="adm-form-row">
+    <div class="adm-fg">
+      <label>Tag</label>
+      <input type="text" name="tag" placeholder="Rewards" value="{{ section.tag }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="tag_ur" dir="rtl" value="{{ section.tag_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading</label>
+      <input type="text" name="heading" placeholder="Prizes &amp;" value="{{ section.heading }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_ur" dir="rtl" value="{{ section.heading_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading — Highlighted Word</label>
+      <input type="text" name="heading_span" placeholder="Recognition" value="{{ section.heading_span }}"/>
+      <small class="adm-hint">Shown in the accent colour, right after the heading above.</small>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_span_ur" dir="rtl" value="{{ section.heading_span_ur }}"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Subtitle</label>
+    <textarea name="subtitle" rows="2" placeholder="We celebrate every participant's effort...">{{ section.subtitle }}</textarea>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <textarea name="subtitle_ur" dir="rtl" rows="2">{{ section.subtitle_ur }}</textarea>
+    </div>
+  </div>
+
+  <h3 class="adm-form-section-h">Prize Cards</h3>
+  <div class="adm-fg">
+    <small class="adm-hint" style="display:block;margin-bottom:.6rem;">
+      These appear in order, left to right. Each card has a style, a medal icon (emoji), a heading and a bullet list.
+    </small>
+    <div id="prizesContainer">
+      {% for prize in prizes %}
+      {% include 'admin/_prize_card_block.html' with context %}
+      {% endfor %}
+    </div>
+    <button type="button" id="addPrizeBtn" class="adm-btn adm-btn--secondary" style="width:auto;padding:.6rem 1.1rem;">
+      <i class="fa-solid fa-plus"></i>&nbsp; Add Prize Card
+    </button>
+  </div>
+
+  <div class="adm-form-footer">
+    <a href="{{ url_for('admin_prizes') }}" class="adm-btn adm-btn--secondary">Cancel</a>
+    <button type="submit" class="btn-primary"><i class="fa-solid fa-pen"></i>&nbsp; Save Changes</button>
+  </div>
+
+</form>
+
+<!-- Hidden template for a brand-new (empty) prize card -->
+<template id="prizeTemplate">
+  {% set prize = {'variant': 'gold', 'medal_icon': '', 'heading': '', 'items': []} %}
+  {% include 'admin/_prize_card_block.html' with context %}
+</template>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  var container = document.getElementById('prizesContainer');
+  var addBtn    = document.getElementById('addPrizeBtn');
+  var tpl       = document.getElementById('prizeTemplate');
+
+  function wireBlock(block){
+    var removeBtn = block.querySelector('.remove-prize-btn');
+    removeBtn.addEventListener('click', function(){ block.remove(); });
+  }
+
+  container.querySelectorAll('.prize-card-block').forEach(wireBlock);
+
+  addBtn.addEventListener('click', function(){
+    var clone = tpl.content.cloneNode(true);
+    container.appendChild(clone);
+    wireBlock(container.lastElementChild);
+  });
+})();
+</script>
+{% endblock %}

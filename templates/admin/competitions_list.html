@@ -9,7 +9,7 @@
     <p>Create, edit, and manage all competitions. Changes reflect live on the public site.</p>
   </div>
   <a href="{{ url_for('admin_competition_new') }}" class="btn-primary">
-    &#43;&nbsp; New Competition
+    <i class="fa-solid fa-plus"></i>&nbsp; New Competition
   </a>
 </div>
 
@@ -74,15 +74,15 @@
         <td style="text-align:center">
           <div class="adm-actions">
             <a href="{{ url_for('admin_competition_edit', cid=comp.id) }}" class="adm-btn adm-btn--edit" title="Edit">
-              &#9998;
+              <i class="fa-solid fa-pen"></i>
             </a>
             <a href="{{ url_for('competitions') }}#comp-{{ comp.id }}" target="_blank"
                class="adm-btn adm-btn--view" title="View on site">
-              &#128065;
+              <i class="fa-solid fa-eye"></i>
             </a>
             <form method="post" action="{{ url_for('admin_competition_delete', cid=comp.id) }}"
                   onsubmit="return confirm('Delete \'{{ comp.title }}\' and all its registrations? This cannot be undone.')">
-              <button type="submit" class="adm-btn adm-btn--del" title="Delete">&#x1F5D1;</button>
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete"><i class="fa-solid fa-trash"></i></button>
             </form>
           </div>
         </td>

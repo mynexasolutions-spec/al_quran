@@ -1,0 +1,173 @@
+{% extends "admin/base.html" %}
+{% block title %}Homepage Banner | Admin{% endblock %}
+{% block topbar_title %}Homepage Banner{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Homepage Hero Banner</h2>
+    <p>Edit the image, heading and buttons shown at the top of the homepage.</p>
+  </div>
+  <a href="{{ url_for('index') }}" target="_blank" class="adm-btn adm-btn--secondary"><i class="fa-solid fa-globe"></i> View Homepage</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="adm-form-card adm-form-card--wide">
+
+  <!-- Badge -->
+  <div class="adm-fg">
+    <label>Badge Text</label>
+    <input type="text" name="badge_text" placeholder="#1 World's Trusted Online Quran Institute"
+           value="{{ hero.badge_text }}"/>
+    <small class="adm-hint">The small pill shown above the heading.</small>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <input type="text" name="badge_text_ur" dir="rtl" value="{{ hero.badge_text_ur }}"/>
+    </div>
+  </div>
+
+  <!-- Heading, built from 4 pieces + one highlighted word so it renders
+       exactly like the current design: "Line 1 / Prefix Highlight / Line 3 / Line 4" -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading — Line 1</label>
+      <input type="text" name="heading_line1" placeholder="Learn the Quran"
+             value="{{ hero.heading_line1 }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_line1_ur" dir="rtl" value="{{ hero.heading_line1_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading — Line 2 prefix</label>
+      <input type="text" name="heading_prefix" placeholder="with"
+             value="{{ hero.heading_prefix }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_prefix_ur" dir="rtl" value="{{ hero.heading_prefix_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading — Highlighted word</label>
+      <input type="text" name="heading_highlight" placeholder="Excellence"
+             value="{{ hero.heading_highlight }}"/>
+      <small class="adm-hint">Shown in gold, on the same line as the prefix above.</small>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_highlight_ur" dir="rtl" value="{{ hero.heading_highlight_ur }}"/>
+      </div>
+    </div>
+  </div>
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading — Line 3</label>
+      <input type="text" name="heading_line3" placeholder="from Anywhere"
+             value="{{ hero.heading_line3 }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_line3_ur" dir="rtl" value="{{ hero.heading_line3_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading — Line 4</label>
+      <input type="text" name="heading_line4" placeholder="in the World"
+             value="{{ hero.heading_line4 }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="heading_line4_ur" dir="rtl" value="{{ hero.heading_line4_ur }}"/>
+      </div>
+    </div>
+  </div>
+  <div class="adm-hero-preview" id="heroHeadingPreview">
+    <span id="hp-l1"></span><br>
+    <span id="hp-prefix"></span> <em id="hp-highlight"></em><br>
+    <span id="hp-l3"></span><br>
+    <span id="hp-l4"></span>
+  </div>
+
+  <!-- Subtitle -->
+  <div class="adm-fg">
+    <label>Subtitle</label>
+    <textarea name="subtitle" rows="2" placeholder="One-to-one Quran classes with Tajweed, Hifz, Arabic language and Islamic studies for all ages.">{{ hero.subtitle }}</textarea>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <textarea name="subtitle_ur" dir="rtl" rows="2">{{ hero.subtitle_ur }}</textarea>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Primary Button Text</label>
+      <input type="text" name="btn1_text" placeholder="Enroll Now" value="{{ hero.btn1_text }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="btn1_text_ur" dir="rtl" value="{{ hero.btn1_text_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Primary Button Link</label>
+      <input type="text" name="btn1_link" placeholder="#courses" value="{{ hero.btn1_link }}"/>
+    </div>
+  </div>
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Secondary Button Text</label>
+      <input type="text" name="btn2_text" placeholder="Book Free Trial" value="{{ hero.btn2_text }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="btn2_text_ur" dir="rtl" value="{{ hero.btn2_text_ur }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Secondary Button Link</label>
+      <input type="text" name="btn2_link" placeholder="https://wa.me/919045520249" value="{{ hero.btn2_link }}"/>
+    </div>
+  </div>
+
+  <!-- Image upload -->
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Banner Image Upload (Cloudinary)</label>
+      <input type="file" name="image" accept="image/*" class="adm-file-input"/>
+      <small class="adm-hint">Upload a new image — this replaces the current one.</small>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Image URL</label>
+      <input type="text" name="image_url" placeholder="https://... (leave blank if uploading above)"/>
+    </div>
+  </div>
+
+  {% if hero.image_url %}
+  <div class="adm-current-img">
+    <span>Current Image:</span>
+    <img src="{{ hero.image_url }}" alt="Homepage Banner"/>
+  </div>
+  {% endif %}
+
+  <div class="adm-form-footer">
+    <button type="submit" class="btn-primary"><i class="fa-solid fa-pen"></i>&nbsp; Save Changes</button>
+  </div>
+
+</form>
+
+<script>
+(function(){
+  var fields = {
+    heading_line1: 'hp-l1', heading_prefix: 'hp-prefix',
+    heading_highlight: 'hp-highlight', heading_line3: 'hp-l3', heading_line4: 'hp-l4'
+  };
+  function sync(){
+    for (var name in fields) {
+      var input = document.querySelector('[name=' + name + ']');
+      var out = document.getElementById(fields[name]);
+      if (input && out) out.textContent = input.value;
+    }
+  }
+  Object.keys(fields).forEach(function(name){
+    var input = document.querySelector('[name=' + name + ']');
+    if (input) input.addEventListener('input', sync);
+  });
+  sync();
+})();
+</script>
+{% endblock %}

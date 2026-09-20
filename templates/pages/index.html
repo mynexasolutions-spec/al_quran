@@ -1,39 +1,229 @@
-﻿{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %}
 {% block title %}Home | Al-Qur'an Global Institute{% endblock %}
 
 {% block content %}
 
 <!-- ══ HERO ══ -->
-<section class="hero" id="home">
-  <div class="hero-wm">&#x627;&#x644;&#x642;&#x631;&#x622;&#x646;</div>
-  <div class="hero-content">
+<section class="hero" id="home" style="background-image: url('{{ hero.image_url }}');">
+  <div class="hero-container">
+    
+    <div class="hero-text-col">
+      <div class="hero-badge">{{ hero.badge_text }}</div>
 
-    <div class="hero-logo-row">
-      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Al-Qur'an Global Institute"/>
-      <div class="hero-inst">
-        <strong>Al-Qur'an Global Institute</strong>
-        <span>Excellence in Islamic and Language Education</span>
+      <h1>{{ hero.heading_line1 }}<br>{{ hero.heading_prefix }} <em>{{ hero.heading_highlight }}</em><br>{{ hero.heading_line3 }}<br class="hero-h1-brk-3"> {{ hero.heading_line4 }}</h1>
+
+      <p>{{ hero.subtitle }}</p>
+
+      <div class="hero-btns">
+        <a href="{{ hero.btn1_link }}" class="btn-primary">{{ hero.btn1_text }}</a>
+        <a href="{{ hero.btn2_link }}" target="_blank" rel="noopener" class="btn-outline-dark"><i class="fa-regular fa-calendar" style="margin-right: 6px;"></i> {{ hero.btn2_text }}</a>
+      </div>
+      
+      <div class="hero-social-proof">
+        <div class="avatars">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
+        </div>
+        <div class="social-text">
+          <strong>5000+</strong>
+          <span>Students Enrolled<br>Worldwide</span>
+        </div>
       </div>
     </div>
 
-    <span class="hero-badge">{{ t.heroBadge | safe }}</span>
+    <!-- Shown only on phone widths (see responsive.css) — on tablet/desktop
+         the same photo is used as the section's full-bleed background instead
+         (set inline below, since it's admin-editable and can't live in the
+         static stylesheet). -->
+    <div class="hero-img-col">
+      <img src="{{ hero.image_url }}" alt="Learn Quran online with certified teachers" class="hero-main-img">
+    </div>
+  </div>
+</section>
 
-    <h1><span>{{ t.heroH1Line1 }}</span><br><em>{{ t.heroH1Em | safe }}</em></h1>
+<!-- ══ HERO STATS BAR ══ -->
+<section class="hero-stats-bar">
+  <div class="hero-stats-container">
+    <div class="stat-box">
+      <i class="fa-solid fa-users stat-icon"></i>
+      <div class="stat-text">
+        <strong>5000+</strong>
+        <span>Students Enrolled</span>
+      </div>
+    </div>
+    <div class="stat-box">
+      <i class="fa-solid fa-chalkboard-user stat-icon"></i>
+      <div class="stat-text">
+        <strong>80+</strong>
+        <span>Qualified Teachers</span>
+      </div>
+    </div>
+    <div class="stat-box">
+      <i class="fa-solid fa-globe stat-icon"></i>
+      <div class="stat-text">
+        <strong>50+</strong>
+        <span>Countries Worldwide</span>
+      </div>
+    </div>
+    <div class="stat-box">
+      <i class="fa-regular fa-star stat-icon"></i>
+      <div class="stat-text">
+        <strong>4.9/5</strong>
+        <span>(2.5k+ Reviews)</span>
+        <span class="stat-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <span class="hero-arabic-sub">&#x648;&#x631;&#x62A;&#x644; &#x627;&#x644;&#x642;&#x631;&#x622;&#x646; &#x62A;&#x631;&#x62A;&#x64A;&#x644;&#x627;</span>
+<!-- ══ HERO FEATURES BAR ══ -->
+<section class="hero-features-bar">
+  <div class="hero-features-container">
+    <div class="feature-item">
+      <i class="fa-regular fa-user feature-icon"></i>
+      <span>One-to-One<br>Live Classes</span>
+    </div>
+    <div class="feature-item">
+      <i class="fa-solid fa-people-arrows feature-icon"></i>
+      <span>Male & Female<br>Teachers</span>
+    </div>
+    <div class="feature-item">
+      <i class="fa-regular fa-clock feature-icon"></i>
+      <span>Flexible<br>Timings</span>
+    </div>
+    <div class="feature-item">
+      <i class="fa-solid fa-award feature-icon"></i>
+      <span>Certified<br>Teachers</span>
+    </div>
+    <div class="feature-item">
+      <i class="fa-solid fa-chart-line feature-icon"></i>
+      <span>Progress<br>Tracking</span>
+    </div>
+    <div class="feature-item">
+      <i class="fa-solid fa-shield-halved feature-icon"></i>
+      <span>Secure & Safe<br>Environment</span>
+    </div>
+  </div>
+</section>
 
-    <p>{{ t.heroP | safe }}</p>
+<!-- ══ PRAYER TIMES & DATE WIDGETS ══ -->
+<section class="prayer-times-section">
+  <div class="prayer-container">
+    
+    <div class="prayer-widget">
+      <div class="widget-header">
+        <h3>Today's Prayer Times <i class="fa-regular fa-calendar-days"></i></h3>
+        <a href="#" class="btn-view-all">View All</a>
+      </div>
+      <div class="prayer-times-grid">
+        <div class="prayer-card" id="prayer-fajr">
+          <div class="p-icon"><i class="fa-solid fa-cloud-sun"></i></div>
+          <div class="p-time">
+            <span class="p-name">Fajr</span>
+            <strong class="p-value">--:-- --</strong>
+          </div>
+        </div>
+        <div class="prayer-card" id="prayer-dhuhr">
+          <div class="p-icon"><i class="fa-solid fa-sun"></i></div>
+          <div class="p-time">
+            <span class="p-name">Dhuhr</span>
+            <strong class="p-value">--:-- --</strong>
+          </div>
+        </div>
+        <div class="prayer-card" id="prayer-asr">
+          <div class="p-icon"><i class="fa-solid fa-sun"></i></div>
+          <div class="p-time">
+            <span class="p-name">Asr</span>
+            <strong class="p-value">--:-- --</strong>
+          </div>
+        </div>
+        <div class="prayer-card" id="prayer-maghrib">
+          <div class="p-icon"><i class="fa-solid fa-cloud-sun"></i></div>
+          <div class="p-time">
+            <span class="p-name">Maghrib</span>
+            <strong class="p-value">--:-- --</strong>
+          </div>
+        </div>
+        <div class="prayer-card" id="prayer-isha">
+          <div class="p-icon"><i class="fa-solid fa-moon"></i></div>
+          <div class="p-time">
+            <span class="p-name">Isha</span>
+            <strong class="p-value">--:-- --</strong>
+          </div>
+        </div>
+      </div>
+      <div class="widget-footer">
+        <div class="location-info">
+          <i class="fa-solid fa-location-dot"></i> <span id="prayer-location">New York, USA</span>
+        </div>
+        <div class="notification-toggle">
+          <i class="fa-regular fa-bell"></i> <span>Get Notified Before Each Prayer</span>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
 
-    <div class="hero-btns">
-      <a href="#courses" class="btn-primary">{{ t.heroExplore }}</a>
-      <a href="https://wa.me/919045520249" target="_blank" rel="noopener" class="btn-outline">{{ t.heroContact }}</a>
+    <div class="islamic-date-widget">
+      <div class="widget-header">
+        <h3>Islamic Date <i class="fa-regular fa-calendar-days"></i></h3>
+      </div>
+      <div class="date-content">
+        <i class="fa-solid fa-moon moon-icon"></i>
+        <h2 id="hijri-date">-- --- ----</h2>
+        <p id="gregorian-date">---, -- --- ----</p>
+      </div>
+      <div class="mosque-silhouette"><i class="fa-solid fa-mosque"></i></div>
     </div>
 
   </div>
 </section>
 
+<!-- API JS -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const city = "New York";
+    const country = "USA";
+    const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=2`;
 
-<!-- ══ COURSES OVERVIEW ══ -->
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.code === 200) {
+          const timings = data.data.timings;
+          const date = data.data.date;
+
+          // Helper to format 24h to 12h
+          const formatTime = (time24) => {
+            const [h, m] = time24.split(':');
+            let hours = parseInt(h);
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            const strHours = hours < 10 ? '0'+hours : hours;
+            return `${strHours}:${m} ${ampm}`;
+          };
+
+          document.querySelector('#prayer-fajr .p-value').innerText = formatTime(timings.Fajr);
+          document.querySelector('#prayer-dhuhr .p-value').innerText = formatTime(timings.Dhuhr);
+          document.querySelector('#prayer-asr .p-value').innerText = formatTime(timings.Asr);
+          document.querySelector('#prayer-maghrib .p-value').innerText = formatTime(timings.Maghrib);
+          document.querySelector('#prayer-isha .p-value').innerText = formatTime(timings.Isha);
+
+          const hijri = date.hijri;
+          document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
+          
+          const gregorian = date.gregorian;
+          document.getElementById('gregorian-date').innerText = `${gregorian.weekday.en}, ${gregorian.day} ${gregorian.month.en} ${gregorian.year}`;
+        }
+      })
+      .catch(err => console.error("Error fetching prayer times: ", err));
+  });
+</script><!-- ══ COURSES OVERVIEW ══ -->
 <section class="courses" id="courses">
   <div class="center-hdr">
     <span class="section-tag">{{ t.coursesSectionTag }}</span>
@@ -43,156 +233,35 @@
   </div>
 
   <div class="courses-grid">
-
-    <a href="{{ url_for('course_tajweed') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/tajweed.webp') }}" alt="Tajweed Course" class="course-img"/>
+    {% for c in courses %}
+    {% if c.has_detail_page %}
+    <a href="{{ url_for('course_detail', slug=c.slug) }}" class="course-card">
+      <img src="{{ c.card_image_url }}" alt="{{ c.title }}" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.tajweedTitle }}</h3>
-        <p>{{ t.tajweedDesc }}</p>
+        <span class="course-cat">{{ c.card_category }}</span>
+        <h3>{{ c.title }}</h3>
+        <p>{{ c.card_description }}</p>
         <div class="course-meta">
-          <span class="badge">{{ t.badgeAllLevels }}</span>
-          <span class="badge">{{ t.badgeOnline }}</span>
-          <span class="badge">{{ t.badgeCertificate }}</span>
+          {% for b in c.card_badges %}<span class="badge">{{ b | safe }}</span>{% endfor %}
         </div>
         <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </a>
-
-    <a href="{{ url_for('course_quran_recitation') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Quran_recitation_course.webp') }}" alt="Quran Recitation Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.recitationTitle }}</h3>
-        <p>{{ t.recitationDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badge1Year }}</span>
-          <span class="badge">{{ t.badgeAllLevels }}</span>
-          <span class="badge">{{ t.badgeNazira }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_hifz') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Quran_Hifz.webp') }}" alt="Quran Hifz Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.hifzTitle }}</h3>
-        <p>{{ t.hifzDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeMonSat }}</span>
-          <span class="badge">{{ t.badgeAllAges }}</span>
-          <span class="badge">{{ t.badgeHafiz }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_qirat') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Quran_Qirat_course.webp') }}" alt="Qirat Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catQuranic }}</span>
-        <h3>{{ t.qiratTitle }}</h3>
-        <p>{{ t.qiratDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeFlexible }}</span>
-          <span class="badge">{{ t.badgeIjazah }}</span>
-          <span class="badge">{{ t.badgeAdvanced }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_arabic') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Arabic_Speaking_Course.webp') }}" alt="Basic Arabic Speaking Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catLanguage }}</span>
-        <h3>{{ t.arabicTitle }}</h3>
-        <p>{{ t.arabicDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badge3Months }}</span>
-          <span class="badge">{{ t.badgeBeginner }}</span>
-          <span class="badge">{{ t.badge5xWeek }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_urdu') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/Urdu_language.webp') }}" alt="Urdu Language Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catLanguage }}</span>
-        <h3>{{ t.urduTitle }}</h3>
-        <p>{{ t.urduDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badgeTueWed | safe }}</span>
-          <span class="badge">{{ t.badgeAllLevels }}</span>
-          <span class="badge">{{ t.badgeCertificate }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
-    <a href="{{ url_for('course_english') }}" class="course-card">
-      <img src="{{ url_for('static', filename='images/courses/English_course.webp') }}" alt="Basic English Course" class="course-img"/>
-      <div class="course-card-body">
-        <span class="course-cat">{{ t.catLanguage }}</span>
-        <h3>{{ t.englishTitle }}</h3>
-        <p>{{ t.englishDesc }}</p>
-        <div class="course-meta">
-          <span class="badge">{{ t.badge3Months }}</span>
-          <span class="badge">{{ t.badgeBeginner }}</span>
-          <span class="badge">{{ t.badge5xWeek }}</span>
-        </div>
-        <span class="course-link">{{ t.courseLinkText }} <span class="course-link-arrow">&#8594;</span></span>
-      </div>
-    </a>
-
+    {% else %}
     <div class="course-card course-card--no-link">
-      <img src="{{ url_for('static', filename='images/courses/Academic_Subjects.webp') }}" alt="Academic Subjects" class="course-img"/>
+      <img src="{{ c.card_image_url }}" alt="{{ c.title }}" class="course-img"/>
       <div class="course-card-body">
-        <span class="course-cat">{{ t.catAcademic }}</span>
-        <h3>{{ t.academicTitle }}</h3>
-        <p>{{ t.academicDesc }}</p>
+        <span class="course-cat">{{ c.card_category }}</span>
+        <h3>{{ c.title }}</h3>
+        <p>{{ c.card_description }}</p>
         <div class="course-meta">
-          <span class="badge">{{ t.badgeMaths }}</span>
-          <span class="badge">{{ t.badgeScience }}</span>
-          <span class="badge">{{ t.badgeAllAges }}</span>
+          {% for b in c.card_badges %}<span class="badge">{{ b | safe }}</span>{% endfor %}
         </div>
         <span class="course-link">{{ t.enrollViaContact }} <span class="course-link-arrow">&#8594;</span></span>
       </div>
     </div>
-
-  </div>
-</section>
-
-
-<!-- ══ STATS ══ -->
-<section class="stats-strip">
-  <div class="stats-numbers">
-    <div class="stat">
-      <span class="stat-num">{{ t.stat1Num }}</span>
-      <span class="stat-label">{{ t.stat1Label }}</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ t.stat2Num }}</span>
-      <span class="stat-label">{{ t.stat2Label }}</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ t.stat3Num }}</span>
-      <span class="stat-label">{{ t.stat3Label }}</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ t.stat4Num }}</span>
-      <span class="stat-label">{{ t.stat4Label }}</span>
-    </div>
-  </div>
-  <div class="stats-trust-bar">
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust1 | safe }}</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust2 | safe }}</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust3 }}</span></div>
-    <div class="trust-item"><span class="trust-check">&#10003;</span><span>{{ t.trust4 }}</span></div>
+    {% endif %}
+    {% endfor %}
   </div>
 </section>
 
@@ -313,6 +382,7 @@
             <div class="rq">&#x201C;</div>
             <div class="rs">{% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}</div>
             <p class="rt">{{ rev.review_text }}</p>
+            <button class="rev-toggle" type="button">Read more</button>
             <div class="reviewer">
               <div class="ra">{{ rev.name[:2].upper() }}</div>
               <div>
@@ -327,6 +397,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
+          <button class="rev-toggle" type="button">Read more</button>
           <div class="reviewer">
             <div class="ra">FA</div>
             <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
@@ -336,6 +407,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
+          <button class="rev-toggle" type="button">Read more</button>
           <div class="reviewer">
             <div class="ra">KM</div>
             <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
@@ -345,6 +417,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
+          <button class="rev-toggle" type="button">Read more</button>
           <div class="reviewer">
             <div class="ra">ZR</div>
             <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
@@ -354,6 +427,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
+          <button class="rev-toggle" type="button">Read more</button>
           <div class="reviewer">
             <div class="ra">NA</div>
             <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
@@ -363,6 +437,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
+          <button class="rev-toggle" type="button">Read more</button>
           <div class="reviewer">
             <div class="ra">OB</div>
             <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
@@ -372,6 +447,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
+          <button class="rev-toggle" type="button">Read more</button>
           <div class="reviewer">
             <div class="ra">SI</div>
             <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>

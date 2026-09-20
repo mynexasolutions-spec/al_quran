@@ -18,6 +18,13 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'fallback-secret-key')
 
+# Force browsers to revalidate static files (CSS/JS/images) on every
+# request instead of caching them for hours. This app's CSS/JS gets
+# edited frequently; without this, visitors can keep running an old,
+# already-fixed-since-then copy of a script until they hard-refresh —
+# the site would look "fixed" to us but stay broken for them.
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 # ── Cloudinary configuration ──────────────────────────────────
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -31,6 +38,14 @@ with app.app_context():
     try:
         DB.init_db()
         DB.seed_competitions()
+        DB.seed_hero_content()
+        DB.seed_courses()
+        DB.seed_prizes()
+        # Backfill Urdu text for anything seeded before Urdu support
+        # existed — a no-op once every row already has its Urdu columns.
+        DB.backfill_hero_urdu()
+        DB.backfill_course_urdu()
+        DB.backfill_prizes_urdu()
     except Exception as e:
         print(f"[DB INIT WARNING] {e}")
 
@@ -46,6 +61,74 @@ STATUS_LABELS = {
     'ongoing':   'Ongoing',
     'completed': 'Completed',
 }
+
+# Fallback used if the DB is unreachable or the hero_content row is
+# missing — keeps the homepage rendering with the original hard-coded
+# copy instead of erroring out.
+DEFAULT_HERO_CONTENT = {
+    'badge_text':        "#1 World's Trusted Online Quran Institute",
+    'heading_line1':     'Learn the Quran',
+    'heading_prefix':    'with',
+    'heading_highlight': 'Excellence',
+    'heading_line3':     'from Anywhere',
+    'heading_line4':     'in the World',
+    'subtitle':          'One-to-one Quran classes with Tajweed, Hifz, Arabic language and Islamic studies for all ages.',
+    'btn1_text':         'Enroll Now',
+    'btn1_link':         '#courses',
+    'btn2_text':         'Book Free Trial',
+    'btn2_link':         'https://wa.me/919045520249',
+    'image_url':         '/static/images/al-quran-banner.webp',
+}
+
+DEFAULT_PRIZES_SECTION = {
+    'tag':          'Rewards',
+    'heading':      'Prizes &',
+    'heading_span': 'Recognition',
+    'subtitle':     "We celebrate every participant's effort, with special honours for those who excel at the top.",
+}
+
+# ── Bilingual DB content: which fields have a "<field>_ur" counterpart ──
+HERO_UR_FIELDS = (
+    'badge_text', 'heading_line1', 'heading_prefix', 'heading_highlight',
+    'heading_line3', 'heading_line4', 'subtitle', 'btn1_text', 'btn2_text',
+)
+COURSE_UR_FIELDS = (
+    'card_category', 'card_description', 'card_badges', 'oc_title', 'oc_description',
+    'category', 'title', 'tagline', 'hero_badges',
+    'duration', 'schedule', 'eligibility', 'certificate_val',
+    'quote', 'quote_cite', 'intro',
+)
+COURSE_SECTION_UR_FIELDS = ('heading', 'items')
+PRIZES_SECTION_UR_FIELDS = ('tag', 'heading', 'heading_span', 'subtitle')
+PRIZE_UR_FIELDS = ('heading', 'items')
+
+
+def localize(raw, fields, lang):
+    """Return a shallow copy of `raw` where every field in `fields` is
+    swapped for its "<field>_ur" counterpart when lang == 'ur' and that
+    translation is actually filled in — otherwise the English value is
+    left in place. Used to turn a DB row (which always carries both
+    languages, for the admin forms) into what a specific page render
+    should show. `raw` may be None (falls straight through) or a dict."""
+    if not raw:
+        return raw
+    out = dict(raw)
+    if lang == 'ur':
+        for f in fields:
+            ur_val = raw.get(f + '_ur')
+            if ur_val:  # non-empty string, or non-empty list for *_badges/items
+                out[f] = ur_val
+    return out
+
+
+def localize_course(course, lang):
+    """localize() a course dict plus each of its content-block sections."""
+    if not course:
+        return course
+    c = localize(course, COURSE_UR_FIELDS, lang)
+    if 'sections' in c:
+        c['sections'] = [localize(s, COURSE_SECTION_UR_FIELDS, lang) for s in c['sections']]
+    return c
 
 THEME_MAP = {
     'teal':  'comp-top--teal',
@@ -68,6 +151,19 @@ def admin_required(f):
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated
+
+
+@app.context_processor
+def inject_nav_courses():
+    """Courses with a detail page, for the navbar dropdown and footer
+    link list — included on every page via navbar.html/footer.html,
+    which don't otherwise have access to a route's own context."""
+    try:
+        lang = session.get('lang', 'en')
+        courses = DB.get_all_courses()
+        return {'nav_courses': [localize_course(c, lang) for c in courses if c['has_detail_page']]}
+    except Exception:
+        return {'nav_courses': []}
 
 
 @app.context_processor
@@ -171,6 +267,7 @@ def _build_excel(registrations, title='Registrations'):
 # ═══════════════════════════════════════════════════════════════
 @app.route('/')
 def index():
+    lang = session.get('lang', 'en')
     try:
         comps = DB.get_all_competitions()
     except Exception:
@@ -180,45 +277,34 @@ def index():
         reviews = DB.get_approved_reviews()
     except Exception:
         reviews = []
+    try:
+        hero = localize(DB.get_hero_content() or DEFAULT_HERO_CONTENT, HERO_UR_FIELDS, lang)
+    except Exception:
+        hero = DEFAULT_HERO_CONTENT
+    try:
+        courses = [localize_course(c, lang) for c in DB.get_all_courses()]
+    except Exception:
+        courses = []
     return render_template('pages/index.html', featured_comps=featured,
-                           reviews=reviews,
+                           reviews=reviews, hero=hero, courses=courses,
                            THEME_MAP=THEME_MAP, BADGE_MAP=BADGE_MAP,
                            STATUS_LABELS=STATUS_LABELS)
 
 
-@app.route('/course/tajweed')
-def course_tajweed():
-    return render_template('pages/course_tajweed.html')
-
-
-@app.route('/course/quran-recitation')
-def course_quran_recitation():
-    return render_template('pages/course_quran_recitation.html')
-
-
-@app.route('/course/hifz')
-def course_hifz():
-    return render_template('pages/course_hifz.html')
-
-
-@app.route('/course/qirat')
-def course_qirat():
-    return render_template('pages/course_qirat.html')
-
-
-@app.route('/course/arabic')
-def course_arabic():
-    return render_template('pages/course_arabic.html')
-
-
-@app.route('/course/urdu')
-def course_urdu():
-    return render_template('pages/course_urdu.html')
-
-
-@app.route('/course/english')
-def course_english():
-    return render_template('pages/course_english.html')
+@app.route('/course/<slug>')
+def course_detail(slug):
+    lang = session.get('lang', 'en')
+    course = DB.get_course_by_slug(slug)
+    if not course or not course['has_detail_page']:
+        abort(404)
+    try:
+        all_courses = DB.get_all_courses()
+    except Exception:
+        all_courses = []
+    other_courses = [localize_course(c, lang) for c in all_courses
+                     if c['id'] != course['id'] and c['has_detail_page']]
+    return render_template('pages/course_detail.html',
+                           course=localize_course(course, lang), other_courses=other_courses)
 
 
 @app.route('/team')
@@ -231,11 +317,21 @@ def team():
 # ═══════════════════════════════════════════════════════════════
 @app.route('/competitions')
 def competitions():
+    lang = session.get('lang', 'en')
     try:
         comps = DB.get_all_competitions()
     except Exception:
         comps = []
+    try:
+        prizes_section = localize(DB.get_prizes_section() or DEFAULT_PRIZES_SECTION, PRIZES_SECTION_UR_FIELDS, lang)
+    except Exception:
+        prizes_section = DEFAULT_PRIZES_SECTION
+    try:
+        prizes = [localize(p, PRIZE_UR_FIELDS, lang) for p in DB.get_all_prizes()]
+    except Exception:
+        prizes = []
     return render_template('pages/competitions.html', competitions=comps,
+                           prizes_section=prizes_section, prizes=prizes,
                            THEME_MAP=THEME_MAP, BADGE_MAP=BADGE_MAP,
                            STATUS_LABELS=STATUS_LABELS)
 
@@ -559,6 +655,247 @@ def admin_review_delete(rid):
     DB.delete_review(rid)
     flash('Review deleted.', 'success')
     return redirect(url_for('admin_reviews'))
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Admin — Homepage Hero Banner
+# ═══════════════════════════════════════════════════════════════
+@app.route('/admin/hero', methods=['GET', 'POST'])
+@admin_required
+def admin_hero():
+    hero = DB.get_hero_content() or DEFAULT_HERO_CONTENT
+
+    if request.method == 'POST':
+        image_url = hero.get('image_url')
+        if 'image' in request.files and request.files['image'].filename:
+            try:
+                result = cloudinary.uploader.upload(
+                    request.files['image'],
+                    folder='alquran/hero',
+                    transformation=[{'width': 1600, 'crop': 'limit'}]
+                )
+                image_url = result.get('secure_url')
+            except Exception as e:
+                flash(f'Image upload failed: {e}', 'warning')
+        elif request.form.get('image_url', '').strip():
+            image_url = request.form['image_url'].strip()
+
+        hero_columns = HERO_UR_FIELDS + tuple(f + '_ur' for f in HERO_UR_FIELDS) + ('btn1_link', 'btn2_link')
+        data = {c: request.form.get(c, '').strip() for c in hero_columns}
+        DB.update_hero_content(data, image_url=image_url)
+
+        flash('Homepage banner updated successfully!', 'success')
+        return redirect(url_for('admin_hero'))
+
+    return render_template('admin/hero_form.html', hero=hero)
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Admin — Courses
+# ═══════════════════════════════════════════════════════════════
+def _parse_pipe_list(raw):
+    """Comma/newline list -> list of strings (badges, paragraphs, plain bullets)."""
+    if not raw:
+        return []
+    return [line.strip() for line in raw.replace(',', '\n').splitlines() if line.strip()]
+
+
+def _parse_highlight_items(raw):
+    """Each non-empty line is 'icon_url | Heading | Text' -> list of dicts.
+    A bare icon filename (no slash) is resolved against the shared
+    static/images/ folder so admins can type e.g. 'hl_instructor.svg'."""
+    items = []
+    for line in (raw or '').splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        parts = [p.strip() for p in line.split('|')]
+        icon, heading, text = (parts + ['', '', ''])[:3]
+        if icon and '/' not in icon:
+            icon = f'/static/images/{icon}'
+        items.append({'icon_url': icon, 'heading': heading, 'text': text})
+    return items
+
+
+def _parse_highlight_items_ur(raw, english_items):
+    """Urdu highlight items are entered as 'Heading | Text' (no icon —
+    it reuses the English item's icon at the same position, since the
+    icon itself doesn't change with language)."""
+    items = []
+    for i, line in enumerate(line.strip() for line in (raw or '').splitlines()):
+        if not line:
+            continue
+        parts = [p.strip() for p in line.split('|')]
+        heading, text = (parts + ['', ''])[:2]
+        icon = english_items[i]['icon_url'] if i < len(english_items) else ''
+        items.append({'icon_url': icon, 'heading': heading, 'text': text})
+    return items
+
+
+def _sections_from_form(form):
+    types       = form.getlist('section_type[]')
+    headings    = form.getlist('section_heading[]')
+    styles      = form.getlist('section_list_style[]')
+    items       = form.getlist('section_items[]')
+    headings_ur = form.getlist('section_heading_ur[]')
+    items_ur    = form.getlist('section_items_ur[]')
+    sections = []
+    for block_type, heading, list_style, raw_items, heading_ur, raw_items_ur in zip(
+            types, headings, styles, items, headings_ur, items_ur):
+        heading = heading.strip()
+        if block_type == 'highlights':
+            parsed = _parse_highlight_items(raw_items)
+            parsed_ur = _parse_highlight_items_ur(raw_items_ur, parsed)
+        else:
+            parsed = _parse_pipe_list(raw_items)
+            parsed_ur = _parse_pipe_list(raw_items_ur)
+        if not heading and not parsed:
+            continue  # skip fully-empty blocks (e.g. an added-then-unused row)
+        sections.append({
+            'block_type': block_type,
+            'list_style': list_style if block_type == 'bullets' else None,
+            'heading': heading,
+            'items': parsed,
+            'heading_ur': heading_ur.strip(),
+            'items_ur': parsed_ur,
+        })
+    return sections
+
+
+def _course_data_from_form(form, card_image_url, icon_url):
+    """Build the course data dict (English + Urdu text fields) shared by
+    both the create and edit routes."""
+    data = {
+        'slug': form.get('slug', '').strip().lower(),
+        'sort_order': form.get('sort_order', type=int) or 0,
+        'has_detail_page': bool(form.get('has_detail_page')),
+        'card_image_url': card_image_url,
+        'icon_url': icon_url,
+        'arabic_title': form.get('arabic_title', '').strip(),
+    }
+    for f in COURSE_UR_FIELDS:
+        if f in ('card_badges', 'hero_badges'):
+            data[f] = _parse_pipe_list(form.get(f, ''))
+            data[f + '_ur'] = _parse_pipe_list(form.get(f + '_ur', ''))
+        else:
+            data[f] = form.get(f, '').strip()
+            data[f + '_ur'] = form.get(f + '_ur', '').strip()
+    return data
+
+
+def _upload_course_image(field_name, folder, current_url, form):
+    if field_name in request.files and request.files[field_name].filename:
+        try:
+            result = cloudinary.uploader.upload(
+                request.files[field_name],
+                folder=folder,
+                transformation=[{'width': 1000, 'crop': 'limit'}]
+            )
+            return result.get('secure_url')
+        except Exception as e:
+            flash(f'Image upload failed: {e}', 'warning')
+            return current_url
+    url_field = f'{field_name}_url'
+    if form.get(url_field, '').strip():
+        return form[url_field].strip()
+    return current_url
+
+
+@app.route('/admin/courses')
+@admin_required
+def admin_courses():
+    courses = DB.get_all_courses()
+    return render_template('admin/courses_list.html', courses=courses)
+
+
+@app.route('/admin/courses/new', methods=['GET', 'POST'])
+@admin_required
+def admin_course_new():
+    if request.method == 'POST':
+        card_image_url = _upload_course_image('card_image', 'alquran/courses', None, request.form)
+        icon_url       = _upload_course_image('icon_image', 'alquran/courses', None, request.form)
+        data = _course_data_from_form(request.form, card_image_url, icon_url)
+
+        if not data['slug'] or not data['title']:
+            flash('Slug and Title are required.', 'error')
+            return render_template('admin/course_form.html', action='new', course=data, sections=_sections_from_form(request.form))
+
+        DB.create_course(data, _sections_from_form(request.form))
+        flash('Course created successfully!', 'success')
+        return redirect(url_for('admin_courses'))
+
+    return render_template('admin/course_form.html', action='new', course=None, sections=[])
+
+
+@app.route('/admin/courses/<int:cid>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_course_edit(cid):
+    course = DB.get_course(cid)
+    if not course:
+        abort(404)
+
+    if request.method == 'POST':
+        card_image_url = _upload_course_image('card_image', 'alquran/courses', course.get('card_image_url'), request.form)
+        icon_url       = _upload_course_image('icon_image', 'alquran/courses', course.get('icon_url'), request.form)
+        data = _course_data_from_form(request.form, card_image_url, icon_url)
+
+        if not data['slug'] or not data['title']:
+            flash('Slug and Title are required.', 'error')
+            return render_template('admin/course_form.html', action='edit', course=dict(course, **data), sections=_sections_from_form(request.form))
+
+        DB.update_course(cid, data, _sections_from_form(request.form))
+        flash('Course updated successfully!', 'success')
+        return redirect(url_for('admin_courses'))
+
+    return render_template('admin/course_form.html', action='edit', course=course, sections=course['sections'])
+
+
+@app.route('/admin/courses/<int:cid>/delete', methods=['POST'])
+@admin_required
+def admin_course_delete(cid):
+    DB.delete_course(cid)
+    flash('Course deleted.', 'info')
+    return redirect(url_for('admin_courses'))
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Admin — Prizes & Recognition (competitions page)
+# ═══════════════════════════════════════════════════════════════
+@app.route('/admin/prizes', methods=['GET', 'POST'])
+@admin_required
+def admin_prizes():
+    section = DB.get_prizes_section() or DEFAULT_PRIZES_SECTION
+    prizes  = DB.get_all_prizes()
+
+    if request.method == 'POST':
+        section_data = {f: request.form.get(f, '').strip() for f in PRIZES_SECTION_UR_FIELDS}
+        section_data.update({f + '_ur': request.form.get(f + '_ur', '').strip() for f in PRIZES_SECTION_UR_FIELDS})
+        DB.update_prizes_section(section_data)
+
+        variants    = request.form.getlist('prize_variant[]')
+        icons       = request.form.getlist('prize_icon[]')
+        headings    = request.form.getlist('prize_heading[]')
+        items_l     = request.form.getlist('prize_items[]')
+        headings_ur = request.form.getlist('prize_heading_ur[]')
+        items_ur_l  = request.form.getlist('prize_items_ur[]')
+        new_prizes = []
+        for variant, icon, heading, raw_items, heading_ur, raw_items_ur in zip(
+                variants, icons, headings, items_l, headings_ur, items_ur_l):
+            heading = heading.strip()
+            items   = _parse_pipe_list(raw_items)
+            if not heading and not items:
+                continue  # skip an added-then-unused card
+            new_prizes.append({
+                'variant': variant, 'medal_icon': icon.strip(),
+                'heading': heading, 'items': items,
+                'heading_ur': heading_ur.strip(), 'items_ur': _parse_pipe_list(raw_items_ur),
+            })
+        DB.replace_all_prizes(new_prizes)
+
+        flash('Prizes & Recognition updated successfully!', 'success')
+        return redirect(url_for('admin_prizes'))
+
+    return render_template('admin/prizes_form.html', section=section, prizes=prizes)
 
 
 if __name__ == '__main__':

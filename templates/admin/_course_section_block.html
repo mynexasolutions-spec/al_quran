@@ -1,0 +1,58 @@
+{# One content-block editor row — included both for existing sections and,
+   inside a <template>, as the blank block a JS click clones. `sec` is a
+   dict with block_type/list_style/heading/items (see db.py course_sections). #}
+<div class="course-section-block adm-section-block">
+  <div class="adm-form-row">
+    <div class="adm-fg">
+      <label>Block Type</label>
+      <select name="section_type[]" class="section-type-sel">
+        <option value="bullets" {% if sec.block_type == 'bullets' %}selected{% endif %}>Bullet List</option>
+        <option value="highlights" {% if sec.block_type == 'highlights' %}selected{% endif %}>Highlights Grid</option>
+        <option value="paragraphs" {% if sec.block_type == 'paragraphs' %}selected{% endif %}>Paragraphs</option>
+      </select>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading</label>
+      <input type="text" name="section_heading[]" placeholder="e.g. What You'll Learn" value="{{ sec.heading or '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="section_heading_ur[]" dir="rtl" value="{{ sec.heading_ur or '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg section-liststyle-fg" {% if sec.block_type != 'bullets' %}hidden{% endif %}>
+      <label>Bullet Style</label>
+      <select name="section_list_style[]">
+        <option value="learn-list" {% if sec.list_style == 'learn-list' %}selected{% endif %}>Gold &#10022; bullets</option>
+        <option value="detail-list" {% if sec.list_style == 'detail-list' %}selected{% endif %}>Teal &#10003; checkmarks</option>
+      </select>
+    </div>
+  </div>
+  <div class="adm-fg">
+    <label>Items</label>
+    <textarea name="section_items[]" rows="5" class="section-items-ta">{%- if sec.block_type == 'highlights' -%}
+{%- for hl in sec['items'] -%}
+{{ (hl.icon_url or '').replace('/static/images/', '') }} | {{ hl.heading }} | {{ hl.text }}
+{% endfor -%}
+{%- else -%}
+{%- for item in sec['items'] -%}
+{{ item }}
+{% endfor -%}
+{%- endif -%}</textarea>
+    <small class="adm-hint section-items-hint">One list item per line.</small>
+    <div class="adm-fg-ur">
+      <label>Urdu (same order — {% if sec.block_type == 'highlights' %}"Heading | Text" per line, no icon — it reuses the English icon{% else %}one item per line{% endif %})</label>
+      <textarea name="section_items_ur[]" dir="rtl" rows="5" class="section-items-ta">{%- if sec.block_type == 'highlights' -%}
+{%- for hl in sec.get('items_ur', []) -%}
+{{ hl.heading }} | {{ hl.text }}
+{% endfor -%}
+{%- else -%}
+{%- for item in sec.get('items_ur', []) -%}
+{{ item }}
+{% endfor -%}
+{%- endif -%}</textarea>
+    </div>
+  </div>
+  <button type="button" class="adm-btn adm-btn--del remove-section-btn" style="width:auto;padding:.5rem 1rem;">
+    <i class="fa-solid fa-trash"></i>&nbsp; Remove Block
+  </button>
+</div>

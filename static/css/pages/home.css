@@ -5,38 +5,505 @@
 
 /* ────────────────── HERO ────────────────── */
 .hero {
-  min-height: 100vh;
-  background:
-    linear-gradient(150deg, rgba(4,25,18,0.92) 0%, rgba(6,50,35,0.86) 50%, rgba(5,85,50,0.78) 100%),
-    url('../../images/Banner_image.webp') center/cover no-repeat;
-  display: flex; align-items: center; justify-content: center;
-  padding: 156px 8% 80px;
-  position: relative; overflow: hidden;
-  text-align: center;
+  /* background-image is set inline on the element — it's admin-editable
+     (see templates/pages/index.html + /admin/hero), so it can't be a
+     static url() here. background-size/position/repeat still apply
+     to whatever the inline background-image is. */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 190px 5% 56px; /* Increased padding to clear fixed navbar and add gap */
+  min-height: 80vh; /* Better min-height to show the background */
+  position: relative;
+  overflow: hidden;
 }
-.hero-wm { position: absolute; top: 50%; right: 4%; transform: translateY(-50%); font-family: 'Amiri', serif; font-size: 13rem; color: rgba(201,168,76,0.055); pointer-events: none; user-select: none; line-height: 1; }
-.hero-content { position: relative; max-width: 820px; }
-.hero-logo-row { display: flex; align-items: center; gap: 1.15rem; margin-bottom: 1.8rem; justify-content: center; }
-.hero-logo-row img { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 4px 18px rgba(201,168,76,0.38)); border-radius: 50%; }
-.hero-inst { font-family: 'Playfair Display', serif; }
-.hero-inst strong { display: block; font-size: 1.48rem; color: var(--gold-light); font-weight: 700; }
-.hero-inst span { font-size: .72rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,230,140,0.92); text-shadow: 0 1px 4px rgba(0,0,0,0.55); }
-.hero-badge { display: inline-block; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.42); color: var(--gold-light); font-size: .82rem; letter-spacing: 3px; text-transform: uppercase; padding: .42rem 1.4rem; border-radius: 20px; margin-bottom: 1.3rem; font-weight: 700; }
-.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.3rem,5.5vw,4.5rem); color: var(--white); line-height: 1.1; margin-bottom: .65rem; }
-.hero h1 em { font-style: italic; color: var(--gold-light); }
-.hero-arabic-sub { font-family: 'Amiri', serif; font-size: 1.8rem; color: rgba(201,168,76,0.8); margin-bottom: 1.45rem; display: block; }
-.hero > .hero-content p { font-size: 1.08rem; color: rgba(220,242,236,0.97); line-height: 1.9; max-width: 620px; margin: 0 auto 2.4rem; font-weight: 400; }
-.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-/* ────────────────── STATS STRIP ────────────────── */
-.stats-strip { background: var(--white); padding: 0; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
-.stats-numbers { display: flex; flex-wrap: wrap; justify-content: center; max-width: 1100px; margin: 0 auto; }
-.stat { padding: 2.6rem 3rem; flex: 1; min-width: 180px; display: flex; flex-direction: column; align-items: center; border-right: 1px solid #E5E7EB; border-bottom: 2px solid #E5E7EB; }
-.stat:last-child { border-right: none; }
-.stat-num { font-family: 'Playfair Display', serif; font-size: 2.7rem; font-weight: 800; color: var(--teal-main); display: block; text-align: center; line-height: 1.1; }
-.stat-label { font-size: .93rem; color: #6B7280; text-align: center; display: block; margin-top: .5rem; font-weight: 500; letter-spacing: .2px; }
-.stats-trust-bar { background: var(--teal-dark); padding: 1.3rem 8%; display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; align-items: center; }
-.trust-item { color: var(--white); font-size: .95rem; font-weight: 600; display: flex; align-items: center; gap: .6rem; letter-spacing: .2px; }
-.trust-check { width: 26px; height: 26px; background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.45); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .8rem; flex-shrink: 0; font-weight: 700; }
+
+.hero-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-text-col {
+  flex: 1;
+  max-width: 600px;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: #FFFBEB; /* Light gold background */
+  color: #B45309; /* Dark gold/orange text */
+  border: 1px solid #FDE68A;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.hero-text-col h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  color: #022C22; /* Dark green/black */
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.hero-text-col h1 em {
+  font-style: normal;
+  color: #D97706; /* Gold color */
+}
+
+.hero-text-col p {
+  font-size: 1.1rem;
+  color: #000000; /* Changed to black as requested */
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.btn-primary {
+  background: #064E3B;
+  color: #fff;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background: #065F46;
+}
+
+.btn-outline-dark {
+  background: #fff;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.btn-outline-dark:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
+}
+
+.hero-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatars {
+  display: flex;
+}
+
+.avatars img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  margin-left: -10px;
+  object-fit: cover;
+}
+.avatars img:first-child {
+  margin-left: 0;
+}
+
+.social-text {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.3;
+}
+
+.social-text strong {
+  display: block;
+  color: #0F172A;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.hero-img-col {
+  /* Hidden by default — the same photo already shows as the full-bleed
+     .hero background on tablet/desktop. Only phone widths (see
+     responsive.css) swap to this real <img> in a compact side-by-side
+     layout instead. */
+  display: none;
+  flex: 1;
+  position: relative;
+  justify-content: flex-end;
+}
+
+.hero-main-img {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 992px) {
+  .hero {
+    min-height: auto;
+    padding: 100px 5% 40px;
+    background: #F0F9F4; /* Light green to match the design */
+  }
+  .hero-container {
+    flex-direction: column-reverse; /* Puts image above text */
+    text-align: left;
+    margin-top: 1rem;
+    gap: 2rem;
+  }
+  .hero-text-col {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+  }
+  .hero-text-col h1 {
+    font-size: 2.2rem;
+    color: #022C22; /* Dark green */
+  }
+  .hero-text-col p {
+    font-size: 1rem;
+    max-width: 100%;
+    color: #475569;
+    margin-bottom: 1.5rem;
+  }
+  .hero-btns {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .btn-primary, .btn-secondary {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .hero-img-col {
+    display: block;
+    width: 100%;
+  }
+  .hero-main-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  
+  /* Make stats and features bars match mobile rounded card style */
+  .hero-stats-bar, .hero-features-bar, .prayer-times-section {
+    margin: 1rem 5%;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .hero-stats-container, .hero-features-container, .prayer-container {
+    padding: 0;
+  }
+  .stat-box {
+    flex: 1 1 45%;
+    min-width: unset;
+    padding: 1rem;
+    border-right: none;
+  }
+  .feature-item {
+    flex: 1 1 45%;
+    min-width: unset;
+  }
+}
+
+/* ────────────────── HERO STATS BAR ────────────────── */
+.hero-stats-bar {
+  background: #022C22; /* Dark green */
+  /* Horizontal padding intentionally left to the base `section` rule
+     (and its responsive overrides) so this bar's content always lines
+     up with every other section's content width, at every breakpoint. */
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.hero-stats-container,
+.hero-features-container {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.stat-box {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2.5rem 1.5rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.stat-box:last-child {
+  border-right: none;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  color: #D97706; /* Gold */
+}
+
+.stat-text strong {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
+}
+
+.stat-text span {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Star row under the rating — phone layout only (see responsive.css) */
+.stat-stars { display: none; }
+
+/* ────────────────── HERO FEATURES BAR ────────────────── */
+.hero-features-bar {
+  background: #fff;
+  /* Horizontal padding left to the base `section` rule, same reasoning
+     as .hero-stats-bar above. */
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.hero-features-container {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  min-width: 150px;
+  max-width: 200px;
+  color: #1E293B;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+  color: #475569;
+}
+
+/* ────────────────── PRAYER TIMES SECTION ────────────────── */
+.prayer-times-section {
+  background: #F8FAFC;
+  /* Horizontal padding left to the base `section` rule, same reasoning
+     as .hero-stats-bar above. */
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.prayer-container {
+  margin: 0 auto;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.prayer-widget {
+  flex: 2;
+  min-width: 600px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.widget-header h3 {
+  font-size: 1.2rem;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-view-all {
+  border: 1px solid #CBD5E1;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  color: #475569;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.prayer-times-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.prayer-card {
+  flex: 1;
+  background: #F8FAFC;
+  border: 1px solid #F1F5F9;
+  border-radius: 8px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.prayer-card .p-icon {
+  font-size: 1.5rem;
+  color: #D97706; /* Gold icon */
+}
+
+.prayer-card .p-name {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748B;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+}
+
+.prayer-card .p-value {
+  display: block;
+  font-size: 1rem;
+  color: #0F172A;
+}
+
+.widget-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #F1F5F9;
+  font-size: 0.9rem;
+  color: #64748B;
+}
+
+.notification-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* Toggle Switch CSS */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #022C22; transition: .4s;
+}
+.slider:before {
+  position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+  background-color: white; transition: .4s;
+}
+input:checked + .slider { background-color: #059669; }
+input:checked + .slider:before { transform: translateX(18px); }
+.slider.round { border-radius: 22px; }
+.slider.round:before { border-radius: 50%; }
+
+.islamic-date-widget {
+  flex: 1;
+  min-width: 300px;
+  background: #FFFBEB; /* Light sand/gold background */
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-content {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.moon-icon {
+  font-size: 2rem;
+  color: #D97706;
+  margin-bottom: 1rem;
+}
+
+.islamic-date-widget h2 {
+  font-size: 1.5rem;
+  color: #022C22;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.islamic-date-widget p {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.mosque-silhouette {
+  position: absolute;
+  bottom: -20px;
+  right: -10px;
+  font-size: 8rem;
+  color: #D97706;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+@media (max-width: 992px) {
+  .prayer-widget { min-width: 100%; }
+  .prayer-times-grid { flex-wrap: wrap; }
+  .prayer-card { min-width: 120px; }
+}
+
 
 /* ────────────────── COURSES GRID ────────────────── */
 .courses { background: var(--cream); }
@@ -72,7 +539,7 @@
 .course-card--no-link:hover { transform: none; box-shadow: none; border-bottom-color: var(--gold); }
 
 /* ────────────────── ABOUT STRIP ────────────────── */
-.about-strip { background: var(--teal-pale); padding: 74px 8%; }
+.about-strip { background: var(--teal-pale); padding: 56px 8%; }
 .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
 .about-img-wrap { display: flex; justify-content: center; align-items: center; }
 .about-full-img { width: 100%; max-width: 620px; height: auto; border-radius: 12px; object-fit: cover; box-shadow: 0 12px 48px rgba(0,0,0,0.12), 0 0 0 3px rgba(5,150,105,0.3); display: block; }
@@ -85,7 +552,7 @@
 .mission-list li::before { content: '✦'; color: var(--teal-main); flex-shrink: 0; font-size: .62rem; }
 
 /* ────────────────── CTA BANNER ────────────────── */
-.cta-banner { background: linear-gradient(105deg, #059669 0%, #10B981 40%, #C9A84C 100%); padding: 52px 8%; position: relative; overflow: hidden; }
+.cta-banner { background: linear-gradient(105deg, #059669 0%, #10B981 40%, #C9A84C 100%); padding: 40px 8%; position: relative; overflow: hidden; }
 .cta-pattern { position: absolute; inset: 0; background-image: repeating-linear-gradient(60deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 30px), repeating-linear-gradient(-60deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 30px), repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 30px); pointer-events: none; }
 .cta-banner::before { content: '\❧'; position: absolute; right: 5%; top: 50%; transform: translateY(-50%); font-size: 9rem; opacity: .07; color: var(--white); font-family: serif; line-height: 1; pointer-events: none; }
 .cta-banner-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 2.5rem; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
@@ -122,7 +589,35 @@
 .review-card { flex: 0 0 calc((100% - 56px) / 3); min-width: 0; background: var(--cream); border-radius: 6px; padding: 1.88rem; border-left: 4px solid var(--gold); transition: box-shadow .3s; box-sizing: border-box; }
 .review-card:hover { box-shadow: 0 14px 38px rgba(5,150,105,0.12); }
 .rq { font-family: 'Playfair Display', serif; font-size: 3.2rem; color: var(--teal-pale); line-height: .5; margin-bottom: .9rem; }
-.rt { font-size: .95rem; color: var(--text-mid); line-height: 1.88; font-style: italic; margin-bottom: 1.15rem; font-weight: 400; }
+.rt {
+  font-size: .95rem;
+  color: var(--text-mid);
+  line-height: 1.88;
+  font-style: italic;
+  margin-bottom: .5rem;
+  font-weight: 400;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+.review-card.expanded .rt {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.rev-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 0 1.15rem;
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--teal-main);
+  cursor: pointer;
+}
+.rev-toggle.is-visible { display: inline-block; }
+.rev-toggle:hover { text-decoration: underline; }
 .rs { color: var(--gold); font-size: .9rem; margin-bottom: .9rem; letter-spacing: 2px; }
 .reviewer { display: flex; align-items: center; gap: .9rem; }
 .ra { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--teal-light), var(--teal-main)); display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 700; font-size: .94rem; flex-shrink: 0; }
@@ -200,7 +695,7 @@
 
 /* Image banner replaces emoji icon */
 .comp-prev-img-wrap {
-  height: 160px;
+  height: 220px;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;

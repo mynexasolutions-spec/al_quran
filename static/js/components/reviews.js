@@ -70,10 +70,51 @@ export function initReviews() {
     current = Math.min(current, maxIdx());
     buildDots();
     goTo(current);
+    updateToggles();
+  }
+
+  /* ── Read more / Show less ───────────────────────── */
+  /* Shows the toggle button only on cards whose review text is
+     actually clipped by the 4-line clamp (short reviews never get
+     a button). Re-checked on resize since how much text fits per
+     line changes with card width. */
+  function updateToggles() {
+    cards.forEach(card => {
+      const rt  = card.querySelector('.rt');
+      const btn = card.querySelector('.rev-toggle');
+      if (!rt || !btn) return;
+
+      if (!card.classList.contains('expanded')) {
+        /* Briefly lift the clamp to read the text's full natural height,
+           then compare it to the clamped (4-line) height — only show the
+           toggle when the text is actually long enough to be cut off. */
+        card.classList.add('expanded');
+        const naturalHeight = rt.scrollHeight;
+        card.classList.remove('expanded');
+        const clampedHeight = rt.clientHeight;
+        btn.classList.toggle('is-visible', naturalHeight > clampedHeight + 1);
+      }
+
+      if (!btn.dataset.bound) {
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', () => {
+          const expanded = card.classList.toggle('expanded');
+          btn.textContent = expanded ? 'Show less' : 'Read more';
+        });
+      }
+    });
   }
 
   /* first paint — wait until the browser has laid out CSS calc sizes */
   requestAnimationFrame(() => requestAnimationFrame(refresh));
+
+  /* Re-check once web fonts finish loading — the italic review text
+     uses a Google Font that loads async; if it swaps in after the
+     line-clamp measurement above, a review can end up visually
+     overflowing without ever getting its "Read more" button. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(refresh);
+  }
 
   /* ── Arrow clicks ───────────────────────────────── */
   if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));

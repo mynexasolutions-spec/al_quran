@@ -9,7 +9,7 @@
     linear-gradient(150deg, rgba(4,25,18,0.92) 0%, rgba(6,50,35,0.86) 55%, rgba(5,85,50,0.78) 100%),
     url('../../images/Banner_image.webp') center / cover no-repeat;
   display: flex; align-items: center; justify-content: center;
-  padding: 176px 8% 90px;
+  padding: 176px 8% 64px;
   text-align: center;
   position: relative; overflow: hidden;
 }
@@ -44,7 +44,7 @@
 
 /* ── Section ── */
 .team-section {
-  padding: 5rem 8% 6rem;
+  padding: 3.5rem 8% 4rem;
   background: #f7f9f8;
 }
 
@@ -155,8 +155,8 @@
   .team-grid--director { grid-template-columns: 1fr; max-width: 340px; }
 }
 @media (max-width: 580px) {
-  .team-hero { min-height: 55vh; padding: 140px 6% 70px; }
-  .team-section { padding: 3.5rem 5% 4.5rem; }
+  .team-hero { min-height: 55vh; padding: 140px 6% 50px; }
+  .team-section { padding: 2.5rem 5% 3rem; }
   .team-grid {
     grid-template-columns: 1fr;
     max-width: 380px;

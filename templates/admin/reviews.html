@@ -68,16 +68,16 @@
           <div class="adm-actions" style="justify-content:center">
             {% if rev.status != 'approved' %}
             <button class="adm-btn adm-btn--approve" title="Approve"
-                    onclick="setStatus({{ rev.id }}, 'approved')">&#10003;</button>
+                    onclick="setStatus({{ rev.id }}, 'approved')"><i class="fa-solid fa-check"></i></button>
             {% endif %}
             {% if rev.status != 'rejected' %}
             <button class="adm-btn adm-btn--reject" title="Reject"
-                    onclick="setStatus({{ rev.id }}, 'rejected')">&#10007;</button>
+                    onclick="setStatus({{ rev.id }}, 'rejected')"><i class="fa-solid fa-xmark"></i></button>
             {% endif %}
             <form method="post" action="{{ url_for('admin_review_delete', rid=rev.id) }}"
                   onsubmit="return confirm('Delete this review permanently?');"
                   style="display:inline">
-              <button type="submit" class="adm-btn adm-btn--delete" title="Delete">&#128465;</button>
+              <button type="submit" class="adm-btn adm-btn--delete" title="Delete"><i class="fa-solid fa-trash"></i></button>
             </form>
           </div>
         </td>
@@ -113,9 +113,9 @@ function setStatus(id, status) {
         /* refresh action buttons */
         var actionsDiv = row.querySelector('.adm-actions');
         actionsDiv.innerHTML =
-          (status !== 'approved' ? '<button class="adm-btn adm-btn--approve" title="Approve" onclick="setStatus(' + id + ',\'approved\')">&#10003;</button>' : '') +
-          (status !== 'rejected' ? '<button class="adm-btn adm-btn--reject" title="Reject" onclick="setStatus(' + id + ',\'rejected\')">&#10007;</button>' : '') +
-          '<form method="post" action="/admin/reviews/' + id + '/delete" onsubmit="return confirm(\'Delete this review permanently?\');" style="display:inline"><button type="submit" class="adm-btn adm-btn--delete" title="Delete">&#128465;</button></form>';
+          (status !== 'approved' ? '<button class="adm-btn adm-btn--approve" title="Approve" onclick="setStatus(' + id + ',\'approved\')"><i class="fa-solid fa-check"></i></button>' : '') +
+          (status !== 'rejected' ? '<button class="adm-btn adm-btn--reject" title="Reject" onclick="setStatus(' + id + ',\'rejected\')"><i class="fa-solid fa-xmark"></i></button>' : '') +
+          '<form method="post" action="/admin/reviews/' + id + '/delete" onsubmit="return confirm(\'Delete this review permanently?\');" style="display:inline"><button type="submit" class="adm-btn adm-btn--delete" title="Delete"><i class="fa-solid fa-trash"></i></button></form>';
       }
     });
 }

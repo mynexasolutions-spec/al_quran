@@ -118,6 +118,38 @@ nav {
 .chevron { font-size: .6rem; transition: transform .3s; }
 .has-dropdown:hover .chevron { transform: rotate(180deg); }
 
+/* ── Compact language switcher (phone widths only, see responsive.css) ── */
+.nav-lang-mobile { display: none; position: relative; }
+.nav-lang-toggle {
+  display: flex; align-items: center; gap: .35rem;
+  background: none; border: 1px solid rgba(5,150,105,0.3);
+  border-radius: 20px; padding: .4rem .75rem;
+  color: var(--teal-dark); font-size: .78rem; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+.nav-lang-toggle i.fa-globe { font-size: .85rem; color: var(--teal-main); }
+.nav-lang-toggle i.fa-chevron-down { font-size: .55rem; transition: transform .25s; }
+.nav-lang-toggle[aria-expanded="true"] i.fa-chevron-down { transform: rotate(180deg); }
+.nav-lang-dropdown {
+  display: none;
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--white);
+  border: 1px solid rgba(5,150,105,0.18);
+  border-radius: 8px;
+  min-width: 120px;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.14);
+  overflow: hidden;
+  z-index: 1200;
+}
+.nav-lang-dropdown.open { display: block; }
+.nav-lang-dropdown a {
+  display: block; padding: .65rem .9rem;
+  color: #374151; text-decoration: none; font-size: .85rem; font-weight: 600;
+  border-bottom: 1px solid rgba(5,150,105,0.08);
+}
+.nav-lang-dropdown a:last-child { border-bottom: none; }
+.nav-lang-dropdown a.active { background: var(--teal-pale); color: var(--teal-dark); }
+
 /* ── Hamburger ── */
 .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
 .hamburger span { display: block; width: 25px; height: 2px; background: var(--teal-dark); border-radius: 2px; transition: all .3s; }

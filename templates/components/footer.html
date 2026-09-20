@@ -17,18 +17,17 @@
     <div class="footer-col">
       <h4>{{ t.footerQuranicH }}</h4>
       <ul class="footer-links">
-        <li><a href="{{ url_for('course_tajweed') }}">{{ t.footerLinkTajweed }}</a></li>
-        <li><a href="{{ url_for('course_quran_recitation') }}">{{ t.footerLinkRecitation }}</a></li>
-        <li><a href="{{ url_for('course_hifz') }}">{{ t.footerLinkHifz }}</a></li>
-        <li><a href="{{ url_for('course_qirat') }}">{{ t.footerLinkQirat }}</a></li>
+        {% for c in nav_courses if c.card_category == 'Quranic Studies' %}
+        <li><a href="{{ url_for('course_detail', slug=c.slug) }}">{{ c.oc_title or c.title }}</a></li>
+        {% endfor %}
       </ul>
     </div>
     <div class="footer-col">
       <h4>{{ t.footerLanguageH }}</h4>
       <ul class="footer-links">
-        <li><a href="{{ url_for('course_arabic') }}">{{ t.footerLinkArabic }}</a></li>
-        <li><a href="{{ url_for('course_urdu') }}">{{ t.footerLinkUrdu }}</a></li>
-        <li><a href="{{ url_for('course_english') }}">{{ t.footerLinkEnglish }}</a></li>
+        {% for c in nav_courses if c.card_category != 'Quranic Studies' %}
+        <li><a href="{{ url_for('course_detail', slug=c.slug) }}">{{ c.oc_title or c.title }}</a></li>
+        {% endfor %}
       </ul>
     </div>
     <div class="footer-col">

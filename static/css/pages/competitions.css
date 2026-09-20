@@ -9,7 +9,7 @@
     linear-gradient(150deg, rgba(4,25,18,0.92) 0%, rgba(6,50,35,0.86) 55%, rgba(5,85,50,0.78) 100%),
     url('../../images/Banner_image.webp') center / cover no-repeat;
   display: flex; align-items: center; justify-content: center;
-  padding: 176px 8% 90px;
+  padding: 176px 8% 64px;
   text-align: center;
   position: relative; overflow: hidden;
 }
@@ -353,7 +353,7 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
 /* ────────────────── CTA BANNER ────────────────── */
 .comp-cta-banner {
   background: linear-gradient(105deg, #059669 0%, #10B981 40%, #C9A84C 100%);
-  padding: 80px 8%;
+  padding: 56px 8%;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -404,7 +404,7 @@ a.comp-cta:hover { background: var(--teal-light); transform: translateX(3px); }
   .comp-grid { grid-template-columns: 1fr; }
   .comp-details { grid-template-columns: 1fr; }
   .comp-prizes-grid { grid-template-columns: 1fr 1fr; }
-  .comp-cta-banner { padding: 56px 5%; }
+  .comp-cta-banner { padding: 40px 5%; }
 }
 
 /* ────────────────── REGISTRATION FLASH BANNER ────────────────── */

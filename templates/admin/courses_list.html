@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+{% block title %}Courses | Admin{% endblock %}
+{% block topbar_title %}Courses{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Courses</h2>
+    <p>Manage every course shown on the homepage grid and its own detail page. Changes reflect live on the public site.</p>
+  </div>
+  <a href="{{ url_for('admin_course_new') }}" class="btn-primary">
+    <i class="fa-solid fa-plus"></i>&nbsp; New Course
+  </a>
+</div>
+
+<div class="adm-stat-row">
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ courses|length }}</span>
+    <span class="adm-stat-lbl">Total Courses</span>
+  </div>
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ courses|selectattr('has_detail_page')|list|length }}</span>
+    <span class="adm-stat-lbl">With Detail Page</span>
+  </div>
+</div>
+
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Course</th>
+        <th>Category</th>
+        <th>Slug</th>
+        <th style="width:110px;text-align:center">Detail Page</th>
+        <th style="width:70px;text-align:center">Order</th>
+        <th style="width:150px;text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in courses %}
+      <tr>
+        <td class="adm-td-muted">{{ loop.index }}</td>
+        <td>
+          <div class="adm-comp-title">
+            {% if c.card_image_url %}<img src="{{ c.card_image_url }}" alt="" style="width:32px;height:32px;object-fit:cover;border-radius:5px;margin-right:.6rem;vertical-align:middle;">{% endif %}
+            {{ c.title }}
+          </div>
+        </td>
+        <td><span class="adm-cat-badge">{{ c.card_category }}</span></td>
+        <td class="adm-td-muted">/course/{{ c.slug }}</td>
+        <td style="text-align:center">
+          {% if c.has_detail_page %}
+            <span class="adm-badge-ok"><i class="fa-solid fa-check"></i> Yes</span>
+          {% else %}
+            <span class="adm-td-muted">Card only</span>
+          {% endif %}
+        </td>
+        <td class="adm-td-muted" style="text-align:center">{{ c.sort_order }}</td>
+        <td style="text-align:center">
+          <div class="adm-actions">
+            <a href="{{ url_for('admin_course_edit', cid=c.id) }}" class="adm-btn adm-btn--edit" title="Edit"><i class="fa-solid fa-pen"></i></a>
+            {% if c.has_detail_page %}
+            <a href="{{ url_for('course_detail', slug=c.slug) }}" target="_blank" class="adm-btn adm-btn--view" title="View on site"><i class="fa-solid fa-eye"></i></a>
+            {% endif %}
+            <form method="post" action="{{ url_for('admin_course_delete', cid=c.id) }}"
+                  onsubmit="return confirm('Delete &quot;{{ c.title }}&quot;? This removes its detail page and homepage card. This cannot be undone.')">
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No courses yet. <a href="{{ url_for('admin_course_new') }}">Create one.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

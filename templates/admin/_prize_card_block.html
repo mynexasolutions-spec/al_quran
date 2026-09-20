@@ -1,0 +1,44 @@
+{# One prize-card editor row — included both for existing cards and,
+   inside a <template>, as the blank card a JS click clones. `prize` is
+   a dict with variant/medal_icon/heading/items (see db.py get_all_prizes). #}
+<div class="prize-card-block adm-section-block">
+  <div class="adm-form-row">
+    <div class="adm-fg">
+      <label>Card Style</label>
+      <select name="prize_variant[]">
+        <option value="gold"   {% if prize.variant == 'gold' %}selected{% endif %}>Gold</option>
+        <option value="silver" {% if prize.variant == 'silver' %}selected{% endif %}>Silver</option>
+        <option value="bronze" {% if prize.variant == 'bronze' %}selected{% endif %}>Bronze</option>
+        <option value="part"   {% if prize.variant == 'part' %}selected{% endif %}>Participation (teal)</option>
+      </select>
+    </div>
+    <div class="adm-fg" style="max-width:110px;">
+      <label>Medal Icon</label>
+      <input type="text" name="prize_icon[]" maxlength="8" class="adm-icon-input" value="{{ prize.medal_icon or '' }}"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Heading</label>
+      <input type="text" name="prize_heading[]" placeholder="e.g. 1st Place" value="{{ prize.heading or '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="prize_heading_ur[]" dir="rtl" value="{{ prize.heading_ur or '' }}"/>
+      </div>
+    </div>
+  </div>
+  <div class="adm-fg">
+    <label>Items</label>
+    <textarea name="prize_items[]" rows="5" class="section-items-ta">{%- for item in prize['items'] -%}
+{{ item }}
+{% endfor -%}</textarea>
+    <small class="adm-hint">One item per line — shown as the bullet list on this card.</small>
+    <div class="adm-fg-ur">
+      <label>Urdu (same order, one item per line)</label>
+      <textarea name="prize_items_ur[]" dir="rtl" rows="5" class="section-items-ta">{%- for item in prize.get('items_ur', []) -%}
+{{ item }}
+{% endfor -%}</textarea>
+    </div>
+  </div>
+  <button type="button" class="adm-btn adm-btn--del remove-prize-btn" style="width:auto;padding:.5rem 1rem;">
+    <i class="fa-solid fa-trash"></i>&nbsp; Remove Card
+  </button>
+</div>
