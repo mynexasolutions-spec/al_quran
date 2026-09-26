@@ -1,0 +1,114 @@
+{% extends "admin/base.html" %}
+{% block title %}Enquiries | Admin{% endblock %}
+{% block topbar_title %}Enquiries{% endblock %}
+
+{% set visible_fields = fields[:4] %}
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Enquiries</h2>
+    <p>Submissions from the homepage "Enroll or Ask a Question" form. Manage the form's fields under <a href="{{ url_for('admin_enquiry_fields') }}">Enquiry Form</a>. The table shows the first {{ visible_fields|length }} fields — click <strong>See</strong> for every field on that submission.</p>
+  </div>
+</div>
+
+<div class="adm-stat-row">
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ enquiries|length }}</span>
+    <span class="adm-stat-lbl">Total Enquiries</span>
+  </div>
+</div>
+
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width:150px">Received</th>
+        {% for f in visible_fields %}
+        <th>{{ f.label }}</th>
+        {% endfor %}
+        <th style="width:110px;text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in enquiries %}
+      <tr>
+        <td class="adm-td-muted">{{ e.created_at.strftime('%d %b %Y, %I:%M %p') if e.created_at else '' }}</td>
+        {% for f in visible_fields %}
+        <td class="adm-td-clip">{{ e.data.get(f.field_key, '—') }}</td>
+        {% endfor %}
+        <td style="text-align:center">
+          <div class="adm-actions">
+            <button type="button" class="adm-btn adm-btn--view adm-enq-view-btn" title="See full enquiry"
+                    style="width:auto;padding:0 .75rem;gap:.4rem;font-size:.82rem;font-weight:700;"
+                    data-received="{{ e.created_at.strftime('%d %b %Y, %I:%M %p') if e.created_at else '' }}"
+                    data-json='{{ e.data|tojson }}'>
+              <i class="fa-solid fa-eye"></i> See
+            </button>
+            <form method="post" action="{{ url_for('admin_enquiry_delete', eid=e.id) }}"
+                  onsubmit="return confirm('Delete this enquiry? This cannot be undone.')">
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="{{ visible_fields|length + 2 }}" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No enquiries yet.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ View Enquiry Modal ══ -->
+<div class="adm-modal-overlay" id="enqModalOverlay">
+  <div class="adm-modal">
+    <div class="adm-modal-hdr">
+      <h3><i class="fa-solid fa-envelope-open-text"></i> Enquiry Details</h3>
+      <button type="button" class="adm-modal-close" id="enqModalClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="adm-modal-body" id="enqModalBody"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var fieldLabels = {{ field_labels|tojson }};
+
+  var overlay = document.getElementById('enqModalOverlay');
+  var body    = document.getElementById('enqModalBody');
+  var closeBtn = document.getElementById('enqModalClose');
+
+  function openModal(receivedAt, data) {
+    var html = '<div class="adm-modal-row"><span class="adm-modal-label">Received</span><span class="adm-modal-value">' + receivedAt + '</span></div>';
+    Object.keys(data).forEach(function (key) {
+      var val = data[key];
+      if (!val) return;
+      var label = fieldLabels[key] || key;
+      html += '<div class="adm-modal-row"><span class="adm-modal-label">' + label + '</span><span class="adm-modal-value">' + String(val).replace(/</g, '&lt;') + '</span></div>';
+    });
+    body.innerHTML = html;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.adm-enq-view-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var data = JSON.parse(btn.dataset.json || '{}');
+      openModal(btn.dataset.received || '', data);
+    });
+  });
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+})();
+</script>
+{% endblock %}

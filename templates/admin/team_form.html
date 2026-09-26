@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'New Team Member' if action=='new' else 'Edit Team Member' }} | Admin{% endblock %}
+{% block topbar_title %}{{ 'New Team Member' if action=='new' else 'Edit: ' ~ member.name[:30] }}{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>{{ 'Add Team Member' if action=='new' else 'Edit Team Member' }}</h2>
+    <p>{{ 'Fill in the details below to add them to the Our Team page.' if action=='new' else 'Update the details and save.' }}</p>
+  </div>
+  <a href="{{ url_for('admin_team') }}" class="adm-btn adm-btn--secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="adm-form-card adm-form-card--wide">
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Name <span class="adm-req">*</span></label>
+      <input type="text" name="name" required placeholder="e.g. Maulana Osama Quasmi"
+             value="{{ member.name if member else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="name_ur" dir="rtl" value="{{ member.name_ur if member else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg" style="max-width:110px;">
+      <label>Sort Order</label>
+      <input type="number" name="display_order" value="{{ member.display_order if member else 0 }}"/>
+    </div>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg">
+      <label class="adm-checkbox-label">
+        <input type="checkbox" name="is_director" {% if member and member.is_director %}checked{% endif %}/>
+        Show as Founder/Director (full-width card at the top of the team grid — only one member should have this checked)
+      </label>
+    </div>
+    <div class="adm-fg">
+      <label class="adm-checkbox-label">
+        <input type="checkbox" name="is_visible" {% if member is none or member.is_visible %}checked{% endif %}/>
+        Visible on the public Our Team page
+      </label>
+    </div>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Role Label</label>
+      <input type="text" name="role_label" placeholder="e.g. Senior Educator, Female Tutor"
+             value="{{ member.role_label if member else '' }}"/>
+      <small class="adm-hint">Small uppercase label shown above the name (e.g. "Founder & Director", "Senior Educator").</small>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="role_label_ur" dir="rtl" value="{{ member.role_label_ur if member else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Subject</label>
+      <input type="text" name="subject" placeholder="e.g. Fiqh & Quranic Sciences"
+             value="{{ member.subject if member else '' }}"/>
+      <small class="adm-hint">Shown as the pill badge under the name.</small>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="subject_ur" dir="rtl" value="{{ member.subject_ur if member else '' }}"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Education</label>
+    <input type="text" name="education" placeholder="e.g. Graduate from Darul Uloom Deoband"
+           value="{{ member.education if member else '' }}"/>
+    <small class="adm-hint">Optional — shown as a small line under the subject on the card.</small>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <input type="text" name="education_ur" dir="rtl" value="{{ member.education_ur if member else '' }}"/>
+    </div>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Photo Upload (Cloudinary)</label>
+      <input type="file" name="image" accept="image/*" class="adm-file-input"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Photo URL</label>
+      <input type="text" name="image_url" placeholder="https://... (leave blank to keep default silhouette / uploaded photo)"/>
+    </div>
+  </div>
+  {% if member and member.image_url %}
+  <div class="adm-current-img"><span>Current Photo:</span><img src="{{ member.image_url }}" alt=""/></div>
+  {% endif %}
+
+  <div class="adm-form-footer">
+    <a href="{{ url_for('admin_team') }}" class="adm-btn adm-btn--secondary">Cancel</a>
+    <button type="submit" class="btn-primary">
+      {% if action == 'new' %}<i class="fa-solid fa-plus"></i>&nbsp; Add Team Member{% else %}<i class="fa-solid fa-pen"></i>&nbsp; Save Changes{% endif %}
+    </button>
+  </div>
+
+</form>
+{% endblock %}

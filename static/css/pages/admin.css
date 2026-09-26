@@ -308,7 +308,7 @@
 .adm-btn--del       { background: rgba(220,53,69,0.1); color: #dc3545; }
 .adm-btn--del:hover  { background: #dc3545; color: var(--white); }
 .adm-btn--secondary {
-  display: inline-flex; align-items: center;
+  display: inline-flex; align-items: center; gap: .5rem;
   padding: .6rem 1.2rem; border-radius: 4px;
   background: rgba(13,74,63,0.1); color: var(--teal-main);
   font-size: .85rem; font-weight: 700; text-decoration: none;
@@ -788,4 +788,86 @@
 .adm-btn--approve { background: rgba(34,180,100,.12); color: #1A7A48; border: 1px solid rgba(34,180,100,.4); }
 .adm-btn--approve:hover { background: rgba(34,180,100,.25); }
 .adm-btn--reject  { background: rgba(220,50,50,.1);   color: #8B1A1A; border: 1px solid rgba(220,50,50,.35); }
+
+/* ─────────────────── TABLE CELL CLIPPING (Enquiries) ─────────────────── */
+.adm-td-clip {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─────────────────── ENQUIRY DETAIL MODAL ─────────────────── */
+.adm-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,20,17,0.55);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.adm-modal-overlay.open { display: flex; }
+.adm-modal {
+  background: var(--white);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.adm-modal-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.adm-modal-hdr h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--teal-dark);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.adm-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  cursor: pointer;
+  width: 32px; height: 32px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.adm-modal-close:hover { background: rgba(0,0,0,0.06); }
+.adm-modal-body {
+  padding: 1.2rem 1.4rem 1.5rem;
+  overflow-y: auto;
+}
+.adm-modal-row {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  padding: .7rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.adm-modal-row:last-child { border-bottom: none; }
+.adm-modal-label {
+  font-size: .74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+}
+.adm-modal-value {
+  font-size: .95rem;
+  color: var(--text-body);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 .adm-btn--reject:hover  { background: rgba(220,50,50,.22); }

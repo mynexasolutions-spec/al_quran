@@ -90,19 +90,19 @@
           </div>
         </td>
       </tr>
-      <!-- Expandable detail row -->
+      <!-- Expandable detail row — every field on the submission at the
+           time (dynamic, follows admin-managed registration_fields),
+           skipping the ones already shown as their own table column. -->
       <tr class="adm-detail-row" id="detail-{{ reg.id }}" style="display:none;">
         <td colspan="9">
           <div class="adm-detail-box">
-            {% if reg.experience %}
-              <div><strong>Previous Experience:</strong> {{ reg.experience }}</div>
-            {% endif %}
-            {% if reg.notes %}
-              <div><strong>Additional Notes:</strong> {{ reg.notes }}</div>
-            {% endif %}
-            {% if not reg.experience and not reg.notes %}
+            {% set shown = ['name', 'email', 'phone', 'age', 'country'] %}
+            {% set extra = reg.data.items() | rejectattr('0', 'in', shown) | selectattr('1') | list %}
+            {% for key, val in extra %}
+              <div><strong>{{ field_labels.get(key, key) }}:</strong> {{ val }}</div>
+            {% else %}
               <em class="adm-td-muted">No additional details provided.</em>
-            {% endif %}
+            {% endfor %}
           </div>
         </td>
       </tr>

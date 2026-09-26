@@ -265,18 +265,33 @@ body.lang-ur .ch-badge {
   padding-top: .35rem;
   padding-bottom: .35rem;
 }
+/* The hero photo is a background-size:cover image on the whole .hero
+   section, sized by .hero-container's content. The global body.lang-ur
+   line-height bump (for Urdu readability elsewhere) makes the badge,
+   heading and paragraph noticeably taller than in English, so the box
+   grows past its 80vh floor and "cover" zooms in further, cropping more
+   off the sides — visibly cutting the photo. Every rule below is kept
+   as close to the plain (English) value as Urdu legibility allows, so
+   .hero-container's height — and the image crop — stays the same as
+   English instead of drifting with the text. */
 body.lang-ur .hero-badge {
-  font-size: 1.08rem;
+  font-size: 1.02rem;
   letter-spacing: 0;
   text-transform: none;
-  line-height: 2;
-  padding: .65rem 2rem;
+  line-height: 1.5;
+  padding: .5rem 1.6rem;
   text-align: center;
-  word-spacing: .35rem;
+  word-spacing: .2rem;
 }
 body.lang-ur .hero h1 em {
   font-style: normal;
   font-size: 1.15em;
+}
+body.lang-ur .hero-text-col h1 {
+  line-height: 1.2;
+}
+body.lang-ur .hero-text-col p {
+  line-height: 1.7;
 }
 body.lang-ur .course-cat {
   font-size: .82rem;

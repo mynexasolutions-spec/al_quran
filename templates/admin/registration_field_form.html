@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'New Field' if action=='new' else 'Edit Field' }} | Admin{% endblock %}
+{% block topbar_title %}{{ 'New Field' if action=='new' else 'Edit: ' ~ field.label[:30] }}{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>{{ 'Add Registration Field' if action=='new' else 'Edit Registration Field' }}</h2>
+    <p>{{ 'This will appear on every competition registration form immediately.' if action=='new' else 'Update the field and save.' }}</p>
+  </div>
+  <a href="{{ url_for('admin_registration_fields') }}" class="adm-btn adm-btn--secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" class="adm-form-card adm-form-card--wide">
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Label <span class="adm-req">*</span></label>
+      <input type="text" name="label" required placeholder="e.g. Full Name"
+             value="{{ field.label if field else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="label_ur" dir="rtl" value="{{ field.label_ur if field else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Field Key <span class="adm-req">*</span></label>
+      <input type="text" name="field_key" required placeholder="full_name" pattern="[a-z0-9_]+"
+             value="{{ field.field_key if field else '' }}" {% if action == 'edit' %}readonly{% endif %}/>
+      <small class="adm-hint">{{ 'Cannot be changed after creation — it identifies this field in saved registrations.' if action == 'edit' else 'Lowercase, letters/numbers/underscore only. name/email/phone/age/country/experience/notes also feed the admin table + Excel export columns.' }}</small>
+    </div>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg">
+      <label>Field Type</label>
+      <select name="field_type">
+        {% for ft in ['text','tel','email','number','textarea','select'] %}
+        <option value="{{ ft }}" {% if field and field.field_type == ft %}selected{% endif %}>{{ ft }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="adm-fg">
+      <label>Row Width</label>
+      <select name="width">
+        <option value="full" {% if field is none or field.width == 'full' %}selected{% endif %}>Full row</option>
+        <option value="half" {% if field and field.width == 'half' %}selected{% endif %}>Half row (paired with the next/previous half field)</option>
+      </select>
+    </div>
+    <div class="adm-fg" style="max-width:110px;">
+      <label>Sort Order</label>
+      <input type="number" name="sort_order" value="{{ field.sort_order if field else 0 }}"/>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label class="adm-checkbox-label">
+      <input type="checkbox" name="is_required" {% if field is none or field.is_required %}checked{% endif %}/>
+      Required field
+    </label>
+  </div>
+
+  <div class="adm-fg">
+    <label>Placeholder</label>
+    <input type="text" name="placeholder" placeholder="e.g. Your full name"
+           value="{{ field.placeholder if field else '' }}"/>
+    <div class="adm-fg-ur">
+      <label>Urdu</label>
+      <input type="text" name="placeholder_ur" dir="rtl" value="{{ field.placeholder_ur if field else '' }}"/>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label>Options <small class="adm-hint" style="display:inline;">(only used when Field Type is "select" — one option per line)</small></label>
+    <textarea name="options" rows="5" placeholder="Option One&#10;Option Two">{{ field.options|join('\n') if field and field.options else '' }}</textarea>
+    <div class="adm-fg-ur">
+      <label>Urdu (same order, one per line)</label>
+      <textarea name="options_ur" dir="rtl" rows="5">{{ field.options_ur|join('\n') if field and field.options_ur else '' }}</textarea>
+    </div>
+  </div>
+
+  <div class="adm-form-footer">
+    <a href="{{ url_for('admin_registration_fields') }}" class="adm-btn adm-btn--secondary">Cancel</a>
+    <button type="submit" class="btn-primary">
+      {% if action == 'new' %}<i class="fa-solid fa-plus"></i>&nbsp; Add Field{% else %}<i class="fa-solid fa-pen"></i>&nbsp; Save Changes{% endif %}
+    </button>
+  </div>
+
+</form>
+{% endblock %}

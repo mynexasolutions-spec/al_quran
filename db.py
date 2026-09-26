@@ -105,6 +105,7 @@ def init_db():
             country            TEXT,
             experience         TEXT,
             notes              TEXT,
+            data               JSONB NOT NULL DEFAULT '{}',
             created_at         TIMESTAMPTZ DEFAULT NOW()
         )
     """)
@@ -205,6 +206,27 @@ def init_db():
         )
     """)
 
+    # One row per person shown on the "Our Team" page. is_director marks
+    # the single full-width founder/director card at the top of the grid;
+    # everyone else renders in the regular grid, ordered by display_order.
+    # is_visible lets an admin hide a member from the public page without
+    # deleting their row.
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS team_members (
+            id            SERIAL PRIMARY KEY,
+            display_order INTEGER NOT NULL DEFAULT 0,
+            is_director   BOOLEAN NOT NULL DEFAULT FALSE,
+            is_visible    BOOLEAN NOT NULL DEFAULT TRUE,
+            name          TEXT NOT NULL DEFAULT '',
+            role_label    TEXT NOT NULL DEFAULT '',
+            subject       TEXT NOT NULL DEFAULT '',
+            education     TEXT NOT NULL DEFAULT '',
+            image_url     TEXT,
+            created_at    TIMESTAMPTZ DEFAULT NOW(),
+            updated_at    TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+
     # Singleton row holding the "Prizes & Recognition" section's intro
     # copy on the competitions page (the cards themselves are the
     # `prizes` table below).
@@ -233,6 +255,74 @@ def init_db():
             items       JSONB NOT NULL DEFAULT '[]',
             created_at  TIMESTAMPTZ DEFAULT NOW(),
             updated_at  TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+
+    # `data` may already exist on registrations created before this
+    # column was added to the CREATE TABLE above (a live database) —
+    # ADD COLUMN IF NOT EXISTS keeps this safe to re-run either way.
+    cur.execute("ALTER TABLE registrations ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'")
+
+    # The competition registration form's field definitions — same
+    # shape/behaviour as enquiry_fields below, just for a different
+    # public form. field_key values matching a legacy fixed column on
+    # `registrations` (name/email/phone/age/country/experience/notes)
+    # keep writing to that column too, so the admin list/Excel export
+    # built against those columns keep working unless an admin removes
+    # or renames one of those fields.
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS registration_fields (
+            id             SERIAL PRIMARY KEY,
+            field_key      TEXT UNIQUE NOT NULL,
+            label          TEXT NOT NULL DEFAULT '',
+            label_ur       TEXT NOT NULL DEFAULT '',
+            field_type     TEXT NOT NULL DEFAULT 'text',
+            placeholder    TEXT NOT NULL DEFAULT '',
+            placeholder_ur TEXT NOT NULL DEFAULT '',
+            options        JSONB NOT NULL DEFAULT '[]',
+            options_ur     JSONB NOT NULL DEFAULT '[]',
+            is_required    BOOLEAN NOT NULL DEFAULT TRUE,
+            width          TEXT NOT NULL DEFAULT 'full',
+            sort_order     INTEGER NOT NULL DEFAULT 0,
+            created_at     TIMESTAMPTZ DEFAULT NOW(),
+            updated_at     TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+
+    # The homepage "Enroll or Ask a Question" form's field definitions.
+    # Admin can add/remove/reorder fields at any time; the public form
+    # and the submitted `enquiries` rows both follow whatever fields
+    # exist here. field_type is one of: text, tel, email, number,
+    # textarea, select (options holds the choices for select).
+    # width is 'half' (paired two-per-row) or 'full' (own row).
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS enquiry_fields (
+            id             SERIAL PRIMARY KEY,
+            field_key      TEXT UNIQUE NOT NULL,
+            label          TEXT NOT NULL DEFAULT '',
+            label_ur       TEXT NOT NULL DEFAULT '',
+            field_type     TEXT NOT NULL DEFAULT 'text',
+            placeholder    TEXT NOT NULL DEFAULT '',
+            placeholder_ur TEXT NOT NULL DEFAULT '',
+            options        JSONB NOT NULL DEFAULT '[]',
+            options_ur     JSONB NOT NULL DEFAULT '[]',
+            is_required    BOOLEAN NOT NULL DEFAULT TRUE,
+            width          TEXT NOT NULL DEFAULT 'full',
+            sort_order     INTEGER NOT NULL DEFAULT 0,
+            created_at     TIMESTAMPTZ DEFAULT NOW(),
+            updated_at     TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+
+    # One row per submission of the homepage enquiry form. `data` holds
+    # whatever fields existed in enquiry_fields at submission time, as
+    # {field_key: value} — keeping this schemaless means admins can
+    # freely reshape the form without needing a matching DB migration.
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS enquiries (
+            id          SERIAL PRIMARY KEY,
+            data        JSONB NOT NULL DEFAULT '{}',
+            created_at  TIMESTAMPTZ DEFAULT NOW()
         )
     """)
 
@@ -282,6 +372,11 @@ def init_db():
 
         ('prizes', 'heading_ur', "TEXT NOT NULL DEFAULT ''"),
         ('prizes', 'items_ur', "JSONB NOT NULL DEFAULT '[]'"),
+
+        ('team_members', 'name_ur', "TEXT NOT NULL DEFAULT ''"),
+        ('team_members', 'role_label_ur', "TEXT NOT NULL DEFAULT ''"),
+        ('team_members', 'subject_ur', "TEXT NOT NULL DEFAULT ''"),
+        ('team_members', 'education_ur', "TEXT NOT NULL DEFAULT ''"),
     ]:
         cur.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {col} {coltype}")
 
@@ -522,17 +617,26 @@ def delete_competition(cid):
 # ─────────────────────────────────────────────────────────────
 #  Registrations CRUD
 # ─────────────────────────────────────────────────────────────
+# Legacy fixed columns that the admin list + Excel export read
+# directly — a submitted field with one of these keys also gets
+# written into its own column, on top of the full `data` blob, so
+# both keep working even though the form's fields are now dynamic.
+_REGISTRATION_LEGACY_KEYS = ('name', 'email', 'phone', 'age', 'country', 'experience', 'notes')
+
+
 def create_registration(data):
     conn = get_conn()
     cur  = conn.cursor()
     cur.execute(
         """INSERT INTO registrations
-           (competition_id,competition_title,name,email,phone,age,country,experience,notes)
-           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+           (competition_id,competition_title,name,email,phone,age,country,experience,notes,data)
+           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (data['competition_id'], data.get('competition_title'),
-         data['name'], data['email'], data.get('phone'),
+         data.get('name', ''), data.get('email', ''), data.get('phone'),
          data.get('age'), data.get('country'),
-         data.get('experience'), data.get('notes'))
+         data.get('experience'), data.get('notes'),
+         psycopg2.extras.Json({k: v for k, v in data.items()
+                                if k not in ('competition_id', 'competition_title')}))
     )
     new_id = cur.fetchone()['id']
     conn.commit(); cur.close(); conn.close()
@@ -568,6 +672,150 @@ def delete_registration(rid):
     cur  = conn.cursor()
     cur.execute("DELETE FROM registrations WHERE id=%s", (rid,))
     conn.commit(); cur.close(); conn.close()
+
+
+def backfill_registration_data():
+    """One-time migration: fill the `data` JSONB column for registrations
+    that were created before it existed, from their legacy fixed
+    columns — so old rows are visible the same way as new ones anywhere
+    that reads `data` (e.g. the admin detail view). Safe to re-run: only
+    touches rows where data is still the empty default."""
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("""
+        UPDATE registrations SET data = jsonb_strip_nulls(jsonb_build_object(
+            'name', name, 'email', email, 'phone', phone,
+            'age', age, 'country', country,
+            'experience', experience, 'notes', notes
+        ))
+        WHERE data = '{}'::jsonb
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+# ─────────────────────────────────────────────────────────────
+#  Registration Form Fields CRUD
+# ─────────────────────────────────────────────────────────────
+_REGISTRATION_FIELD_COLUMNS = (
+    'field_key', 'label', 'label_ur', 'field_type',
+    'placeholder', 'placeholder_ur', 'options', 'options_ur',
+    'is_required', 'width', 'sort_order',
+)
+
+
+def _registration_field_values(data):
+    values = []
+    for c in _REGISTRATION_FIELD_COLUMNS:
+        v = data.get(c)
+        if c in ('options', 'options_ur'):
+            v = psycopg2.extras.Json(v or [])
+        values.append(v)
+    return tuple(values)
+
+
+def get_all_registration_fields():
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM registration_fields ORDER BY sort_order, id")
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_registration_field(fid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM registration_fields WHERE id=%s", (fid,))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    return dict(row) if row else None
+
+
+def create_registration_field(data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cols = ', '.join(_REGISTRATION_FIELD_COLUMNS)
+    placeholders = ', '.join(['%s'] * len(_REGISTRATION_FIELD_COLUMNS))
+    cur.execute(
+        f"INSERT INTO registration_fields ({cols}) VALUES ({placeholders}) RETURNING id",
+        _registration_field_values(data)
+    )
+    new_id = cur.fetchone()['id']
+    conn.commit(); cur.close(); conn.close()
+    return new_id
+
+
+def update_registration_field(fid, data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    set_clause = ', '.join(f"{c}=%s" for c in _REGISTRATION_FIELD_COLUMNS)
+    cur.execute(
+        f"UPDATE registration_fields SET {set_clause}, updated_at=NOW() WHERE id=%s",
+        _registration_field_values(data) + (fid,)
+    )
+    conn.commit(); cur.close(); conn.close()
+
+
+def delete_registration_field(fid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM registration_fields WHERE id=%s", (fid,))
+    conn.commit(); cur.close(); conn.close()
+
+
+# The form's original hard-coded fields, used to seed a fresh database
+# so the public registration form looks the same as before this feature
+# existed. Urdu text filled in upfront (unlike the enquiry form's seed,
+# which was backfilled separately after the fact).
+_REGISTRATION_FIELD_SEED = [
+    {'field_key': 'name', 'label': 'Full Name', 'label_ur': 'پورا نام',
+     'field_type': 'text', 'placeholder': 'Your full name', 'placeholder_ur': 'آپ کا پورا نام',
+     'is_required': True, 'width': 'half'},
+    {'field_key': 'email', 'label': 'Email Address', 'label_ur': 'ای میل ایڈریس',
+     'field_type': 'email', 'placeholder': 'your@email.com', 'placeholder_ur': 'your@email.com',
+     'is_required': False, 'width': 'half'},
+    {'field_key': 'phone', 'label': 'Phone / WhatsApp', 'label_ur': 'فون / واٹس ایپ',
+     'field_type': 'tel', 'placeholder': '+XX XXXX XXXXXX', 'placeholder_ur': '+XX XXXX XXXXXX',
+     'is_required': True, 'width': 'half'},
+    {'field_key': 'age', 'label': 'Age', 'label_ur': 'عمر',
+     'field_type': 'number', 'placeholder': 'Your age', 'placeholder_ur': 'آپ کی عمر',
+     'is_required': True, 'width': 'half'},
+    {'field_key': 'country', 'label': 'Full Address', 'label_ur': 'مکمل پتہ',
+     'field_type': 'text', 'placeholder': 'Street, City, Country', 'placeholder_ur': 'گلی، شہر، ملک',
+     'is_required': True, 'width': 'full'},
+    {'field_key': 'experience', 'label': 'Previous Experience', 'label_ur': 'سابقہ تجربہ',
+     'field_type': 'textarea',
+     'placeholder': 'Briefly describe your relevant experience (e.g. years of Tajweed study, previous competitions, etc.)...',
+     'placeholder_ur': 'اپنے متعلقہ تجربے کے بارے میں مختصراً بتائیں (مثلاً تجوید کی تعلیم کے سال، پچھلے مقابلے وغیرہ)...',
+     'is_required': True, 'width': 'full'},
+    {'field_key': 'notes', 'label': 'Additional Notes', 'label_ur': 'اضافی نوٹس',
+     'field_type': 'textarea', 'placeholder': 'Any questions or special requirements?',
+     'placeholder_ur': 'کوئی سوال یا خصوصی ضرورت؟',
+     'is_required': False, 'width': 'full'},
+]
+
+
+def seed_registration_fields():
+    """Insert the original hard-coded registration fields if the table
+    is still empty (fresh database)."""
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT COUNT(*) AS cnt FROM registration_fields")
+    if cur.fetchone()['cnt'] == 0:
+        for i, f in enumerate(_REGISTRATION_FIELD_SEED):
+            cur.execute(
+                """INSERT INTO registration_fields
+                     (field_key, label, label_ur, field_type, placeholder, placeholder_ur,
+                      is_required, width, sort_order)
+                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                (f['field_key'], f['label'], f['label_ur'], f['field_type'],
+                 f['placeholder'], f['placeholder_ur'], f['is_required'], f['width'], i)
+            )
+    conn.commit()
+    cur.close()
+    conn.close()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -794,6 +1042,267 @@ def delete_course(cid):
     conn = get_conn()
     cur  = conn.cursor()
     cur.execute("DELETE FROM courses WHERE id=%s", (cid,))
+    conn.commit(); cur.close(); conn.close()
+
+
+# ─────────────────────────────────────────────────────────────
+#  Team Members CRUD
+# ─────────────────────────────────────────────────────────────
+_TEAM_COLUMNS = (
+    'display_order', 'is_director', 'is_visible',
+    'name', 'name_ur', 'role_label', 'role_label_ur',
+    'subject', 'subject_ur', 'education', 'education_ur', 'image_url',
+)
+
+
+def _team_values(data):
+    return tuple(data.get(c) for c in _TEAM_COLUMNS)
+
+
+def get_all_team_members(visible_only=False):
+    """All team members, director first then by display_order. Pass
+    visible_only=True for the public /team page (admin sees everyone,
+    including members hidden with is_visible=False)."""
+    conn = get_conn()
+    cur  = conn.cursor()
+    where = "WHERE is_visible = TRUE" if visible_only else ""
+    cur.execute(f"SELECT * FROM team_members {where} ORDER BY is_director DESC, display_order, id")
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_team_member(tid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM team_members WHERE id=%s", (tid,))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    return dict(row) if row else None
+
+
+def create_team_member(data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cols = ', '.join(_TEAM_COLUMNS)
+    placeholders = ', '.join(['%s'] * len(_TEAM_COLUMNS))
+    cur.execute(
+        f"INSERT INTO team_members ({cols}) VALUES ({placeholders}) RETURNING id",
+        _team_values(data)
+    )
+    new_id = cur.fetchone()['id']
+    conn.commit(); cur.close(); conn.close()
+    return new_id
+
+
+def update_team_member(tid, data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    set_clause = ', '.join(f"{c}=%s" for c in _TEAM_COLUMNS)
+    cur.execute(
+        f"UPDATE team_members SET {set_clause}, updated_at=NOW() WHERE id=%s",
+        _team_values(data) + (tid,)
+    )
+    conn.commit(); cur.close(); conn.close()
+
+
+def delete_team_member(tid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM team_members WHERE id=%s", (tid,))
+    conn.commit(); cur.close(); conn.close()
+
+
+# Fallback seed for a brand-new database that has no team_members rows
+# yet — mirrors the real data already live in production.
+_TEAM_SEED = [
+    {'is_director': True,  'name': 'Qari Mohammad Shariq Zafar', 'role_label': 'Founder & Director',
+     'subject': 'Tajweed & Qirat Scholar', 'education': 'Aalim, Qari & Hafiz',
+     'image_url': '/static/images/team/director_shariq_zafar.jpeg'},
+    {'is_director': False, 'name': 'Maulana Osama Quasmi', 'role_label': 'Senior Educator',
+     'subject': 'Quran Recitation & Islamic Studies', 'education': 'Graduate from Darul Uloom Deoband',
+     'image_url': '/static/images/team/maulana_osama_quasmi.jpeg'},
+    {'is_director': False, 'name': 'Mufti Maaz Quasmi', 'role_label': 'Senior Educator',
+     'subject': 'Fiqh & Quranic Sciences', 'education': 'Mufti & Scholar',
+     'image_url': '/static/images/team/mufti_maaz_quasmi.jpeg'},
+    {'is_director': False, 'name': 'Aalima Rahnuma Fatima', 'role_label': 'Female Tutor',
+     'subject': 'Tajweed & Arabic Tutoress', 'education': 'Aalima',
+     'image_url': '/static/images/team/default_female.svg'},
+    {'is_director': False, 'name': 'Hafiza Sumaiya Fatima', 'role_label': 'Female Tutor',
+     'subject': 'Hifz & Tajweed Tutoress', 'education': 'Hafiza & Aalima',
+     'image_url': '/static/images/team/default_female.svg'},
+    {'is_director': False, 'name': 'Hafiza Safia Junaid', 'role_label': 'Female Tutor',
+     'subject': 'Quran & Urdu Language Tutoress', 'education': 'Hafiza',
+     'image_url': '/static/images/team/default_female.svg'},
+    {'is_director': False, 'name': 'Dr Noorussama Fatima', 'role_label': 'Academic Specialist',
+     'subject': 'Academic & School Curriculum Support', 'education': 'BUMS / Academic Specialist',
+     'image_url': '/static/images/team/default_female.svg'},
+]
+
+
+def seed_team_members():
+    """Insert the fallback team members if the table is still empty
+    (fresh database) — keeps the public /team page looking the same as
+    the current production data."""
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT COUNT(*) AS cnt FROM team_members")
+    if cur.fetchone()['cnt'] == 0:
+        for i, m in enumerate(_TEAM_SEED):
+            cur.execute(
+                """INSERT INTO team_members
+                     (display_order, is_director, is_visible, name, role_label, subject, education, image_url)
+                   VALUES (%s,%s,TRUE,%s,%s,%s,%s,%s)""",
+                (i, m['is_director'], m['name'], m['role_label'],
+                 m['subject'], m['education'], m['image_url'])
+            )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+# ─────────────────────────────────────────────────────────────
+#  Enquiry Form — field definitions + submitted leads
+# ─────────────────────────────────────────────────────────────
+_ENQUIRY_FIELD_COLUMNS = (
+    'field_key', 'label', 'label_ur', 'field_type',
+    'placeholder', 'placeholder_ur', 'options', 'options_ur',
+    'is_required', 'width', 'sort_order',
+)
+
+
+def _enquiry_field_values(data):
+    values = []
+    for c in _ENQUIRY_FIELD_COLUMNS:
+        v = data.get(c)
+        if c in ('options', 'options_ur'):
+            v = psycopg2.extras.Json(v or [])
+        values.append(v)
+    return tuple(values)
+
+
+def get_all_enquiry_fields():
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM enquiry_fields ORDER BY sort_order, id")
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_enquiry_field(fid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM enquiry_fields WHERE id=%s", (fid,))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    return dict(row) if row else None
+
+
+def create_enquiry_field(data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cols = ', '.join(_ENQUIRY_FIELD_COLUMNS)
+    placeholders = ', '.join(['%s'] * len(_ENQUIRY_FIELD_COLUMNS))
+    cur.execute(
+        f"INSERT INTO enquiry_fields ({cols}) VALUES ({placeholders}) RETURNING id",
+        _enquiry_field_values(data)
+    )
+    new_id = cur.fetchone()['id']
+    conn.commit(); cur.close(); conn.close()
+    return new_id
+
+
+def update_enquiry_field(fid, data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    set_clause = ', '.join(f"{c}=%s" for c in _ENQUIRY_FIELD_COLUMNS)
+    cur.execute(
+        f"UPDATE enquiry_fields SET {set_clause}, updated_at=NOW() WHERE id=%s",
+        _enquiry_field_values(data) + (fid,)
+    )
+    conn.commit(); cur.close(); conn.close()
+
+
+def delete_enquiry_field(fid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM enquiry_fields WHERE id=%s", (fid,))
+    conn.commit(); cur.close(); conn.close()
+
+
+# The form's original hard-coded fields, used only to seed a fresh
+# database so the public form looks the same as before this feature
+# existed. 'course' ships with the same options that were hard-coded
+# in the template.
+_ENQUIRY_FIELD_SEED = [
+    {'field_key': 'name', 'label': 'Your Name', 'field_type': 'text',
+     'placeholder': 'Full Name', 'is_required': True, 'width': 'half'},
+    {'field_key': 'phone', 'label': 'Phone / WhatsApp', 'field_type': 'tel',
+     'placeholder': '+XX XXXX XXXXXX', 'is_required': True, 'width': 'half'},
+    {'field_key': 'email', 'label': 'Email Address', 'field_type': 'email',
+     'placeholder': 'your@email.com', 'is_required': False, 'width': 'full'},
+    {'field_key': 'course', 'label': 'Course Interested In', 'field_type': 'select',
+     'placeholder': 'Select a Course', 'is_required': True, 'width': 'half',
+     'options': ['Tajweed Course', 'Quran Recitation', 'Quran Hifz', 'Qirat Course',
+                 'Basic Arabic Speaking', 'Urdu Language Course', 'Basic English Course',
+                 'Academic Subjects (Maths / Science)']},
+    {'field_key': 'age', 'label': 'Student Age', 'field_type': 'number',
+     'placeholder': 'Your age', 'is_required': True, 'width': 'half'},
+    {'field_key': 'address', 'label': 'Full Address', 'field_type': 'text',
+     'placeholder': 'Street, City, Country', 'is_required': True, 'width': 'full'},
+    {'field_key': 'message', 'label': 'Your Message', 'field_type': 'textarea',
+     'placeholder': 'Tell us about your learning goals, current level, or any questions...',
+     'is_required': True, 'width': 'full'},
+]
+
+
+def seed_enquiry_fields():
+    """Insert the original hard-coded form fields if the table is still
+    empty (fresh database) — keeps the public enquiry form looking the
+    same as before this feature existed."""
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT COUNT(*) AS cnt FROM enquiry_fields")
+    if cur.fetchone()['cnt'] == 0:
+        for i, f in enumerate(_ENQUIRY_FIELD_SEED):
+            cur.execute(
+                """INSERT INTO enquiry_fields
+                     (field_key, label, field_type, placeholder, is_required, width, options, sort_order)
+                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+                (f['field_key'], f['label'], f['field_type'], f['placeholder'],
+                 f['is_required'], f['width'], psycopg2.extras.Json(f.get('options', [])), i)
+            )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def get_all_enquiries():
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM enquiries ORDER BY created_at DESC")
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
+def create_enquiry(data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute(
+        "INSERT INTO enquiries (data) VALUES (%s) RETURNING id",
+        (psycopg2.extras.Json(data),)
+    )
+    new_id = cur.fetchone()['id']
+    conn.commit(); cur.close(); conn.close()
+    return new_id
+
+
+def delete_enquiry(eid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM enquiries WHERE id=%s", (eid,))
     conn.commit(); cur.close(); conn.close()
 
 

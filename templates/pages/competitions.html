@@ -215,44 +215,19 @@
 <!-- ══ REGISTRATION MODAL ══ -->
 <div class="reg-modal-overlay" id="regModal" role="dialog" aria-modal="true" aria-labelledby="regModalTitle">
   <div class="reg-modal">
-    <button class="reg-modal-close" id="regModalClose" aria-label="Close">&times;</button>
+    <button class="reg-modal-close" id="regModalClose" aria-label="{{ t.modalCloseAria }}">&times;</button>
     <div class="reg-modal-hdr">
       <span class="section-tag">{{ t.compModalTag }}</span>
       <h2 class="reg-modal-comp-title" id="regModalTitle"></h2>
     </div>
     <form id="regModalForm" method="post" action="">
       <div class="reg-modal-grid">
-        <div class="rmg">
-          <label>{{ t.compModalName }} <span class="req">*</span></label>
-          <input type="text" name="name" placeholder="{{ t.compModalNamePh }}" required/>
-        </div>
-        <div class="rmg">
-          <label>{{ t.compModalEmail }} <span class="form-optional">{{ t.compModalEmailOpt }}</span></label>
-          <input type="email" name="email" placeholder="your@email.com"/>
-        </div>
-        <div class="rmg">
-          <label>{{ t.compModalPhone }} <span class="req">*</span></label>
-          <input type="tel" name="phone" placeholder="{{ t.compModalPhonePh }}" required/>
-        </div>
-        <div class="rmg">
-          <label>{{ t.compModalAge }} <span class="req">*</span></label>
-          <input type="number" name="age" placeholder="{{ t.compModalAgePh }}" min="1" max="120" required/>
-        </div>
-        <div class="rmg rmg--full">
-          <label>{{ t.compModalAddress }} <span class="req">*</span></label>
-          <input type="text" name="country" placeholder="{{ t.compModalAddressPh }}" required/>
-        </div>
-        <div class="rmg rmg--full">
-          <label>{{ t.compModalExp }} <span class="req">*</span></label>
-          <textarea name="experience" rows="3" required placeholder="{{ t.compModalExpPh }}"></textarea>
-        </div>
-        <div class="rmg rmg--full">
-          <label>{{ t.compModalNotes }} <span class="form-optional">{{ t.compModalEmailOpt }}</span></label>
-          <textarea name="notes" rows="2" placeholder="{{ t.compModalNotesPh }}"></textarea>
-        </div>
+        {% for f in registration_fields %}
+        {% include 'components/_registration_modal_field.html' %}
+        {% endfor %}
         <p class="form-req-note" style="grid-column:1/-1;"><span class="req">*</span> {{ t.compModalReqLabel }} &nbsp;|&nbsp; <span class="form-optional">{{ t.compModalOptLabel }}</span> {{ t.compModalOptNote }}</p>
       </div>
-      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;text-align:center;padding:1rem;">{{ t.compModalSubmit }}</button>
+      <button type="submit" class="btn-primary" style="display:block;margin:1.3rem auto 0;padding:1rem 2.6rem;">{{ t.compModalSubmit }}</button>
       <p class="reg-modal-privacy">{{ t.compModalPrivacy }}</p>
     </form>
   </div>

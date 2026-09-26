@@ -5,17 +5,27 @@
 
 /* ────────────────── HERO ────────────────── */
 .hero {
-  /* background-image is set inline on the element — it's admin-editable
-     (see templates/pages/index.html + /admin/hero), so it can't be a
-     static url() here. background-size/position/repeat still apply
-     to whatever the inline background-image is. */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   padding: 190px 5% 56px; /* Increased padding to clear fixed navbar and add gap */
   min-height: 80vh; /* Better min-height to show the background */
   position: relative;
   overflow: hidden;
+}
+
+/* The hero photo — fills the section fully (inset:0 tracks .hero's own
+   height, growing with it) so it always covers edge-to-edge with no
+   gap, same as before. background-image is set inline on this element
+   — it's admin-editable (see templates/pages/index.html + /admin/hero),
+   so it can't be a static url() here. Urdu's line-height is kept close
+   to English's (see body.lang-ur overrides in responsive.css) so the
+   section doesn't grow tall enough to force a noticeably different
+   cover-crop between languages. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
 }
 
 .hero-container {
@@ -166,6 +176,12 @@
     min-height: auto;
     padding: 100px 5% 40px;
     background: #F0F9F4; /* Light green to match the design */
+  }
+  .hero-bg {
+    /* Below 992px the same photo shows as a real <img> in .hero-img-col
+       instead (see below) — hide this background layer so it doesn't
+       sit behind/duplicate it. */
+    display: none;
   }
   .hero-container {
     flex-direction: column-reverse; /* Puts image above text */

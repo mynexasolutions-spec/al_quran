@@ -1,0 +1,14 @@
+{# Renders one enquiry-form field. Expects `f` (a row from enquiry_fields) in context. #}
+<div class="fg">
+  <label>{{ f.label }} {% if f.is_required %}<span class="req">*</span>{% else %}<span class="form-optional">(Optional)</span>{% endif %}</label>
+  {% if f.field_type == 'select' %}
+  <select name="{{ f.field_key }}" {% if f.is_required %}required{% endif %}>
+    <option value="">{{ f.placeholder or 'Select' }}</option>
+    {% for opt in f.options %}<option>{{ opt }}</option>{% endfor %}
+  </select>
+  {% elif f.field_type == 'textarea' %}
+  <textarea name="{{ f.field_key }}" placeholder="{{ f.placeholder }}" {% if f.is_required %}required{% endif %}></textarea>
+  {% else %}
+  <input type="{{ f.field_type }}" name="{{ f.field_key }}" placeholder="{{ f.placeholder }}" {% if f.is_required %}required{% endif %}/>
+  {% endif %}
+</div>

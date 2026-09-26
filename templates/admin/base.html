@@ -49,6 +49,22 @@
          class="adm-nav-item {% if request.endpoint == 'admin_prizes' %}active{% endif %}">
         <span class="adm-nav-icon"><i class="fa-solid fa-medal"></i></span> Prizes &amp; Recognition
       </a>
+      <a href="{{ url_for('admin_team') }}"
+         class="adm-nav-item {% if request.endpoint in ('admin_team','admin_team_new','admin_team_edit') %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-users"></i></span> Team
+      </a>
+      <a href="{{ url_for('admin_enquiry_fields') }}"
+         class="adm-nav-item {% if request.endpoint in ('admin_enquiry_fields','admin_enquiry_field_new','admin_enquiry_field_edit') %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-list-check"></i></span> Enquiry Form
+      </a>
+      <a href="{{ url_for('admin_enquiries') }}"
+         class="adm-nav-item {% if request.endpoint == 'admin_enquiries' %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-inbox"></i></span> Enquiries
+      </a>
+      <a href="{{ url_for('admin_registration_fields') }}"
+         class="adm-nav-item {% if request.endpoint in ('admin_registration_fields','admin_registration_field_new','admin_registration_field_edit') %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-list-check"></i></span> Registration Form
+      </a>
       <a href="{{ url_for('admin_registrations') }}"
          class="adm-nav-item {% if request.endpoint == 'admin_registrations' %}active{% endif %}">
         <span class="adm-nav-icon"><i class="fa-solid fa-clipboard-list"></i></span> Registrations

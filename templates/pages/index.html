@@ -4,7 +4,8 @@
 {% block content %}
 
 <!-- ══ HERO ══ -->
-<section class="hero" id="home" style="background-image: url('{{ hero.image_url }}');">
+<section class="hero" id="home">
+  <div class="hero-bg" style="background-image: url('{{ hero.image_url }}');"></div>
   <div class="hero-container">
     
     <div class="hero-text-col">
@@ -21,14 +22,14 @@
       
       <div class="hero-social-proof">
         <div class="avatars">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="Student" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
         </div>
         <div class="social-text">
           <strong>5000+</strong>
-          <span>Students Enrolled<br>Worldwide</span>
+          <span>{{ t.heroSocialProofL1 }}<br>{{ t.heroSocialProofL2 }}</span>
         </div>
       </div>
     </div>
@@ -38,7 +39,7 @@
          (set inline below, since it's admin-editable and can't live in the
          static stylesheet). -->
     <div class="hero-img-col">
-      <img src="{{ hero.image_url }}" alt="Learn Quran online with certified teachers" class="hero-main-img">
+      <img src="{{ hero.image_url }}" alt="{{ t.heroMainImgAlt }}" class="hero-main-img">
     </div>
   </div>
 </section>
@@ -50,28 +51,28 @@
       <i class="fa-solid fa-users stat-icon"></i>
       <div class="stat-text">
         <strong>5000+</strong>
-        <span>Students Enrolled</span>
+        <span>{{ t.heroStatStudentsLabel }}</span>
       </div>
     </div>
     <div class="stat-box">
       <i class="fa-solid fa-chalkboard-user stat-icon"></i>
       <div class="stat-text">
         <strong>80+</strong>
-        <span>Qualified Teachers</span>
+        <span>{{ t.heroStatTeachersLabel }}</span>
       </div>
     </div>
     <div class="stat-box">
       <i class="fa-solid fa-globe stat-icon"></i>
       <div class="stat-text">
         <strong>50+</strong>
-        <span>Countries Worldwide</span>
+        <span>{{ t.heroStatCountriesLabel }}</span>
       </div>
     </div>
     <div class="stat-box">
       <i class="fa-regular fa-star stat-icon"></i>
       <div class="stat-text">
         <strong>4.9/5</strong>
-        <span>(2.5k+ Reviews)</span>
+        <span>{{ t.heroStatReviewsLabel }}</span>
         <span class="stat-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
       </div>
     </div>
@@ -83,27 +84,27 @@
   <div class="hero-features-container">
     <div class="feature-item">
       <i class="fa-regular fa-user feature-icon"></i>
-      <span>One-to-One<br>Live Classes</span>
+      <span>{{ t.heroFeatOneToOneL1 }}<br>{{ t.heroFeatOneToOneL2 }}</span>
     </div>
     <div class="feature-item">
       <i class="fa-solid fa-people-arrows feature-icon"></i>
-      <span>Male & Female<br>Teachers</span>
+      <span>{{ t.heroFeatTeachersL1 }}<br>{{ t.heroFeatTeachersL2 }}</span>
     </div>
     <div class="feature-item">
       <i class="fa-regular fa-clock feature-icon"></i>
-      <span>Flexible<br>Timings</span>
+      <span>{{ t.heroFeatTimingsL1 }}<br>{{ t.heroFeatTimingsL2 }}</span>
     </div>
     <div class="feature-item">
       <i class="fa-solid fa-award feature-icon"></i>
-      <span>Certified<br>Teachers</span>
+      <span>{{ t.heroFeatCertifiedL1 }}<br>{{ t.heroFeatCertifiedL2 }}</span>
     </div>
     <div class="feature-item">
       <i class="fa-solid fa-chart-line feature-icon"></i>
-      <span>Progress<br>Tracking</span>
+      <span>{{ t.heroFeatProgressL1 }}<br>{{ t.heroFeatProgressL2 }}</span>
     </div>
     <div class="feature-item">
       <i class="fa-solid fa-shield-halved feature-icon"></i>
-      <span>Secure & Safe<br>Environment</span>
+      <span>{{ t.heroFeatSecureL1 }}<br>{{ t.heroFeatSecureL2 }}</span>
     </div>
   </div>
 </section>
@@ -114,52 +115,52 @@
     
     <div class="prayer-widget">
       <div class="widget-header">
-        <h3>Today's Prayer Times <i class="fa-regular fa-calendar-days"></i></h3>
-        <a href="#" class="btn-view-all">View All</a>
+        <h3>{{ t.prayerWidgetTitle }} <i class="fa-regular fa-calendar-days"></i></h3>
+        <a href="#" class="btn-view-all">{{ t.prayerViewAll }}</a>
       </div>
       <div class="prayer-times-grid">
         <div class="prayer-card" id="prayer-fajr">
           <div class="p-icon"><i class="fa-solid fa-cloud-sun"></i></div>
           <div class="p-time">
-            <span class="p-name">Fajr</span>
+            <span class="p-name">{{ t.prayerFajr }}</span>
             <strong class="p-value">--:-- --</strong>
           </div>
         </div>
         <div class="prayer-card" id="prayer-dhuhr">
           <div class="p-icon"><i class="fa-solid fa-sun"></i></div>
           <div class="p-time">
-            <span class="p-name">Dhuhr</span>
+            <span class="p-name">{{ t.prayerDhuhr }}</span>
             <strong class="p-value">--:-- --</strong>
           </div>
         </div>
         <div class="prayer-card" id="prayer-asr">
           <div class="p-icon"><i class="fa-solid fa-sun"></i></div>
           <div class="p-time">
-            <span class="p-name">Asr</span>
+            <span class="p-name">{{ t.prayerAsr }}</span>
             <strong class="p-value">--:-- --</strong>
           </div>
         </div>
         <div class="prayer-card" id="prayer-maghrib">
           <div class="p-icon"><i class="fa-solid fa-cloud-sun"></i></div>
           <div class="p-time">
-            <span class="p-name">Maghrib</span>
+            <span class="p-name">{{ t.prayerMaghrib }}</span>
             <strong class="p-value">--:-- --</strong>
           </div>
         </div>
         <div class="prayer-card" id="prayer-isha">
           <div class="p-icon"><i class="fa-solid fa-moon"></i></div>
           <div class="p-time">
-            <span class="p-name">Isha</span>
+            <span class="p-name">{{ t.prayerIsha }}</span>
             <strong class="p-value">--:-- --</strong>
           </div>
         </div>
       </div>
       <div class="widget-footer">
         <div class="location-info">
-          <i class="fa-solid fa-location-dot"></i> <span id="prayer-location">New York, USA</span>
+          <i class="fa-solid fa-location-dot"></i> <span id="prayer-location">{{ t.prayerLocation }}</span>
         </div>
         <div class="notification-toggle">
-          <i class="fa-regular fa-bell"></i> <span>Get Notified Before Each Prayer</span>
+          <i class="fa-regular fa-bell"></i> <span>{{ t.prayerNotify }}</span>
           <label class="switch">
             <input type="checkbox">
             <span class="slider round"></span>
@@ -170,7 +171,7 @@
 
     <div class="islamic-date-widget">
       <div class="widget-header">
-        <h3>Islamic Date <i class="fa-regular fa-calendar-days"></i></h3>
+        <h3>{{ t.islamicDateTitle }} <i class="fa-regular fa-calendar-days"></i></h3>
       </div>
       <div class="date-content">
         <i class="fa-solid fa-moon moon-icon"></i>
@@ -270,7 +271,7 @@
 <section class="about-strip" id="about">
   <div class="about-inner">
     <div class="about-img-wrap">
-      <img src="{{ url_for('static', filename='images/who_we_are.webp') }}" alt="Who We Are — Al-Qur'an Global Institute" class="about-full-img"/>
+      <img src="{{ url_for('static', filename='images/who_we_are.webp') }}" alt="{{ t.aboutImgAlt }}" class="about-full-img"/>
     </div>
     <div>
       <span class="section-tag">{{ t.aboutTag }}</span>
@@ -314,7 +315,7 @@
 
     <div class="feat-card">
       <div class="feat-img-wrap feat-img-wrap--1">
-        <img src="{{ url_for('static', filename='images/why/expert_tutor.webp') }}" alt="Expert Quran Tutors" class="feat-img" onerror="this.style.display='none'">
+        <img src="{{ url_for('static', filename='images/why/expert_tutor.webp') }}" alt="{{ t.feat1ImgAlt }}" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
         <h3>{{ t.feat1H }}</h3>
@@ -324,7 +325,7 @@
 
     <div class="feat-card">
       <div class="feat-img-wrap feat-img-wrap--2">
-        <img src="{{ url_for('static', filename='images/why/we_value_our_students.webp') }}" alt="We Value Our Students" class="feat-img" onerror="this.style.display='none'">
+        <img src="{{ url_for('static', filename='images/why/we_value_our_students.webp') }}" alt="{{ t.feat2ImgAlt }}" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
         <h3>{{ t.feat2H }}</h3>
@@ -334,7 +335,7 @@
 
     <div class="feat-card">
       <div class="feat-img-wrap feat-img-wrap--3">
-        <img src="{{ url_for('static', filename='images/why/one-on-one-classes.webp') }}" alt="One-on-One Classes" class="feat-img" onerror="this.style.display='none'">
+        <img src="{{ url_for('static', filename='images/why/one-on-one-classes.webp') }}" alt="{{ t.feat3ImgAlt }}" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
         <h3>{{ t.feat3H }}</h3>
@@ -344,7 +345,7 @@
 
     <div class="feat-card">
       <div class="feat-img-wrap feat-img-wrap--4">
-        <img src="{{ url_for('static', filename='images/why/flexible-timings.webp') }}" alt="Flexible Timings" class="feat-img" onerror="this.style.display='none'">
+        <img src="{{ url_for('static', filename='images/why/flexible-timings.webp') }}" alt="{{ t.feat4ImgAlt }}" class="feat-img" onerror="this.style.display='none'">
       </div>
       <div class="feat-body">
         <h3>{{ t.feat4H }}</h3>
@@ -373,7 +374,7 @@
   {% endwith %}
 
   <div class="reviews-carousel">
-    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="Previous reviews">&#8249;</button>
+    <button class="rev-arrow rev-prev" id="rev-prev" aria-label="{{ t.reviewsPrevAria }}">&#8249;</button>
     <div class="reviews-track-outer" id="rev-track-outer">
       <div class="reviews-track" id="rev-track">
 
@@ -382,7 +383,7 @@
             <div class="rq">&#x201C;</div>
             <div class="rs">{% for i in range(rev.rating) %}&#9733;{% endfor %}{% for i in range(5 - rev.rating) %}<span style="opacity:.25">&#9733;</span>{% endfor %}</div>
             <p class="rt">{{ rev.review_text }}</p>
-            <button class="rev-toggle" type="button">Read more</button>
+            <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
             <div class="reviewer">
               <div class="ra">{{ rev.name[:2].upper() }}</div>
               <div>
@@ -397,7 +398,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
-          <button class="rev-toggle" type="button">Read more</button>
+          <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">FA</div>
             <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
@@ -407,7 +408,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
-          <button class="rev-toggle" type="button">Read more</button>
+          <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">KM</div>
             <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
@@ -417,7 +418,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
-          <button class="rev-toggle" type="button">Read more</button>
+          <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">ZR</div>
             <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
@@ -427,7 +428,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
-          <button class="rev-toggle" type="button">Read more</button>
+          <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">NA</div>
             <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
@@ -437,7 +438,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
-          <button class="rev-toggle" type="button">Read more</button>
+          <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">OB</div>
             <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
@@ -447,7 +448,7 @@
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
-          <button class="rev-toggle" type="button">Read more</button>
+          <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">SI</div>
             <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
@@ -456,7 +457,7 @@
 
       </div>
     </div>
-    <button class="rev-arrow rev-next" id="rev-next" aria-label="Next reviews">&#8250;</button>
+    <button class="rev-arrow rev-next" id="rev-next" aria-label="{{ t.reviewsNextAria }}">&#8250;</button>
   </div>
 
   <div class="rev-dots" id="rev-dots"></div>
@@ -471,7 +472,7 @@
 <!-- ══ REVIEW SUBMISSION MODAL ══ -->
 <div class="rev-modal-overlay" id="revModal" role="dialog" aria-modal="true" aria-labelledby="revModalTitle">
   <div class="rev-modal">
-    <button class="rev-modal-close" id="revModalClose" aria-label="Close">&times;</button>
+    <button class="rev-modal-close" id="revModalClose" aria-label="{{ t.modalCloseAria }}">&times;</button>
     <div class="rev-modal-hdr">
       <span class="section-tag">{{ t.modalTag }}</span>
       <h2 id="revModalTitle">{{ t.modalH2 }}</h2>
@@ -483,7 +484,7 @@
         <label>{{ t.modalRating }} <span class="req">*</span></label>
         <div class="rev-stars" id="revStars">
           {% for i in range(1,6) %}
-          <button type="button" class="rev-star-btn" data-val="{{ i }}" aria-label="{{ i }} stars">&#9733;</button>
+          <button type="button" class="rev-star-btn" data-val="{{ i }}" aria-label="{{ i }} {{ t.modalStarsWord }}">&#9733;</button>
           {% endfor %}
         </div>
         <input type="hidden" name="rating" id="revRatingInput" value="5"/>
@@ -502,14 +503,14 @@
           <label>{{ t.modalCourse }}</label>
           <select name="course">
             <option value="">{{ t.modalCourseOpt }}</option>
-            <option>Tajweed Course</option>
-            <option>Quran Recitation</option>
-            <option>Quran Hifz Course</option>
-            <option>Qirat Course</option>
-            <option>Basic Arabic Speaking</option>
-            <option>Urdu Language Course</option>
-            <option>Basic English Course</option>
-            <option>Academic Subjects</option>
+            <option>{{ t.modalCourseOptTajweed }}</option>
+            <option>{{ t.modalCourseOptRecitation }}</option>
+            <option>{{ t.modalCourseOptHifz }}</option>
+            <option>{{ t.modalCourseOptQirat }}</option>
+            <option>{{ t.modalCourseOptArabic }}</option>
+            <option>{{ t.modalCourseOptUrdu }}</option>
+            <option>{{ t.modalCourseOptEnglish }}</option>
+            <option>{{ t.modalCourseOptAcademic }}</option>
           </select>
         </div>
         <div class="rmg rmg--full">
@@ -732,41 +733,18 @@
     </div>
 
     <div>
-      <form id="contactForm">
-        <div class="form-row">
-          <div class="fg"><label>{{ t.formNameLabel }} <span class="req">*</span></label><input type="text" name="name" placeholder="{{ t.formNamePh }}" required/></div>
-          <div class="fg"><label>{{ t.formPhoneLabel }} <span class="req">*</span></label><input type="tel" name="phone" placeholder="{{ t.formPhonePh }}" required/></div>
-        </div>
-        <div class="fg"><label>{{ t.formEmailLabel }} <span class="form-optional">(Optional)</span></label><input type="email" name="email" placeholder="{{ t.formEmailPh }}" autocomplete="email"/></div>
-        <div class="form-row">
-          <div class="fg">
-            <label>{{ t.formCourseLabel }} <span class="req">*</span></label>
-            <select name="course" required>
-              <option value="">{{ t.formCourseOpt }}</option>
-              <option>Tajweed Course</option>
-              <option>Quran Recitation</option>
-              <option>Quran Hifz</option>
-              <option>Qirat Course</option>
-              <option>Basic Arabic Speaking</option>
-              <option>Urdu Language Course</option>
-              <option>Basic English Course</option>
-              <option>Academic Subjects (Maths / Science)</option>
-            </select>
+      <form id="contactForm" action="{{ url_for('contact') }}" method="post">
+        {% for group in enquiry_field_groups %}
+          {% if group|length == 2 %}
+          <div class="form-row">
+            {% for f in group %}{% include 'components/_enquiry_field.html' %}{% endfor %}
           </div>
-          <div class="fg">
-            <label>{{ t.formAgeLabel }} <span class="req">*</span></label>
-            <input type="number" name="age" placeholder="Your age" min="1" max="120" required/>
-          </div>
-        </div>
-        <div class="fg">
-          <label>Full Address <span class="req">*</span></label>
-          <input type="text" name="address" placeholder="Street, City, Country" required/>
-        </div>
-        <div class="fg">
-          <label>{{ t.formMsgLabel }} <span class="req">*</span></label>
-          <textarea name="message" placeholder="{{ t.formMsgPh }}" required></textarea>
-        </div>
-        <p class="form-req-note"><span class="req">*</span> Required &nbsp;|&nbsp; <span class="form-optional">Optional</span> fields are not mandatory</p>
+          {% else %}
+            {% set f = group[0] %}
+            {% include 'components/_enquiry_field.html' %}
+          {% endif %}
+        {% endfor %}
+        <p class="form-req-note"><span class="req">*</span> {{ t.compModalReqLabel }} &nbsp;|&nbsp; <span class="form-optional">{{ t.compModalOptLabel }}</span> {{ t.compModalOptNote }}</p>
         <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;justify-content:center;display:flex;align-items:center;gap:.5rem;">
           {{ t.formSubmit }}
         </button>
@@ -829,28 +807,26 @@
   }, 6000);
 })();
 
-/* Contact form → WhatsApp redirect */
+/* Contact form → saves to admin (via /contact) + opens WhatsApp with the entered details */
 (function () {
   var form = document.getElementById('contactForm');
   if (!form) return;
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var name    = (form.elements['name']    || {}).value || '';
-    var phone   = (form.elements['phone']   || {}).value || '';
-    var email   = (form.elements['email']   || {}).value || '';
-    var course  = (form.elements['course']  || {}).value || '';
-    var age     = (form.elements['age']     || {}).value || '';
-    var address = (form.elements['address'] || {}).value || '';
-    var message = (form.elements['message'] || {}).value || '';
-    var lines = [];
-    lines.push('*New Enquiry \u2014 Al-Qur\u2019an Global Institute*');
-    if (name)    lines.push('\uD83D\uDC64 *Name:* ' + name);
-    if (phone)   lines.push('\uD83D\uDCDE *Phone:* ' + phone);
-    if (email)   lines.push('\u2709 *Email:* ' + email);
-    if (course)  lines.push('\uD83D\uDCDA *Course:* ' + course);
-    if (age)     lines.push('\uD83C\uDF82 *Age:* ' + age);
-    if (address) lines.push('\uD83D\uDCCD *Address:* ' + address);
-    if (message) lines.push('\uD83D\uDCAC *Message:* ' + message);
+    var formData = new FormData(form);
+
+    // Fire-and-forget save so admins can review it under Enquiries,
+    // even if the visitor's browser blocks the WhatsApp popup.
+    fetch(form.action, { method: 'POST', body: formData }).catch(function () {});
+
+    var lines = ['*New Enquiry \u2014 Al-Qur\u2019an Global Institute*'];
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (!el.name || !el.value) return;
+      var fg = el.closest('.fg');
+      var labelEl = fg && fg.querySelector('label');
+      var label = labelEl ? labelEl.textContent.replace('*', '').replace('(Optional)', '').trim() : el.name;
+      lines.push('\u2022 *' + label + ':* ' + el.value);
+    });
     var text = encodeURIComponent(lines.join('\n'));
     window.open('https://wa.me/919045520249?text=' + text, '_blank');
   });

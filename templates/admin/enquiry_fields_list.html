@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+{% block title %}Enquiry Form | Admin{% endblock %}
+{% block topbar_title %}Enquiry Form{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Enquiry Form Fields</h2>
+    <p>Add, edit, remove or reorder the fields on the homepage "Enroll or Ask a Question" form. Every submission is captured under <a href="{{ url_for('admin_enquiries') }}">Enquiries</a>, whatever fields exist at the time.</p>
+  </div>
+  <a href="{{ url_for('admin_enquiry_field_new') }}" class="btn-primary">
+    <i class="fa-solid fa-plus"></i>&nbsp; New Field
+  </a>
+</div>
+
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Label</th>
+        <th>Field Key</th>
+        <th style="width:110px">Type</th>
+        <th style="width:80px;text-align:center">Width</th>
+        <th style="width:90px;text-align:center">Required</th>
+        <th style="width:70px;text-align:center">Order</th>
+        <th style="width:150px;text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in fields %}
+      <tr>
+        <td class="adm-td-muted">{{ loop.index }}</td>
+        <td>{{ f.label }}</td>
+        <td class="adm-td-muted"><code>{{ f.field_key }}</code></td>
+        <td><span class="adm-cat-badge">{{ f.field_type }}</span></td>
+        <td class="adm-td-muted" style="text-align:center">{{ f.width }}</td>
+        <td style="text-align:center">
+          {% if f.is_required %}
+            <span class="adm-badge-ok"><i class="fa-solid fa-check"></i> Yes</span>
+          {% else %}
+            <span class="adm-td-muted">Optional</span>
+          {% endif %}
+        </td>
+        <td class="adm-td-muted" style="text-align:center">{{ f.sort_order }}</td>
+        <td style="text-align:center">
+          <div class="adm-actions">
+            <a href="{{ url_for('admin_enquiry_field_edit', fid=f.id) }}" class="adm-btn adm-btn--edit" title="Edit"><i class="fa-solid fa-pen"></i></a>
+            <form method="post" action="{{ url_for('admin_enquiry_field_delete', fid=f.id) }}"
+                  onsubmit="return confirm('Delete the &quot;{{ f.label }}&quot; field? This removes it from the public form. This cannot be undone.')">
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No fields yet. <a href="{{ url_for('admin_enquiry_field_new') }}">Add one.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

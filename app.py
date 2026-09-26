@@ -41,6 +41,10 @@ with app.app_context():
         DB.seed_hero_content()
         DB.seed_courses()
         DB.seed_prizes()
+        DB.seed_team_members()
+        DB.seed_enquiry_fields()
+        DB.seed_registration_fields()
+        DB.backfill_registration_data()
         # Backfill Urdu text for anything seeded before Urdu support
         # existed — a no-op once every row already has its Urdu columns.
         DB.backfill_hero_urdu()
@@ -61,6 +65,18 @@ STATUS_LABELS = {
     'ongoing':   'Ongoing',
     'completed': 'Completed',
 }
+
+
+def _localized_status_labels(lang):
+    """STATUS_LABELS translated for a public-facing page. Admin pages
+    keep the plain English STATUS_LABELS above — the admin panel itself
+    is never localized."""
+    t = TRANSLATIONS.get(lang, TRANSLATIONS['en'])
+    return {
+        'upcoming':  t.get('statusUpcoming', STATUS_LABELS['upcoming']),
+        'ongoing':   t.get('statusOngoing', STATUS_LABELS['ongoing']),
+        'completed': t.get('statusCompleted', STATUS_LABELS['completed']),
+    }
 
 # Fallback used if the DB is unreachable or the hero_content row is
 # missing — keeps the homepage rendering with the original hard-coded
@@ -101,6 +117,28 @@ COURSE_UR_FIELDS = (
 COURSE_SECTION_UR_FIELDS = ('heading', 'items')
 PRIZES_SECTION_UR_FIELDS = ('tag', 'heading', 'heading_span', 'subtitle')
 PRIZE_UR_FIELDS = ('heading', 'items')
+TEAM_UR_FIELDS = ('name', 'role_label', 'subject', 'education')
+ENQUIRY_FIELD_UR_FIELDS = ('label', 'placeholder', 'options')
+ENQUIRY_FIELD_TYPES = ('text', 'tel', 'email', 'number', 'textarea', 'select')
+REGISTRATION_FIELD_UR_FIELDS = ('label', 'placeholder', 'options')
+
+
+def _group_enquiry_fields(fields):
+    """Pair up consecutive width='half' fields into a 2-column row;
+    everything else (width='full', or a half left without a partner)
+    renders on its own row. Lets the public template stay a simple loop
+    while still reproducing the original 2-column layout."""
+    groups = []
+    i = 0
+    while i < len(fields):
+        f = fields[i]
+        if f['width'] == 'half' and i + 1 < len(fields) and fields[i + 1]['width'] == 'half':
+            groups.append([f, fields[i + 1]])
+            i += 2
+        else:
+            groups.append([f])
+            i += 1
+    return groups
 
 
 def localize(raw, fields, lang):
@@ -285,10 +323,15 @@ def index():
         courses = [localize_course(c, lang) for c in DB.get_all_courses()]
     except Exception:
         courses = []
+    try:
+        enquiry_fields = [localize(f, ENQUIRY_FIELD_UR_FIELDS, lang) for f in DB.get_all_enquiry_fields()]
+    except Exception:
+        enquiry_fields = []
     return render_template('pages/index.html', featured_comps=featured,
                            reviews=reviews, hero=hero, courses=courses,
+                           enquiry_field_groups=_group_enquiry_fields(enquiry_fields),
                            THEME_MAP=THEME_MAP, BADGE_MAP=BADGE_MAP,
-                           STATUS_LABELS=STATUS_LABELS)
+                           STATUS_LABELS=_localized_status_labels(lang))
 
 
 @app.route('/course/<slug>')
@@ -309,7 +352,11 @@ def course_detail(slug):
 
 @app.route('/team')
 def team():
-    return render_template('pages/team.html')
+    lang = session.get('lang', 'en')
+    members = [localize(m, TEAM_UR_FIELDS, lang) for m in DB.get_all_team_members(visible_only=True)]
+    director = next((m for m in members if m['is_director']), None)
+    others = [m for m in members if not m['is_director']]
+    return render_template('pages/team.html', director=director, members=others)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -330,10 +377,15 @@ def competitions():
         prizes = [localize(p, PRIZE_UR_FIELDS, lang) for p in DB.get_all_prizes()]
     except Exception:
         prizes = []
+    try:
+        reg_fields = [localize(f, REGISTRATION_FIELD_UR_FIELDS, lang) for f in DB.get_all_registration_fields()]
+    except Exception:
+        reg_fields = []
     return render_template('pages/competitions.html', competitions=comps,
                            prizes_section=prizes_section, prizes=prizes,
+                           registration_fields=reg_fields,
                            THEME_MAP=THEME_MAP, BADGE_MAP=BADGE_MAP,
-                           STATUS_LABELS=STATUS_LABELS)
+                           STATUS_LABELS=_localized_status_labels(lang))
 
 
 @app.route('/competitions/<int:cid>/register', methods=['GET'])
@@ -344,7 +396,10 @@ def register_page(cid):
     if comp['status'] == 'completed':
         flash('This competition has ended. Registration is closed.', 'warning')
         return redirect(url_for('competitions'))
-    return render_template('pages/register.html', competition=comp)
+    lang = session.get('lang', 'en')
+    reg_fields = [localize(f, REGISTRATION_FIELD_UR_FIELDS, lang) for f in DB.get_all_registration_fields()]
+    return render_template('pages/register.html', competition=comp,
+                           registration_field_groups=_group_enquiry_fields(reg_fields))
 
 
 @app.route('/competitions/<int:cid>/register', methods=['POST'])
@@ -353,25 +408,22 @@ def register_submit(cid):
     if not comp or comp['status'] == 'completed':
         abort(404)
 
-    name  = request.form.get('name', '').strip()
-    email = request.form.get('email', '').strip()
-    phone = request.form.get('phone', '').strip()
+    reg_fields = DB.get_all_registration_fields()
+    data = {}
+    missing = []
+    for f in reg_fields:
+        val = request.form.get(f['field_key'], '').strip()
+        if f['is_required'] and not val:
+            missing.append(f['label'])
+        data[f['field_key']] = val
 
-    if not name or not phone:
-        flash('Name and phone number are required.', 'error')
+    if missing:
+        flash(f"{', '.join(missing)} {'is' if len(missing) == 1 else 'are'} required.", 'error')
         return redirect(url_for('competitions') + '#all-competitions')
 
-    DB.create_registration({
-        'competition_id':    cid,
-        'competition_title': comp['title'],
-        'name':       name,
-        'email':      email,
-        'phone':      request.form.get('phone', '').strip(),
-        'age':        request.form.get('age', '').strip(),
-        'country':    request.form.get('country', '').strip(),
-        'experience': request.form.get('experience', '').strip(),
-        'notes':      request.form.get('notes', '').strip(),
-    })
+    data['competition_id']    = cid
+    data['competition_title'] = comp['title']
+    DB.create_registration(data)
 
     flash(f'JazakAllah Khair! Your registration for "{comp["title"]}" has been received. We\'ll be in touch soon, insha\'Allah.', 'success')
     return redirect(url_for('competitions') + '#all-competitions')
@@ -386,11 +438,19 @@ def register_success(cid):
 
 
 # ═══════════════════════════════════════════════════════════════
-#  Contact Form (existing)
+#  Contact / Enquiry Form
 # ═══════════════════════════════════════════════════════════════
 @app.route('/contact', methods=['POST'])
 def contact():
-    data = request.get_json()
+    """Saves whatever fields the homepage enquiry form submitted (its
+    shape follows the admin-managed `enquiry_fields`, so this stays a
+    plain key/value dict rather than named parameters)."""
+    data = request.form.to_dict() if request.form else (request.get_json(silent=True) or {})
+    if data:
+        try:
+            DB.create_enquiry(data)
+        except Exception as e:
+            print(f"[ENQUIRY SAVE WARNING] {e}")
     return jsonify({'status': 'ok',
                     'message': "JazakAllah Khair! We will contact you within 24 hours, insha'Allah."})
 
@@ -571,6 +631,89 @@ def admin_competition_delete(cid):
 
 
 # ═══════════════════════════════════════════════════════════════
+#  Admin — Registration Form (competition registration form)
+# ═══════════════════════════════════════════════════════════════
+def _registration_field_data_from_form(form):
+    field_key = form.get('field_key', '').strip().lower().replace(' ', '_')
+    data = {
+        'field_key':   field_key,
+        'field_type':  form.get('field_type', 'text'),
+        'is_required': bool(form.get('is_required')),
+        'width':       form.get('width', 'full'),
+        'sort_order':  form.get('sort_order', type=int) or 0,
+        'options':     _parse_pipe_list(form.get('options', '')),
+        'options_ur':  _parse_pipe_list(form.get('options_ur', '')),
+    }
+    for f in ('label', 'placeholder'):
+        data[f] = form.get(f, '').strip()
+        data[f + '_ur'] = form.get(f + '_ur', '').strip()
+    return data
+
+
+@app.route('/admin/registration-fields')
+@admin_required
+def admin_registration_fields():
+    fields = DB.get_all_registration_fields()
+    return render_template('admin/registration_fields_list.html', fields=fields)
+
+
+@app.route('/admin/registration-fields/new', methods=['GET', 'POST'])
+@admin_required
+def admin_registration_field_new():
+    if request.method == 'POST':
+        data = _registration_field_data_from_form(request.form)
+
+        if not data['field_key'] or not data['label']:
+            flash('Field Key and Label are required.', 'error')
+            return render_template('admin/registration_field_form.html', action='new', field=data)
+
+        try:
+            DB.create_registration_field(data)
+        except Exception as e:
+            flash(f'Could not create field — is "{data["field_key"]}" already used? ({e})', 'error')
+            return render_template('admin/registration_field_form.html', action='new', field=data)
+
+        flash('Form field added successfully!', 'success')
+        return redirect(url_for('admin_registration_fields'))
+
+    return render_template('admin/registration_field_form.html', action='new', field=None)
+
+
+@app.route('/admin/registration-fields/<int:fid>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_registration_field_edit(fid):
+    field = DB.get_registration_field(fid)
+    if not field:
+        abort(404)
+
+    if request.method == 'POST':
+        data = _registration_field_data_from_form(request.form)
+
+        if not data['field_key'] or not data['label']:
+            flash('Field Key and Label are required.', 'error')
+            return render_template('admin/registration_field_form.html', action='edit', field=dict(field, **data))
+
+        try:
+            DB.update_registration_field(fid, data)
+        except Exception as e:
+            flash(f'Could not save field — is "{data["field_key"]}" already used? ({e})', 'error')
+            return render_template('admin/registration_field_form.html', action='edit', field=dict(field, **data))
+
+        flash('Form field updated successfully!', 'success')
+        return redirect(url_for('admin_registration_fields'))
+
+    return render_template('admin/registration_field_form.html', action='edit', field=field)
+
+
+@app.route('/admin/registration-fields/<int:fid>/delete', methods=['POST'])
+@admin_required
+def admin_registration_field_delete(fid):
+    DB.delete_registration_field(fid)
+    flash('Form field deleted.', 'info')
+    return redirect(url_for('admin_registration_fields'))
+
+
+# ═══════════════════════════════════════════════════════════════
 #  Admin — Registrations
 # ═══════════════════════════════════════════════════════════════
 @app.route('/admin/registrations')
@@ -579,10 +722,14 @@ def admin_registrations():
     cid   = request.args.get('competition_id', type=int)
     regs  = DB.get_all_registrations(competition_id=cid)
     comps = DB.get_all_competitions()
+    reg_fields = DB.get_all_registration_fields()
+    field_labels = {f['field_key']: f['label'] for f in reg_fields}
     selected_comp = DB.get_competition(cid) if cid else None
     return render_template('admin/registrations.html',
                            registrations=regs,
                            competitions=comps,
+                           fields=reg_fields,
+                           field_labels=field_labels,
                            selected_comp=selected_comp,
                            selected_id=cid)
 
@@ -859,6 +1006,177 @@ def admin_course_delete(cid):
 
 
 # ═══════════════════════════════════════════════════════════════
+#  Admin — Team
+# ═══════════════════════════════════════════════════════════════
+def _team_data_from_form(form, image_url):
+    data = {
+        'display_order': form.get('display_order', type=int) or 0,
+        'is_director': bool(form.get('is_director')),
+        'is_visible': bool(form.get('is_visible')),
+        'image_url': image_url,
+    }
+    for f in TEAM_UR_FIELDS:
+        data[f] = form.get(f, '').strip()
+        data[f + '_ur'] = form.get(f + '_ur', '').strip()
+    return data
+
+
+@app.route('/admin/team')
+@admin_required
+def admin_team():
+    members = DB.get_all_team_members()
+    return render_template('admin/team_list.html', members=members)
+
+
+@app.route('/admin/team/new', methods=['GET', 'POST'])
+@admin_required
+def admin_team_new():
+    if request.method == 'POST':
+        image_url = _upload_course_image('image', 'alquran/team', None, request.form)
+        data = _team_data_from_form(request.form, image_url)
+
+        if not data['name']:
+            flash('Name is required.', 'error')
+            return render_template('admin/team_form.html', action='new', member=data)
+
+        DB.create_team_member(data)
+        flash('Team member added successfully!', 'success')
+        return redirect(url_for('admin_team'))
+
+    return render_template('admin/team_form.html', action='new', member=None)
+
+
+@app.route('/admin/team/<int:tid>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_team_edit(tid):
+    member = DB.get_team_member(tid)
+    if not member:
+        abort(404)
+
+    if request.method == 'POST':
+        image_url = _upload_course_image('image', 'alquran/team', member.get('image_url'), request.form)
+        data = _team_data_from_form(request.form, image_url)
+
+        if not data['name']:
+            flash('Name is required.', 'error')
+            return render_template('admin/team_form.html', action='edit', member=dict(member, **data))
+
+        DB.update_team_member(tid, data)
+        flash('Team member updated successfully!', 'success')
+        return redirect(url_for('admin_team'))
+
+    return render_template('admin/team_form.html', action='edit', member=member)
+
+
+@app.route('/admin/team/<int:tid>/delete', methods=['POST'])
+@admin_required
+def admin_team_delete(tid):
+    DB.delete_team_member(tid)
+    flash('Team member deleted.', 'info')
+    return redirect(url_for('admin_team'))
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Admin — Enquiry Form (homepage "Enroll or Ask a Question" form)
+# ═══════════════════════════════════════════════════════════════
+def _enquiry_field_data_from_form(form):
+    field_key = form.get('field_key', '').strip().lower().replace(' ', '_')
+    data = {
+        'field_key':   field_key,
+        'field_type':  form.get('field_type', 'text'),
+        'is_required': bool(form.get('is_required')),
+        'width':       form.get('width', 'full'),
+        'sort_order':  form.get('sort_order', type=int) or 0,
+        'options':     _parse_pipe_list(form.get('options', '')),
+        'options_ur':  _parse_pipe_list(form.get('options_ur', '')),
+    }
+    for f in ('label', 'placeholder'):
+        data[f] = form.get(f, '').strip()
+        data[f + '_ur'] = form.get(f + '_ur', '').strip()
+    return data
+
+
+@app.route('/admin/enquiry-fields')
+@admin_required
+def admin_enquiry_fields():
+    fields = DB.get_all_enquiry_fields()
+    return render_template('admin/enquiry_fields_list.html', fields=fields)
+
+
+@app.route('/admin/enquiry-fields/new', methods=['GET', 'POST'])
+@admin_required
+def admin_enquiry_field_new():
+    if request.method == 'POST':
+        data = _enquiry_field_data_from_form(request.form)
+
+        if not data['field_key'] or not data['label']:
+            flash('Field Key and Label are required.', 'error')
+            return render_template('admin/enquiry_field_form.html', action='new', field=data)
+
+        try:
+            DB.create_enquiry_field(data)
+        except Exception as e:
+            flash(f'Could not create field — is "{data["field_key"]}" already used? ({e})', 'error')
+            return render_template('admin/enquiry_field_form.html', action='new', field=data)
+
+        flash('Form field added successfully!', 'success')
+        return redirect(url_for('admin_enquiry_fields'))
+
+    return render_template('admin/enquiry_field_form.html', action='new', field=None)
+
+
+@app.route('/admin/enquiry-fields/<int:fid>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_enquiry_field_edit(fid):
+    field = DB.get_enquiry_field(fid)
+    if not field:
+        abort(404)
+
+    if request.method == 'POST':
+        data = _enquiry_field_data_from_form(request.form)
+
+        if not data['field_key'] or not data['label']:
+            flash('Field Key and Label are required.', 'error')
+            return render_template('admin/enquiry_field_form.html', action='edit', field=dict(field, **data))
+
+        try:
+            DB.update_enquiry_field(fid, data)
+        except Exception as e:
+            flash(f'Could not save field — is "{data["field_key"]}" already used? ({e})', 'error')
+            return render_template('admin/enquiry_field_form.html', action='edit', field=dict(field, **data))
+
+        flash('Form field updated successfully!', 'success')
+        return redirect(url_for('admin_enquiry_fields'))
+
+    return render_template('admin/enquiry_field_form.html', action='edit', field=field)
+
+
+@app.route('/admin/enquiry-fields/<int:fid>/delete', methods=['POST'])
+@admin_required
+def admin_enquiry_field_delete(fid):
+    DB.delete_enquiry_field(fid)
+    flash('Form field deleted.', 'info')
+    return redirect(url_for('admin_enquiry_fields'))
+
+
+@app.route('/admin/enquiries')
+@admin_required
+def admin_enquiries():
+    enquiries = DB.get_all_enquiries()
+    fields = DB.get_all_enquiry_fields()
+    field_labels = {f['field_key']: f['label'] for f in fields}
+    return render_template('admin/enquiries_list.html', enquiries=enquiries, fields=fields, field_labels=field_labels)
+
+
+@app.route('/admin/enquiries/<int:eid>/delete', methods=['POST'])
+@admin_required
+def admin_enquiry_delete(eid):
+    DB.delete_enquiry(eid)
+    flash('Enquiry deleted.', 'info')
+    return redirect(url_for('admin_enquiries'))
+
+
+# ═══════════════════════════════════════════════════════════════
 #  Admin — Prizes & Recognition (competitions page)
 # ═══════════════════════════════════════════════════════════════
 @app.route('/admin/prizes', methods=['GET', 'POST'])
@@ -899,5 +1217,5 @@ def admin_prizes():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
 
