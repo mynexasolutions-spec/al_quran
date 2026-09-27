@@ -1,0 +1,81 @@
+{% extends "admin/base.html" %}
+{% block title %}Videos | Admin{% endblock %}
+{% block topbar_title %}Videos{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>Video Showcase</h2>
+    <p>Manage the video slider shown on the homepage, just above the courses grid. Up to {{ max_videos }} videos.</p>
+  </div>
+  {% if videos|length < max_videos %}
+  <a href="{{ url_for('admin_video_new') }}" class="btn-primary">
+    <i class="fa-solid fa-plus"></i>&nbsp; New Video
+  </a>
+  {% else %}
+  <span class="adm-btn adm-btn--secondary" style="opacity:.6;cursor:default;" title="Delete a video to add a new one">
+    <i class="fa-solid fa-circle-check"></i>&nbsp; Limit Reached
+  </span>
+  {% endif %}
+</div>
+
+<div class="adm-stat-row">
+  <div class="adm-stat-card">
+    <span class="adm-stat-num">{{ videos|length }} / {{ max_videos }}</span>
+    <span class="adm-stat-lbl">Total Videos</span>
+  </div>
+</div>
+
+<div class="adm-table-wrap">
+  <table class="adm-table">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th style="width:90px">Preview</th>
+        <th>Title</th>
+        <th style="width:90px;text-align:center">Visible</th>
+        <th style="width:70px;text-align:center">Order</th>
+        <th style="width:150px;text-align:center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in videos %}
+      <tr>
+        <td class="adm-td-muted">{{ loop.index }}</td>
+        <td>
+          {% if v.thumbnail_url %}
+          <img src="{{ v.thumbnail_url }}" alt="" style="width:64px;height:40px;object-fit:cover;border-radius:5px;">
+          {% else %}
+          <video src="{{ v.video_url }}" style="width:64px;height:40px;object-fit:cover;border-radius:5px;background:#000;"></video>
+          {% endif %}
+        </td>
+        <td>{{ v.title }}</td>
+        <td style="text-align:center">
+          {% if v.is_visible %}
+            <span class="adm-badge-ok"><i class="fa-solid fa-eye"></i> Yes</span>
+          {% else %}
+            <span class="adm-td-muted"><i class="fa-solid fa-eye-slash"></i> Hidden</span>
+          {% endif %}
+        </td>
+        <td class="adm-td-muted" style="text-align:center">{{ v.display_order }}</td>
+        <td style="text-align:center">
+          <div class="adm-actions">
+            <a href="{{ url_for('admin_video_edit', vid=v.id) }}" class="adm-btn adm-btn--edit" title="Edit"><i class="fa-solid fa-pen"></i></a>
+            <form method="post" action="{{ url_for('admin_video_delete', vid=v.id) }}"
+                  onsubmit="return confirm('Delete &quot;{{ v.title }}&quot;? This cannot be undone.')">
+              <button type="submit" class="adm-btn adm-btn--del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center;padding:2.5rem;color:var(--text-light);">
+          No videos yet. <a href="{{ url_for('admin_video_new') }}">Add one.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

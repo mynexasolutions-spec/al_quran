@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+{% block title %}Page Not Found | Al-Qur'an Global Institute{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="error-page-wm">&#x664;&#x660;&#x664;</div>
+  <div class="error-page-content">
+    <span class="section-tag">{{ t.error404Tag }}</span>
+    <div class="error-page-code">404</div>
+    <h1>{{ t.error404H1 }}</h1>
+    <p>{{ t.error404P }}</p>
+    <div class="error-page-btns">
+      <a href="{{ url_for('index') }}" class="btn-primary">
+        <i class="fa-solid fa-house"></i>&nbsp; {{ t.error404BtnHome }}
+      </a>
+      <a href="{{ url_for('competitions') }}" class="btn-outline-dark">
+        <i class="fa-solid fa-trophy"></i>&nbsp; {{ t.error404BtnComp }}
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

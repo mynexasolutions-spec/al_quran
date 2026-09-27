@@ -83,6 +83,13 @@ TRANSLATIONS = {
         "statusOngoing": "Ongoing",
         "statusCompleted": "Completed",
 
+        # ── 404 Page ──
+        "error404Tag": "Error 404",
+        "error404H1": "Page Not Found",
+        "error404P": "Sorry, the page you're looking for doesn't exist or may have been moved.",
+        "error404BtnHome": "Back to Home",
+        "error404BtnComp": "Browse Competitions",
+
         # ── Hero Stats Bar ──
         "heroStatStudentsLabel":  "Students Enrolled",
         "heroStatTeachersLabel":  "Qualified Teachers",
@@ -111,9 +118,15 @@ TRANSLATIONS = {
         "prayerAsr":         "Asr",
         "prayerMaghrib":     "Maghrib",
         "prayerIsha":        "Isha",
-        "prayerLocation":    "New York, USA",
+        "prayerLocation":    "New Delhi, India",
         "prayerNotify":      "Get Notified Before Each Prayer",
         "islamicDateTitle":  "Islamic Date",
+
+        # ── Video Showcase ──
+        "videoSectionTag": "Watch & Learn",
+        "videoH2": "See Us",
+        "videoH2Span": "In Action",
+        "videoSub": "A glimpse into our live classes, students, and the learning experience at Al-Qur'an Global Institute.",
 
         # ── Courses Section ──
         "coursesSectionTag": "Our Programs",
@@ -215,6 +228,20 @@ TRANSLATIONS = {
         "reviewCta": "Alhamdulillah — did we make a difference for you?",
         "reviewCtaBtn": "Share Your Review",
         "reviewReadMore": "Read more",
+
+        # ── Homepage static testimonials (demo/marketing copy) ──
+        "testi1Quote": "The Tajweed course transformed my recitation completely. The instructor’s patience and detailed feedback made such a difference. JazakAllah Khair!",
+        "testi1Type": "Tajweed Course",
+        "testi2Quote": "My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.",
+        "testi2Type": "Hifz Course",
+        "testi3Quote": "I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!",
+        "testi3Type": "Arabic Course",
+        "testi4Quote": "Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.",
+        "testi4Type": "Home Tuition",
+        "testi5Quote": "I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!",
+        "testi5Type": "Online",
+        "testi6Quote": "The Islamic Studies alongside Quran is wonderful. My kids now understand what they’re reciting — it has made them truly fall in love with learning.",
+        "testi6Type": "Online",
 
         # Review Modal
         "modalTag": "Share Your Experience",
@@ -823,6 +850,13 @@ TRANSLATIONS = {
         "statusOngoing": "جاری",
         "statusCompleted": "مکمل",
 
+        # ── 404 Page ──
+        "error404Tag": "خرابی 404",
+        "error404H1": "صفحہ نہیں ملا",
+        "error404P": "معذرت، جو صفحہ آپ ڈھونڈ رہے ہیں وہ موجود نہیں ہے یا منتقل کر دیا گیا ہے۔",
+        "error404BtnHome": "ہوم پیج پر واپس جائیں",
+        "error404BtnComp": "مقابلے دیکھیں",
+
         # ── Hero Stats Bar ──
         "heroStatStudentsLabel":  "زیرِ تعلیم طلباء",
         "heroStatTeachersLabel":  "تجربہ کار اساتذہ",
@@ -851,9 +885,15 @@ TRANSLATIONS = {
         "prayerAsr":         "عصر",
         "prayerMaghrib":     "مغرب",
         "prayerIsha":        "عشاء",
-        "prayerLocation":    "نیویارک، امریکہ",
+        "prayerLocation":    "نئی دہلی، بھارت",
         "prayerNotify":      "ہر نماز سے پہلے مطلع کریں",
         "islamicDateTitle":  "اسلامی تاریخ",
+
+        # ── Video Showcase ──
+        "videoSectionTag": "دیکھیں اور سیکھیں",
+        "videoH2": "ہمیں",
+        "videoH2Span": "عمل میں دیکھیں",
+        "videoSub": "القرآن گلوبل انسٹیٹیوٹ میں ہماری لائیو کلاسز، طلباء اور سیکھنے کے تجربے کی ایک جھلک۔",
 
         # ── Courses Section ──
         "coursesSectionTag": "ہمارے پروگرام",
@@ -955,6 +995,20 @@ TRANSLATIONS = {
         "reviewCta": "الحمد للہ — کیا ہم نے آپ کے لیے فرق کیا؟",
         "reviewCtaBtn": "اپنا جائزہ شیئر کریں",
         "reviewReadMore": "مزید پڑھیں",
+
+        # ── Homepage static testimonials (demo/marketing copy) ──
+        "testi1Quote": "تجوید کورس نے میری تلاوت کو مکمل طور پر بدل دیا۔ استاد کے صبر اور تفصیلی رہنمائی نے بہت فرق ڈالا۔ جزاک اللہ خیر!",
+        "testi1Type": "تجوید کورس",
+        "testi2Quote": "میرے بیٹے نے حفظ پروگرام میں صرف 3 مہینوں میں جزو عم مکمل کر لیا۔ منظم روزانہ منصوبہ اور ذاتی توجہ واقعی غیر معمولی ہے۔",
+        "testi2Type": "حفظ کورس",
+        "testi3Quote": "میں نے بالکل ابتدائی سطح سے عربی بولنے کے کورس میں داخلہ لیا۔ 3 مہینوں کے اندر میں بنیادی گفتگو کر سکتی تھی۔ ایک شاندار پروگرام!",
+        "testi3Type": "عربی کورس",
+        "testi4Quote": "شاندار انسٹیٹیوٹ! میرے تینوں بچے مختلف کورسز میں شریک ہیں اور سب ہر کلاس کا بے تابی سے انتظار کرتے ہیں۔ اساتذہ بہت متاثر کن ہیں۔",
+        "testi4Type": "گھریلو تدریس",
+        "testi5Quote": "میں نے صرف 4 مہینوں میں اپنا جزو عم حفظ مکمل کر لیا۔ منظم دہرائی کا طریقہ بہترین ہے۔ میں نے اگلے جزو کے لیے پہلے ہی داخلہ لے لیا ہے!",
+        "testi5Type": "آن لائن",
+        "testi6Quote": "قرآن کے ساتھ اسلامی علوم بھی شاندار ہیں۔ میرے بچے اب سمجھتے ہیں کہ وہ کیا تلاوت کر رہے ہیں — اس نے انہیں سیکھنے سے واقعی محبت کرنے پر مجبور کر دیا ہے۔",
+        "testi6Type": "آن لائن",
 
         # Review Modal
         "modalTag": "اپنا تجربہ شیئر کریں",

@@ -202,7 +202,18 @@
   .reviews-carousel { gap: 0; }
   .reviews-track { gap: 0; }
   .review-card { flex: 0 0 100%; }
+  /* video carousel: 1 card + swipe, but (unlike reviews) keeps its
+     arrow buttons visible on mobile too. */
+  .video-track { gap: 0; }
+  .video-card { flex: 0 0 100%; }
+  .video-arrow { width: 38px; height: 38px; font-size: 1.6rem; }
   .social-grid { grid-template-columns: 1fr; }
+  /* "Leave a Review" modal: the 2-column grid has no give on narrow
+     screens — a long, non-wrapping <select> (or any field) forces the
+     whole grid (and the modal) wider than the viewport. One column
+     lets every field shrink to fit instead. */
+  .rev-modal { padding: 1.7rem 1.3rem; }
+  .rev-modal-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 430px) {
@@ -214,7 +225,10 @@
      keeps Enroll Now / Book Free Trial on one row, and this used to
      override it back to a stacked column on narrower phones. */
   .ch-btns { flex-direction: column; }
-  .btn-primary, .btn-outline { width: 100%; text-align: center; }
+  /* .btn-primary is display:inline-flex (see home.css) — text-align
+     has no effect on a flex item, so centering it at full width needs
+     justify-content instead. */
+  .btn-primary, .btn-outline { width: 100%; text-align: center; justify-content: center; }
   /* ...except inside the hero, where both buttons share one row. */
   .hero-btns .btn-primary, .hero-btns .btn-outline-dark { width: auto; padding: .75rem .3rem; font-size: .72rem; }
   .courses-grid { grid-template-columns: 1fr; }

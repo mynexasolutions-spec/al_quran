@@ -144,6 +144,26 @@
   </div>
   {% endif %}
 
+  <!-- Social-proof avatars -->
+  <h3 class="adm-form-section-h">Social Proof Avatars</h3>
+  <p class="adm-hint" style="margin:-0.4rem 0 1rem;">The 4 small round photos next to "5000+ Students Enrolled Worldwide" under the hero text.</p>
+  {% for i in range(1, 5) %}
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Avatar {{ i }} Upload (Cloudinary)</label>
+      <input type="file" name="avatar{{ i }}" accept="image/*" class="adm-file-input"/>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Avatar {{ i }} URL</label>
+      <input type="text" name="avatar{{ i }}_url" placeholder="https://... (leave blank if uploading above)"/>
+    </div>
+    {% set avatar_val = hero['avatar' ~ i ~ '_url'] %}
+    {% if avatar_val %}
+    <img src="{{ avatar_val }}" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;align-self:center;margin-top:1.4rem;">
+    {% endif %}
+  </div>
+  {% endfor %}
+
   <div class="adm-form-footer">
     <button type="submit" class="btn-primary"><i class="fa-solid fa-pen"></i>&nbsp; Save Changes</button>
   </div>

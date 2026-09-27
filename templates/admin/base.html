@@ -53,6 +53,10 @@
          class="adm-nav-item {% if request.endpoint in ('admin_team','admin_team_new','admin_team_edit') %}active{% endif %}">
         <span class="adm-nav-icon"><i class="fa-solid fa-users"></i></span> Team
       </a>
+      <a href="{{ url_for('admin_videos') }}"
+         class="adm-nav-item {% if request.endpoint in ('admin_videos','admin_video_new','admin_video_edit') %}active{% endif %}">
+        <span class="adm-nav-icon"><i class="fa-solid fa-video"></i></span> Videos
+      </a>
       <a href="{{ url_for('admin_enquiry_fields') }}"
          class="adm-nav-item {% if request.endpoint in ('admin_enquiry_fields','admin_enquiry_field_new','admin_enquiry_field_edit') %}active{% endif %}">
         <span class="adm-nav-icon"><i class="fa-solid fa-list-check"></i></span> Enquiry Form
@@ -76,7 +80,7 @@
         {% if pending > 0 %}<span class="adm-badge">{{ pending }}</span>{% endif %}
       </a>
       <div class="adm-nav-sep"></div>
-      <a href="{{ url_for('competitions') }}" target="_blank" class="adm-nav-item">
+      <a href="{{ url_for('index') }}" target="_blank" class="adm-nav-item">
         <span class="adm-nav-icon"><i class="fa-solid fa-globe"></i></span> View Site
       </a>
       <a href="{{ url_for('admin_logout') }}" class="adm-nav-item adm-logout">

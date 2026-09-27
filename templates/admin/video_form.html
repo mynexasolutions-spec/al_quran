@@ -1,0 +1,164 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'New Video' if action=='new' else 'Edit Video' }} | Admin{% endblock %}
+{% block topbar_title %}{{ 'New Video' if action=='new' else 'Edit: ' ~ video.title[:30] }}{% endblock %}
+
+{% block content %}
+<div class="adm-page-hdr">
+  <div>
+    <h2>{{ 'Add Video' if action=='new' else 'Edit Video' }}</h2>
+    <p>{{ 'This will appear in the homepage video slider immediately.' if action=='new' else 'Update the video and save.' }}</p>
+  </div>
+  <a href="{{ url_for('admin_videos') }}" class="adm-btn adm-btn--secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="adm-form-card adm-form-card--wide" id="videoForm">
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Title <span class="adm-req">*</span></label>
+      <input type="text" name="title" required placeholder="e.g. A Day at Al-Qur'an Global Institute"
+             value="{{ video.title if video else '' }}"/>
+      <div class="adm-fg-ur">
+        <label>Urdu</label>
+        <input type="text" name="title_ur" dir="rtl" value="{{ video.title_ur if video else '' }}"/>
+      </div>
+    </div>
+    <div class="adm-fg" style="max-width:110px;">
+      <label>Sort Order</label>
+      <input type="number" name="display_order" value="{{ video.display_order if video else 0 }}"/>
+    </div>
+  </div>
+
+  <div class="adm-fg">
+    <label class="adm-checkbox-label">
+      <input type="checkbox" name="is_visible" {% if video is none or video.is_visible %}checked{% endif %}/>
+      Visible on the homepage
+    </label>
+  </div>
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Video Upload (Cloudinary)</label>
+      <input type="file" name="video" id="videoFileInput" accept="video/*" class="adm-file-input"/>
+      <small class="adm-hint">Max file size: <strong>30 MB</strong> per video — kept small so the homepage stays fast for visitors.</small>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Video URL</label>
+      <input type="text" name="video_url" id="videoUrlInput" placeholder="https://... (leave blank if uploading above)"/>
+    </div>
+  </div>
+  {% if video and video.video_url %}
+  <div class="adm-current-img">
+    <span>Current Video:</span>
+    <video src="{{ video.video_url }}" controls style="max-width:280px;border-radius:8px;"></video>
+  </div>
+  {% endif %}
+
+  <div class="adm-form-row">
+    <div class="adm-fg adm-fg--grow">
+      <label>Thumbnail Upload (Cloudinary)</label>
+      <input type="file" name="thumbnail" id="thumbnailFileInput" accept="image/*" class="adm-file-input"/>
+      <small class="adm-hint">Optional — shown as the video's poster image before it's played.</small>
+    </div>
+    <div class="adm-fg adm-fg--grow">
+      <label>Or Thumbnail URL</label>
+      <input type="text" name="thumbnail_url" id="thumbnailUrlInput" placeholder="https://... (leave blank if uploading above)"/>
+    </div>
+  </div>
+  {% if video and video.thumbnail_url %}
+  <div class="adm-current-img"><span>Current Thumbnail:</span><img src="{{ video.thumbnail_url }}" alt=""/></div>
+  {% endif %}
+
+  <div class="adm-form-footer">
+    <a href="{{ url_for('admin_videos') }}" class="adm-btn adm-btn--secondary">Cancel</a>
+    <button type="submit" class="btn-primary" id="videoSubmitBtn" data-default-label="{{ 'Add Video' if action == 'new' else 'Save Changes' }}">
+      {% if action == 'new' %}<i class="fa-solid fa-plus"></i>&nbsp; Add Video{% else %}<i class="fa-solid fa-pen"></i>&nbsp; Save Changes{% endif %}
+    </button>
+  </div>
+
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var MAX_VIDEO_BYTES = 30 * 1024 * 1024;
+  var form         = document.getElementById('videoForm');
+  var videoFile     = document.getElementById('videoFileInput');
+  var videoUrl      = document.getElementById('videoUrlInput');
+  var thumbFile      = document.getElementById('thumbnailFileInput');
+  var thumbUrl        = document.getElementById('thumbnailUrlInput');
+  var submitBtn       = document.getElementById('videoSubmitBtn');
+  var SIGNATURE_URL   = "{{ url_for('admin_cloudinary_signature') }}";
+
+  videoFile.addEventListener('change', function () {
+    var file = this.files[0];
+    if (file && file.size > MAX_VIDEO_BYTES) {
+      alert('This video is ' + (file.size / (1024*1024)).toFixed(1) + ' MB — the max allowed is 30 MB (kept small so the site stays fast). Please compress it and try again.');
+      this.value = '';
+    }
+  });
+
+  // Uploads `file` straight from the browser to Cloudinary (never
+  // through our own server) — needed because Vercel serverless
+  // functions cap request bodies at 4.5MB, well under a 30MB video.
+  function uploadDirectToCloudinary(file, folder) {
+    var sigBody = new FormData();
+    sigBody.append('folder', folder);
+    return fetch(SIGNATURE_URL, { method: 'POST', body: sigBody })
+      .then(function (r) { return r.json(); })
+      .then(function (sig) {
+        var uploadBody = new FormData();
+        uploadBody.append('file', file);
+        uploadBody.append('api_key', sig.api_key);
+        uploadBody.append('timestamp', sig.timestamp);
+        uploadBody.append('signature', sig.signature);
+        uploadBody.append('folder', sig.folder);
+        var resourceType = file.type.indexOf('video') === 0 ? 'video' : 'image';
+        return fetch('https://api.cloudinary.com/v1_1/' + sig.cloud_name + '/' + resourceType + '/upload', {
+          method: 'POST', body: uploadBody
+        });
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (result) {
+        if (!result.secure_url) throw new Error((result.error && result.error.message) || 'Upload failed');
+        return result.secure_url;
+      });
+  }
+
+  form.addEventListener('submit', function (e) {
+    var vFile = videoFile.files[0];
+    var tFile = thumbFile.files[0];
+    if (!vFile && !tFile) return; // nothing new to upload — plain submit
+
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Uploading...';
+
+    Promise.resolve()
+      .then(function () {
+        if (!vFile) return null;
+        return uploadDirectToCloudinary(vFile, 'alquran/videos').then(function (url) {
+          videoUrl.value = url;
+          videoFile.value = '';
+        });
+      })
+      .then(function () {
+        if (!tFile) return null;
+        return uploadDirectToCloudinary(tFile, 'alquran/videos').then(function (url) {
+          thumbUrl.value = url;
+          thumbFile.value = '';
+        });
+      })
+      .then(function () {
+        form.submit();
+      })
+      .catch(function (err) {
+        alert('Upload failed: ' + err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.dataset.defaultLabel;
+      });
+  });
+})();
+</script>
+{% endblock %}

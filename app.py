@@ -1,9 +1,11 @@
 import os
 import io
+import time
 import functools
 import cloudinary
 from translations import TRANSLATIONS
 import cloudinary.uploader
+import cloudinary.utils
 from flask import (
     Flask, render_template, request, jsonify,
     redirect, url_for, session, flash, send_file, abort
@@ -94,6 +96,10 @@ DEFAULT_HERO_CONTENT = {
     'btn2_text':         'Book Free Trial',
     'btn2_link':         'https://wa.me/919045520249',
     'image_url':         '/static/images/al-quran-banner.webp',
+    'avatar1_url':       '/static/images/team/mufti_maaz_quasmi.jpeg',
+    'avatar2_url':       '/static/images/team/mufti_maaz_quasmi.jpeg',
+    'avatar3_url':       '/static/images/team/mufti_maaz_quasmi.jpeg',
+    'avatar4_url':       '/static/images/team/mufti_maaz_quasmi.jpeg',
 }
 
 DEFAULT_PRIZES_SECTION = {
@@ -121,6 +127,9 @@ TEAM_UR_FIELDS = ('name', 'role_label', 'subject', 'education')
 ENQUIRY_FIELD_UR_FIELDS = ('label', 'placeholder', 'options')
 ENQUIRY_FIELD_TYPES = ('text', 'tel', 'email', 'number', 'textarea', 'select')
 REGISTRATION_FIELD_UR_FIELDS = ('label', 'placeholder', 'options')
+VIDEO_UR_FIELDS = ('title',)
+MAX_VIDEOS = 10
+MAX_VIDEO_SIZE_MB = 30  # kept well under Cloudinary's 100MB cap so pages stay fast for visitors
 
 
 def _group_enquiry_fields(fields):
@@ -327,8 +336,12 @@ def index():
         enquiry_fields = [localize(f, ENQUIRY_FIELD_UR_FIELDS, lang) for f in DB.get_all_enquiry_fields()]
     except Exception:
         enquiry_fields = []
+    try:
+        videos = [localize(v, VIDEO_UR_FIELDS, lang) for v in DB.get_all_videos(visible_only=True)]
+    except Exception:
+        videos = []
     return render_template('pages/index.html', featured_comps=featured,
-                           reviews=reviews, hero=hero, courses=courses,
+                           reviews=reviews, hero=hero, courses=courses, videos=videos,
                            enquiry_field_groups=_group_enquiry_fields(enquiry_fields),
                            THEME_MAP=THEME_MAP, BADGE_MAP=BADGE_MAP,
                            STATUS_LABELS=_localized_status_labels(lang))
@@ -827,9 +840,14 @@ def admin_hero():
         elif request.form.get('image_url', '').strip():
             image_url = request.form['image_url'].strip()
 
+        avatar_urls = tuple(
+            _upload_course_image(f'avatar{i}', 'alquran/hero', hero.get(f'avatar{i}_url'), request.form)
+            for i in range(1, 5)
+        )
+
         hero_columns = HERO_UR_FIELDS + tuple(f + '_ur' for f in HERO_UR_FIELDS) + ('btn1_link', 'btn2_link')
         data = {c: request.form.get(c, '').strip() for c in hero_columns}
-        DB.update_hero_content(data, image_url=image_url)
+        DB.update_hero_content(data, image_url=image_url, avatar_urls=avatar_urls)
 
         flash('Homepage banner updated successfully!', 'success')
         return redirect(url_for('admin_hero'))
@@ -941,6 +959,32 @@ def _upload_course_image(field_name, folder, current_url, form):
             return result.get('secure_url')
         except Exception as e:
             flash(f'Image upload failed: {e}', 'warning')
+            return current_url
+    url_field = f'{field_name}_url'
+    if form.get(url_field, '').strip():
+        return form[url_field].strip()
+    return current_url
+
+
+def _upload_video_file(field_name, folder, current_url, form):
+    if field_name in request.files and request.files[field_name].filename:
+        file = request.files[field_name]
+        file.stream.seek(0, os.SEEK_END)
+        size_bytes = file.stream.tell()
+        file.stream.seek(0)
+        if size_bytes > MAX_VIDEO_SIZE_MB * 1024 * 1024:
+            flash(f'Video is {size_bytes / (1024*1024):.1f} MB — the max allowed is {MAX_VIDEO_SIZE_MB} MB '
+                  f'(kept small so pages load fast for visitors). Please compress it and try again.', 'error')
+            return current_url
+        try:
+            result = cloudinary.uploader.upload(
+                file,
+                folder=folder,
+                resource_type='video'
+            )
+            return result.get('secure_url')
+        except Exception as e:
+            flash(f'Video upload failed: {e}', 'warning')
             return current_url
     url_field = f'{field_name}_url'
     if form.get(url_field, '').strip():
@@ -1074,6 +1118,102 @@ def admin_team_delete(tid):
     DB.delete_team_member(tid)
     flash('Team member deleted.', 'info')
     return redirect(url_for('admin_team'))
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Admin — Videos (homepage video showcase, above the courses grid)
+# ═══════════════════════════════════════════════════════════════
+def _video_data_from_form(form, video_url, thumbnail_url):
+    return {
+        'display_order': form.get('display_order', type=int) or 0,
+        'is_visible': bool(form.get('is_visible')),
+        'title': form.get('title', '').strip(),
+        'title_ur': form.get('title_ur', '').strip(),
+        'video_url': video_url,
+        'thumbnail_url': thumbnail_url,
+    }
+
+
+@app.route('/admin/cloudinary-signature', methods=['POST'])
+@admin_required
+def admin_cloudinary_signature():
+    """Signs a direct browser-to-Cloudinary upload so large video files
+    never pass through our own server/Vercel function — Vercel serverless
+    functions cap request bodies at 4.5MB, well under our own 30MB video
+    limit, so the file has to go straight from the browser to Cloudinary.
+    This endpoint's own request/response is tiny (just a signature)."""
+    folder = request.form.get('folder', 'alquran/uploads')
+    timestamp = int(time.time())
+    params_to_sign = {'timestamp': timestamp, 'folder': folder}
+    signature = cloudinary.utils.api_sign_request(params_to_sign, cloudinary.config().api_secret)
+    return jsonify({
+        'signature': signature,
+        'timestamp': timestamp,
+        'api_key': cloudinary.config().api_key,
+        'cloud_name': cloudinary.config().cloud_name,
+        'folder': folder,
+    })
+
+
+@app.route('/admin/videos')
+@admin_required
+def admin_videos():
+    videos = DB.get_all_videos()
+    return render_template('admin/videos_list.html', videos=videos, max_videos=MAX_VIDEOS)
+
+
+@app.route('/admin/videos/new', methods=['GET', 'POST'])
+@admin_required
+def admin_video_new():
+    if len(DB.get_all_videos()) >= MAX_VIDEOS:
+        flash(f'You can have at most {MAX_VIDEOS} videos — delete one before adding another.', 'error')
+        return redirect(url_for('admin_videos'))
+
+    if request.method == 'POST':
+        video_url = _upload_video_file('video', 'alquran/videos', None, request.form)
+        thumbnail_url = _upload_course_image('thumbnail', 'alquran/videos', None, request.form)
+        data = _video_data_from_form(request.form, video_url, thumbnail_url)
+
+        if not data['video_url'] or not data['title']:
+            flash('Title and a video (upload or URL) are required.', 'error')
+            return render_template('admin/video_form.html', action='new', video=data)
+
+        DB.create_video(data)
+        flash('Video added successfully!', 'success')
+        return redirect(url_for('admin_videos'))
+
+    return render_template('admin/video_form.html', action='new', video=None)
+
+
+@app.route('/admin/videos/<int:vid>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_video_edit(vid):
+    video = DB.get_video(vid)
+    if not video:
+        abort(404)
+
+    if request.method == 'POST':
+        video_url = _upload_video_file('video', 'alquran/videos', video.get('video_url'), request.form)
+        thumbnail_url = _upload_course_image('thumbnail', 'alquran/videos', video.get('thumbnail_url'), request.form)
+        data = _video_data_from_form(request.form, video_url, thumbnail_url)
+
+        if not data['video_url'] or not data['title']:
+            flash('Title and a video (upload or URL) are required.', 'error')
+            return render_template('admin/video_form.html', action='edit', video=dict(video, **data))
+
+        DB.update_video(vid, data)
+        flash('Video updated successfully!', 'success')
+        return redirect(url_for('admin_videos'))
+
+    return render_template('admin/video_form.html', action='edit', video=video)
+
+
+@app.route('/admin/videos/<int:vid>/delete', methods=['POST'])
+@admin_required
+def admin_video_delete(vid):
+    DB.delete_video(vid)
+    flash('Video deleted.', 'info')
+    return redirect(url_for('admin_videos'))
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -1214,6 +1354,14 @@ def admin_prizes():
         return redirect(url_for('admin_prizes'))
 
     return render_template('admin/prizes_form.html', section=section, prizes=prizes)
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Error Pages
+# ═══════════════════════════════════════════════════════════════
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('pages/404.html'), 404
 
 
 if __name__ == '__main__':

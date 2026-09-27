@@ -646,6 +646,113 @@ input:checked + .slider:before { transform: translateX(18px); }
 .rev-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(5,150,105,0.2); border: none; cursor: pointer; padding: 0; transition: background .25s, transform .25s; }
 .rev-dot.active { background: var(--gold); transform: scale(1.35); }
 
+/* ────────────────── VIDEO SHOWCASE ────────────────── */
+.video-showcase { background: var(--white); }
+.video-carousel { position: relative; display: flex; align-items: center; gap: .75rem; margin-top: 3rem; }
+.video-track-outer { flex: 1; overflow: hidden; }
+.video-track { display: flex; gap: 28px; width: 100%; transition: transform .45s cubic-bezier(.4,0,.2,1); will-change: transform; }
+.video-card {
+  flex: 0 0 calc((100% - 56px) / 3);
+  min-width: 0;
+  background: var(--cream);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.07);
+  transition: transform .32s ease, box-shadow .32s ease;
+  box-sizing: border-box;
+}
+.video-card:hover { transform: translateY(-6px); box-shadow: 0 18px 42px rgba(5,150,105,0.16); }
+.video-card { cursor: pointer; }
+.video-card:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.video-player-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #06231c; }
+.video-player { width: 100%; height: 100%; display: block; object-fit: cover; pointer-events: none; }
+.video-play-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(4,20,16,0.2);
+  transition: background .25s;
+}
+.video-card:hover .video-play-overlay { background: rgba(4,20,16,0.42); }
+.video-play-overlay i {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.94);
+  color: var(--teal-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.35rem;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+  transition: transform .25s;
+}
+.video-card:hover .video-play-overlay i { transform: scale(1.12); }
+.video-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--teal-dark);
+  line-height: 1.4;
+  padding: 1rem 1.3rem 1.3rem;
+  margin: 0;
+}
+.video-arrow { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--teal-dark); border: 2px solid rgba(201,168,76,0.4); color: var(--gold-light); font-size: 2rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .25s, border-color .25s, color .25s; }
+.video-arrow:hover:not(:disabled) { background: var(--gold); color: var(--teal-dark); border-color: var(--gold); }
+.video-arrow:disabled { opacity: .28; cursor: default; }
+.video-dots { display: flex; justify-content: center; gap: .55rem; margin-top: 1.6rem; }
+.video-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(5,150,105,0.2); border: none; cursor: pointer; padding: 0; transition: background .25s, transform .25s; }
+.video-dot.active { background: var(--gold); transform: scale(1.35); }
+
+/* ── Video lightbox modal ── */
+.video-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(4,20,16,0.85);
+  z-index: 1200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s;
+}
+.video-modal-overlay.open { opacity: 1; pointer-events: all; }
+.video-modal {
+  background: var(--white);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 32px 90px rgba(0,0,0,0.45);
+  transform: translateY(24px) scale(.97);
+  transition: transform .28s;
+}
+.video-modal-overlay.open .video-modal { transform: translateY(0) scale(1); }
+.video-modal-player-wrap { width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.video-modal-player-wrap video { width: 100%; height: 100%; display: block; }
+.video-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--teal-dark);
+  margin: 0;
+  padding: 1.1rem 1.5rem 1.3rem;
+}
+.video-modal-close {
+  position: absolute; top: .8rem; right: .9rem;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  color: var(--white);
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  transition: background .2s;
+}
+.video-modal-close:hover { background: rgba(0,0,0,0.75); }
+@media (max-width: 660px) {
+  .video-modal { max-width: 100%; }
+}
+
 /* ────────────────── FAQ ────────────────── */
 .faq { background: var(--cream); }
 .faq-list { max-width: 750px; margin: 0 auto; }
@@ -1090,4 +1197,57 @@ input:checked + .slider:before { transform: translateX(18px); }
   transition: background .25s, transform .2s;
 }
 .rev-modal-submit:hover { background: var(--teal-dark); transform: translateY(-2px); }
+
+/* ────────────────── 404 PAGE ────────────────── */
+.error-page {
+  min-height: 72vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 160px 8% 80px;
+  background: linear-gradient(150deg, #04140f 0%, #0a3d33 55%, #0f5544 100%);
+}
+.error-page-wm {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Amiri', serif;
+  font-size: 22rem;
+  line-height: 1;
+  color: rgba(201,168,76,0.06);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+.error-page-content { position: relative; max-width: 560px; }
+.error-page-content .section-tag { color: var(--gold-light); }
+.error-page-code {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4.5rem, 12vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--gold);
+  margin: .6rem 0 .3rem;
+}
+.error-page-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+  color: var(--white);
+  margin-bottom: .9rem;
+}
+.error-page-content p {
+  font-size: 1.02rem;
+  color: rgba(220,242,236,0.9);
+  line-height: 1.8;
+  margin-bottom: 2.2rem;
+}
+.error-page-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 660px) {
+  .error-page { padding: 130px 6% 60px; min-height: 62vh; }
+  .error-page-wm { font-size: 12rem; }
+}
 

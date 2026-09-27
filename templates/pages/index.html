@@ -22,10 +22,10 @@
       
       <div class="hero-social-proof">
         <div class="avatars">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
-          <img src="{{ url_for('static', filename='images/team/mufti_maaz_quasmi.jpeg') }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ hero.avatar1_url }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ hero.avatar2_url }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ hero.avatar3_url }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
+          <img src="{{ hero.avatar4_url }}" alt="{{ t.heroAvatarAlt }}" onerror="this.style.display='none'">
         </div>
         <div class="social-text">
           <strong>5000+</strong>
@@ -162,7 +162,7 @@
         <div class="notification-toggle">
           <i class="fa-regular fa-bell"></i> <span>{{ t.prayerNotify }}</span>
           <label class="switch">
-            <input type="checkbox">
+            <input type="checkbox" id="prayerNotifyToggle">
             <span class="slider round"></span>
           </label>
         </div>
@@ -187,44 +187,208 @@
 <!-- API JS -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const city = "New York";
-    const country = "USA";
-    const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=2`;
+    // Used only if the visitor's browser can't/won't share their location
+    // (denied permission, unsupported, times out, etc).
+    const FALLBACK_CITY    = "New Delhi";
+    const FALLBACK_COUNTRY = "India";
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.code === 200) {
-          const timings = data.data.timings;
-          const date = data.data.date;
+    const formatTime = (time24) => {
+      const [h, m] = time24.split(':');
+      let hours = parseInt(h);
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      const strHours = hours < 10 ? '0'+hours : hours;
+      return `${strHours}:${m} ${ampm}`;
+    };
 
-          // Helper to format 24h to 12h
-          const formatTime = (time24) => {
-            const [h, m] = time24.split(':');
-            let hours = parseInt(h);
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            const strHours = hours < 10 ? '0'+hours : hours;
-            return `${strHours}:${m} ${ampm}`;
-          };
+    function renderPrayerData(data) {
+      if (!data || data.code !== 200) return;
+      const timings = data.data.timings;
+      const date    = data.data.date;
 
-          document.querySelector('#prayer-fajr .p-value').innerText = formatTime(timings.Fajr);
-          document.querySelector('#prayer-dhuhr .p-value').innerText = formatTime(timings.Dhuhr);
-          document.querySelector('#prayer-asr .p-value').innerText = formatTime(timings.Asr);
-          document.querySelector('#prayer-maghrib .p-value').innerText = formatTime(timings.Maghrib);
-          document.querySelector('#prayer-isha .p-value').innerText = formatTime(timings.Isha);
+      document.querySelector('#prayer-fajr .p-value').innerText    = formatTime(timings.Fajr);
+      document.querySelector('#prayer-dhuhr .p-value').innerText   = formatTime(timings.Dhuhr);
+      document.querySelector('#prayer-asr .p-value').innerText     = formatTime(timings.Asr);
+      document.querySelector('#prayer-maghrib .p-value').innerText = formatTime(timings.Maghrib);
+      document.querySelector('#prayer-isha .p-value').innerText    = formatTime(timings.Isha);
 
-          const hijri = date.hijri;
-          document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
-          
-          const gregorian = date.gregorian;
-          document.getElementById('gregorian-date').innerText = `${gregorian.weekday.en}, ${gregorian.day} ${gregorian.month.en} ${gregorian.year}`;
+      const hijri = date.hijri;
+      document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
+
+      const gregorian = date.gregorian;
+      document.getElementById('gregorian-date').innerText = `${gregorian.weekday.en}, ${gregorian.day} ${gregorian.month.en} ${gregorian.year}`;
+
+      window.__lastPrayerTimings = timings;
+      scheduleNotifications(timings);
+    }
+
+    // ── "Get Notified Before Each Prayer" toggle ──────────────────
+    // Browser Notification API only — reminders fire while this tab
+    // stays open (no service worker / push server, so nothing arrives
+    // once the tab or browser is closed). Lead time and on/off state
+    // are remembered in localStorage so the toggle stays on next visit.
+    const NOTIFY_LEAD_MINUTES = 10;
+    const notifyToggle = document.getElementById('prayerNotifyToggle');
+    let notifyTimers = [];
+
+    function clearNotifyTimers() {
+      notifyTimers.forEach(clearTimeout);
+      notifyTimers = [];
+    }
+
+    function scheduleNotifications(timings) {
+      clearNotifyTimers();
+      if (!notifyToggle || !notifyToggle.checked) return;
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+      const now = new Date();
+      [['Fajr', timings.Fajr], ['Dhuhr', timings.Dhuhr], ['Asr', timings.Asr],
+       ['Maghrib', timings.Maghrib], ['Isha', timings.Isha]].forEach(function ([name, time24]) {
+        const [h, m] = time24.split(':').map(Number);
+        const prayerAt = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+        const notifyAt = new Date(prayerAt.getTime() - NOTIFY_LEAD_MINUTES * 60000);
+        const delay = notifyAt.getTime() - now.getTime();
+        if (delay <= 0) return; // already passed for today
+        notifyTimers.push(setTimeout(function () {
+          new Notification(name + ' in ' + NOTIFY_LEAD_MINUTES + ' minutes', {
+            body: "It's almost time for " + name + " prayer.",
+            icon: '/static/images/favicon/favicon-32x32.png'
+          });
+        }, delay));
+      });
+    }
+
+    if (notifyToggle) {
+      let savedOn = false;
+      try { savedOn = localStorage.getItem('prayerNotifyOn') === '1'; } catch (e) {}
+      notifyToggle.checked = savedOn && 'Notification' in window && Notification.permission === 'granted';
+
+      notifyToggle.addEventListener('change', function () {
+        if (!notifyToggle.checked) {
+          try { localStorage.setItem('prayerNotifyOn', '0'); } catch (e) {}
+          clearNotifyTimers();
+          return;
         }
-      })
-      .catch(err => console.error("Error fetching prayer times: ", err));
+        if (!('Notification' in window)) {
+          alert("Sorry, this browser doesn't support notifications.");
+          notifyToggle.checked = false;
+          return;
+        }
+        Notification.requestPermission().then(function (perm) {
+          if (perm === 'granted') {
+            try { localStorage.setItem('prayerNotifyOn', '1'); } catch (e) {}
+            if (window.__lastPrayerTimings) scheduleNotifications(window.__lastPrayerTimings);
+          } else {
+            notifyToggle.checked = false;
+          }
+        });
+      });
+    }
+
+    function fetchByCity(city, country) {
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=2`;
+      fetch(url).then(res => res.json()).then(renderPrayerData)
+        .catch(err => console.error("Error fetching prayer times: ", err));
+    }
+
+    function fetchByCoords(lat, lon) {
+      const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`;
+      fetch(url).then(res => res.json()).then(renderPrayerData)
+        .catch(err => {
+          console.error("Error fetching prayer times for your location: ", err);
+          fetchByCity(FALLBACK_CITY, FALLBACK_COUNTRY);
+        });
+    }
+
+    // Best-effort reverse geocode (free, keyless) just to relabel the
+    // "📍 ..." line — prayer times themselves already work from the raw
+    // coordinates above regardless of whether this succeeds.
+    function updateLocationLabel(lat, lon) {
+      const locEl = document.getElementById('prayer-location');
+      if (!locEl) return;
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`)
+        .then(res => res.json())
+        .then(geo => {
+          const addr = (geo && geo.address) || {};
+          const city = addr.city || addr.town || addr.village || addr.county || '';
+          const country = addr.country || '';
+          const label = [city, country].filter(Boolean).join(', ');
+          if (label) locEl.textContent = label;
+        })
+        .catch(() => {});
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          const lat = pos.coords.latitude, lon = pos.coords.longitude;
+          fetchByCoords(lat, lon);
+          updateLocationLabel(lat, lon);
+        },
+        function () {
+          // Permission denied or unavailable — fall back. (No `timeout`
+          // option here on purpose: the permission prompt itself waits
+          // indefinitely for the visitor to respond, so a short client
+          // timeout would fall back to Delhi before they'd even clicked
+          // "Allow", with nothing to retry it afterwards short of a
+          // manual refresh.)
+          fetchByCity(FALLBACK_CITY, FALLBACK_COUNTRY);
+        },
+        { maximumAge: 600000 }
+      );
+    } else {
+      fetchByCity(FALLBACK_CITY, FALLBACK_COUNTRY);
+    }
   });
-</script><!-- ══ COURSES OVERVIEW ══ -->
+</script>
+
+{% if videos %}
+<!-- ══ VIDEO SHOWCASE ══ -->
+<section class="video-showcase" id="videos">
+  <div class="center-hdr">
+    <span class="section-tag">{{ t.videoSectionTag }}</span>
+    <h2 class="section-title"><span>{{ t.videoH2 }}</span> <span>{{ t.videoH2Span }}</span></h2>
+    <div class="divider"></div>
+    <p class="section-sub">{{ t.videoSub }}</p>
+  </div>
+
+  <div class="video-carousel">
+    <button class="video-arrow video-prev" id="vid-prev" aria-label="{{ t.reviewsPrevAria }}">&#8249;</button>
+    <div class="video-track-outer" id="vid-track-outer">
+      <div class="video-track" id="vid-track">
+        {% for v in videos %}
+        <div class="video-card" tabindex="0" role="button"
+             data-video-src="{{ v.video_url }}" data-video-title="{{ v.title }}">
+          <div class="video-player-wrap">
+            <video class="video-player" preload="metadata" muted playsinline {% if v.thumbnail_url %}poster="{{ v.thumbnail_url }}"{% endif %}>
+              <source src="{{ v.video_url }}">
+            </video>
+            <div class="video-play-overlay"><i class="fa-solid fa-play"></i></div>
+          </div>
+          {% if v.title %}<h4 class="video-card-title">{{ v.title }}</h4>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="video-arrow video-next" id="vid-next" aria-label="{{ t.reviewsNextAria }}">&#8250;</button>
+  </div>
+  <div class="video-dots" id="vid-dots"></div>
+</section>
+
+<!-- ══ VIDEO LIGHTBOX MODAL ══ -->
+<div class="video-modal-overlay" id="videoModalOverlay">
+  <div class="video-modal">
+    <button class="video-modal-close" id="videoModalClose" aria-label="{{ t.modalCloseAria }}">&times;</button>
+    <div class="video-modal-player-wrap">
+      <video id="videoModalPlayer" controls playsinline></video>
+    </div>
+    <h3 class="video-modal-title" id="videoModalTitleText"></h3>
+  </div>
+</div>
+{% endif %}
+
+<!-- ══ COURSES OVERVIEW ══ -->
 <section class="courses" id="courses">
   <div class="center-hdr">
     <span class="section-tag">{{ t.coursesSectionTag }}</span>
@@ -397,61 +561,61 @@
         <div class="review-card">
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">The Tajweed course transformed my recitation completely. The instructor&rsquo;s patience and detailed feedback made such a difference. JazakAllah Khair!</p>
+          <p class="rt">{{ t.testi1Quote }}</p>
           <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">FA</div>
-            <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; Tajweed Course</div></div>
+            <div><div class="rn">Fatima Al-Amin</div><div class="rl">London, UK &middot; {{ t.testi1Type }}</div></div>
           </div>
         </div>
         <div class="review-card">
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">My son completed Juz Amma in the Hifz program in just 3 months. The structured daily plan and personal attention is truly exceptional.</p>
+          <p class="rt">{{ t.testi2Quote }}</p>
           <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">KM</div>
-            <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; Hifz Course</div></div>
+            <div><div class="rn">Khalid Mahmood</div><div class="rl">Toronto, Canada &middot; {{ t.testi2Type }}</div></div>
           </div>
         </div>
         <div class="review-card">
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">I enrolled in the Arabic speaking course as a complete beginner. Within 3 months I could hold basic conversations. An amazing program!</p>
+          <p class="rt">{{ t.testi3Quote }}</p>
           <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">ZR</div>
-            <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; Arabic Course</div></div>
+            <div><div class="rn">Zainab Rahman</div><div class="rl">Dubai, UAE &middot; {{ t.testi3Type }}</div></div>
           </div>
         </div>
         <div class="review-card">
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">Wonderful institute! My three children attend different courses and all of them look forward to every single class. The teachers are inspiring.</p>
+          <p class="rt">{{ t.testi4Quote }}</p>
           <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">NA</div>
-            <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; Home Tuition</div></div>
+            <div><div class="rn">Nadia Anwar</div><div class="rl">Manchester, UK &middot; {{ t.testi4Type }}</div></div>
           </div>
         </div>
         <div class="review-card">
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">I completed my Juz Amma memorization in just 4 months. The systematic revision method is excellent. Already signed up for the next Juz!</p>
+          <p class="rt">{{ t.testi5Quote }}</p>
           <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">OB</div>
-            <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; Online</div></div>
+            <div><div class="rn">Omar Bashir</div><div class="rl">New York, USA &middot; {{ t.testi5Type }}</div></div>
           </div>
         </div>
         <div class="review-card">
           <div class="rq">&#x201C;</div>
           <div class="rs">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="rt">The Islamic Studies alongside Quran is wonderful. My kids now understand what they&rsquo;re reciting &mdash; it has made them truly fall in love with learning.</p>
+          <p class="rt">{{ t.testi6Quote }}</p>
           <button class="rev-toggle" type="button">{{ t.reviewReadMore }}</button>
           <div class="reviewer">
             <div class="ra">SI</div>
-            <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; Online</div></div>
+            <div><div class="rn">Samira Idris</div><div class="rl">Birmingham, UK &middot; {{ t.testi6Type }}</div></div>
           </div>
         </div>
 
@@ -519,7 +683,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-primary" style="width:100%;margin-top:1.3rem;padding:1rem;text-align:center;">{{ t.modalSubmit }}</button>
+      <button type="submit" class="btn-primary" style="display:block;margin:1.3rem auto 0;padding:1rem 2.6rem;">{{ t.modalSubmit }}</button>
       <p class="rev-modal-note">{{ t.modalNote }}</p>
     </form>
   </div>

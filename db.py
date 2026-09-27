@@ -140,6 +140,10 @@ def init_db():
             btn2_text         TEXT NOT NULL DEFAULT 'Book Free Trial',
             btn2_link         TEXT NOT NULL DEFAULT 'https://wa.me/919045520249',
             image_url         TEXT NOT NULL DEFAULT '/static/images/al-quran-banner.webp',
+            avatar1_url       TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg',
+            avatar2_url       TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg',
+            avatar3_url       TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg',
+            avatar4_url       TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg',
             updated_at        TIMESTAMPTZ DEFAULT NOW(),
             CONSTRAINT hero_content_singleton CHECK (id = 1)
         )
@@ -222,6 +226,23 @@ def init_db():
             subject       TEXT NOT NULL DEFAULT '',
             education     TEXT NOT NULL DEFAULT '',
             image_url     TEXT,
+            created_at    TIMESTAMPTZ DEFAULT NOW(),
+            updated_at    TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+
+    # One row per video in the homepage's video showcase slider (shown
+    # just above the courses grid). is_visible lets an admin hide a
+    # video without deleting it.
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS videos (
+            id            SERIAL PRIMARY KEY,
+            display_order INTEGER NOT NULL DEFAULT 0,
+            is_visible    BOOLEAN NOT NULL DEFAULT TRUE,
+            title         TEXT NOT NULL DEFAULT '',
+            title_ur      TEXT NOT NULL DEFAULT '',
+            video_url     TEXT NOT NULL DEFAULT '',
+            thumbnail_url TEXT,
             created_at    TIMESTAMPTZ DEFAULT NOW(),
             updated_at    TIMESTAMPTZ DEFAULT NOW()
         )
@@ -344,6 +365,10 @@ def init_db():
         ('hero_content', 'subtitle_ur', "TEXT NOT NULL DEFAULT ''"),
         ('hero_content', 'btn1_text_ur', "TEXT NOT NULL DEFAULT ''"),
         ('hero_content', 'btn2_text_ur', "TEXT NOT NULL DEFAULT ''"),
+        ('hero_content', 'avatar1_url', "TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg'"),
+        ('hero_content', 'avatar2_url', "TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg'"),
+        ('hero_content', 'avatar3_url', "TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg'"),
+        ('hero_content', 'avatar4_url', "TEXT NOT NULL DEFAULT '/static/images/team/mufti_maaz_quasmi.jpeg'"),
 
         ('courses', 'card_category_ur', "TEXT NOT NULL DEFAULT ''"),
         ('courses', 'card_description_ur', "TEXT NOT NULL DEFAULT ''"),
@@ -377,6 +402,7 @@ def init_db():
         ('team_members', 'role_label_ur', "TEXT NOT NULL DEFAULT ''"),
         ('team_members', 'subject_ur', "TEXT NOT NULL DEFAULT ''"),
         ('team_members', 'education_ur', "TEXT NOT NULL DEFAULT ''"),
+
     ]:
         cur.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {col} {coltype}")
 
@@ -889,23 +915,29 @@ _HERO_TEXT_COLUMNS = (
 )
 
 
-def update_hero_content(data, image_url=None):
-    """Upsert the singleton hero_content row. `image_url` is passed
-    separately (rather than always overwritten from `data`) so the
-    caller can keep the existing image when no new one was uploaded.
-    `data` should have every key in _HERO_TEXT_COLUMNS (missing keys
-    default to '')."""
+_HERO_AVATAR_COLUMNS = ('avatar1_url', 'avatar2_url', 'avatar3_url', 'avatar4_url')
+
+
+def update_hero_content(data, image_url=None, avatar_urls=None):
+    """Upsert the singleton hero_content row. `image_url` and
+    `avatar_urls` (a 4-item list/tuple) are passed separately (rather
+    than always overwritten from `data`) so the caller can keep the
+    existing images when no new one was uploaded. `data` should have
+    every key in _HERO_TEXT_COLUMNS (missing keys default to '')."""
     conn = get_conn()
     cur  = conn.cursor()
     cols = ', '.join(_HERO_TEXT_COLUMNS)
-    set_clause = ', '.join(f"{c} = EXCLUDED.{c}" for c in _HERO_TEXT_COLUMNS)
+    avatar_cols = ', '.join(_HERO_AVATAR_COLUMNS)
+    set_clause = ', '.join(f"{c} = EXCLUDED.{c}" for c in _HERO_TEXT_COLUMNS + _HERO_AVATAR_COLUMNS)
     placeholders = ', '.join(['%s'] * len(_HERO_TEXT_COLUMNS))
+    avatar_placeholders = ', '.join(['%s'] * len(_HERO_AVATAR_COLUMNS))
+    avatar_urls = tuple(avatar_urls or ('', '', '', ''))
     cur.execute(
-        f"""INSERT INTO hero_content (id, {cols}, image_url, updated_at)
-           VALUES (1, {placeholders}, %s, NOW())
+        f"""INSERT INTO hero_content (id, {cols}, image_url, {avatar_cols}, updated_at)
+           VALUES (1, {placeholders}, %s, {avatar_placeholders}, NOW())
            ON CONFLICT (id) DO UPDATE SET
              {set_clause}, image_url = EXCLUDED.image_url, updated_at = NOW()""",
-        tuple(data.get(c, '') for c in _HERO_TEXT_COLUMNS) + (image_url,)
+        tuple(data.get(c, '') for c in _HERO_TEXT_COLUMNS) + (image_url,) + avatar_urls
     )
     conn.commit(); cur.close(); conn.close()
 
@@ -1159,6 +1191,69 @@ def seed_team_members():
     conn.commit()
     cur.close()
     conn.close()
+
+
+# ─────────────────────────────────────────────────────────────
+#  Videos CRUD (homepage video showcase)
+# ─────────────────────────────────────────────────────────────
+_VIDEO_COLUMNS = (
+    'display_order', 'is_visible', 'title', 'title_ur', 'video_url', 'thumbnail_url',
+)
+
+
+def _video_values(data):
+    return tuple(data.get(c) for c in _VIDEO_COLUMNS)
+
+
+def get_all_videos(visible_only=False):
+    conn = get_conn()
+    cur  = conn.cursor()
+    where = "WHERE is_visible = TRUE" if visible_only else ""
+    cur.execute(f"SELECT * FROM videos {where} ORDER BY display_order, id")
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_video(vid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("SELECT * FROM videos WHERE id=%s", (vid,))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    return dict(row) if row else None
+
+
+def create_video(data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cols = ', '.join(_VIDEO_COLUMNS)
+    placeholders = ', '.join(['%s'] * len(_VIDEO_COLUMNS))
+    cur.execute(
+        f"INSERT INTO videos ({cols}) VALUES ({placeholders}) RETURNING id",
+        _video_values(data)
+    )
+    new_id = cur.fetchone()['id']
+    conn.commit(); cur.close(); conn.close()
+    return new_id
+
+
+def update_video(vid, data):
+    conn = get_conn()
+    cur  = conn.cursor()
+    set_clause = ', '.join(f"{c}=%s" for c in _VIDEO_COLUMNS)
+    cur.execute(
+        f"UPDATE videos SET {set_clause}, updated_at=NOW() WHERE id=%s",
+        _video_values(data) + (vid,)
+    )
+    conn.commit(); cur.close(); conn.close()
+
+
+def delete_video(vid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("DELETE FROM videos WHERE id=%s", (vid,))
+    conn.commit(); cur.close(); conn.close()
 
 
 # ─────────────────────────────────────────────────────────────
