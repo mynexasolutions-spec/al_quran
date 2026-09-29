@@ -203,10 +203,13 @@
   .reviews-track { gap: 0; }
   .review-card { flex: 0 0 100%; }
   /* video carousel: 1 card + swipe, but (unlike reviews) keeps its
-     arrow buttons visible on mobile too. */
+     arrow buttons visible on mobile too — sized down and pulled closer
+     to the track so the card itself gets as much width as possible. */
+  .video-showcase { padding-left: 3%; padding-right: 3%; }
+  .video-carousel { gap: .35rem; }
   .video-track { gap: 0; }
   .video-card { flex: 0 0 100%; }
-  .video-arrow { width: 38px; height: 38px; font-size: 1.6rem; }
+  .video-arrow { width: 32px; height: 32px; font-size: 1.3rem; flex-shrink: 0; }
   .social-grid { grid-template-columns: 1fr; }
   /* "Leave a Review" modal: the 2-column grid has no give on narrow
      screens — a long, non-wrapping <select> (or any field) forces the
