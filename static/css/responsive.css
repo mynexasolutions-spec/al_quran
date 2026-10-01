@@ -348,23 +348,23 @@ body.lang-ur .ch-cat {
   padding: .5rem 1.1rem;
 }
 
-/* ── Phone-only Urdu hero badge spacing ── */
+/* ── Phone-only Urdu hero: match the English mobile hero's compact,
+   centered look (same badge proportions, "prefix + highlight" kept on
+   one line, same paragraph sizing) instead of the old oversized/blocky
+   layout. ── */
 @media (max-width: 660px) {
   body.lang-ur .hero-badge {
-    line-height: 2.4;
-    padding: .8rem 1.6rem;
-    margin-bottom: 2rem;
+    font-size: .8rem;
+    line-height: 1.6;
+    padding: .55rem 1.1rem;
+    margin-bottom: 1rem;
     /* The plain .hero-badge rule forces white-space:nowrap (fine for
        short English badge text), but a longer Urdu translation can
        overflow the viewport on narrow phones — let it wrap instead. */
     white-space: normal;
   }
-  body.lang-ur .hero h1 em {
-    display: block;
-    margin-top: .75rem;
-  }
-  body.lang-ur .hero > .hero-content p {
-    line-height: 2.5;
-    font-size: 1.08rem;
+  body.lang-ur .hero-text-col p {
+    line-height: 1.9;
+    font-size: 1rem;
   }
 }
