@@ -245,8 +245,18 @@
    Urdu / Arabic script — global line-height & spacing fixes
    Urdu glyphs with diacritics need more vertical room than
    Latin; without this lines visually overlap on all screens.
+
+   font-family is set explicitly here instead of left to fall back to
+   the OS default: without it, Android/Chrome substitutes its bundled
+   "Noto Nastaliq Urdu" (the flowing diagonal script already used
+   across this site) while iOS/Safari substitutes a different system
+   font whose line metrics don't match — causing text to visually
+   overlap on iPhone even though the same line-height looks fine on
+   Android. Loading the same web font everywhere (see the @import in
+   variables.css) makes every platform render identically.
    ══════════════════════════════════════════════════════════ */
 body.lang-ur {
+  font-family: 'Noto Nastaliq Urdu', serif;
   line-height: 1.85;
 }
 body.lang-ur .section-title {
@@ -353,18 +363,41 @@ body.lang-ur .ch-cat {
    one line, same paragraph sizing) instead of the old oversized/blocky
    layout. ── */
 @media (max-width: 660px) {
+  /* Urdu needs a bit less top air than English before the fold — see
+     the heading height note below for why it's tighter on space. */
+  body.lang-ur .hero {
+    padding-top: 52px;
+  }
   body.lang-ur .hero-badge {
     font-size: .8rem;
     line-height: 1.6;
-    padding: .55rem 1.1rem;
-    margin-bottom: 1rem;
+    padding: .5rem 1.1rem;
+    margin-bottom: .7rem;
     /* The plain .hero-badge rule forces white-space:nowrap (fine for
        short English badge text), but a longer Urdu translation can
        overflow the viewport on narrow phones — let it wrap instead. */
     white-space: normal;
   }
+  /* Noto Nastaliq Urdu's diagonal letter-stacking needs more vertical
+     room per line than the 1.2 used on desktop (kept tight there to
+     avoid cropping the hero photo — see the comment above), or lines
+     visually overlap. The hero photo isn't a background on phone (it's
+     a plain <img> in .hero-img-col, see home.css), so there's no crop
+     to protect here — but giving it room the naive way (a bigger
+     line-height alone) pushes the CTA buttons below the fold, unlike
+     English, so the font-size also comes down a touch to keep the
+     total heading height closer to English's. */
+  body.lang-ur .hero-text-col h1 {
+    font-size: 1.7rem;
+    line-height: 1.65;
+    margin-bottom: .6rem;
+  }
   body.lang-ur .hero-text-col p {
-    line-height: 1.9;
-    font-size: 1rem;
+    line-height: 1.6;
+    font-size: .95rem;
+    margin-bottom: .9rem;
+  }
+  body.lang-ur .hero-btns {
+    margin-bottom: 1rem;
   }
 }
